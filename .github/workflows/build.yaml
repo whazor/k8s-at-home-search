@@ -1,0 +1,25 @@
+name: build-frontend
+on: push
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: false
+      # cd frontend/
+      - name: NPM or Yarn install with caching
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: frontend/
+      - name: Install dependencies 📦
+        run: yarn install --frozen-lockfile
+        working-directory: frontend/
+      - name: Download sqlite.js
+        run: |
+          mkdir -p frontend/dist/
+          wget https://github.com/sql-js/sql.js/releases/download/v1.6.2/sqljs-worker-wasm.zip
+          unzip sqljs-worker-wasm.zip -d frontend/dist/
+      - name: Build frontend 🚧
+        run: yarn run build
+        working-directory: frontend/

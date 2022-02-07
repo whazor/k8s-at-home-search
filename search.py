@@ -12,7 +12,7 @@ api_version = "apiVersion: helm.toolkit.fluxcd.io"
 kind = "kind: HelmRelease"
 
 # create sqlite db
-conn = sqlite3.connect('frontend/dist/repos.db')
+conn = sqlite3.connect('repos.db')
 c = conn.cursor()
 # table name: charts
 # fields: chart name, repo name, url, timestamp
@@ -30,11 +30,14 @@ repos = dict(c.fetchall())
 c.execute("SELECT repo_name, branch FROM repos")
 branches = dict(c.fetchall())
 
-
 for root, dirs, files in os.walk("repos/"):
   for file in files:
     if file.endswith(".yaml"):
       file_path = os.path.join(root, file)
+      repo_dir_name = file_path.split('/')[1]
+      if repo_dir_name not in repos:
+        print("repo", repo_dir_name, "not found in repos")
+        continue
       contains_api_version = False
       contains_kind = False
       with open(file_path, "r") as stream:
@@ -61,17 +64,12 @@ for root, dirs, files in os.walk("repos/"):
                   walk('spec.chart.spec.chart', lambda x: x is not None) and \
                   walk('spec.chart.spec.sourceRef.kind', lambda x: x == "HelmRepository"):
                 chart_name = walk('spec.chart.spec.chart')
-                repo_dir_name = file_path.split('/')[1]
-                if repo_dir_name not in repos:
-                  print("repo", repo_dir_name, "not found in repos")
-                  sys.exit(1) 
+                
                 hajimari_icon = walk(
                   'spec.values.ingress.main.annotations.hajimari\.io/icon',
                   lambda x: x.strip()) or None
 
                 repo_name = repos[repo_dir_name]
-                if chart_name == "sonarr":
-                  print(hajimari_icon)
                 cmd = "git log -1 --format=%ct -- "+ file_path.split("repos/"+repo_dir_name+"/")[1]
                 timestamp = check_output(
                   cmd,

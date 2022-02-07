@@ -97,6 +97,3 @@
 [submodule "repos/thaum-xyz-ankhmorpork"]
 	path = repos/thaum-xyz-ankhmorpork
 	url = https://github.com/thaum-xyz/ankhmorpork
-[submodule "repos/Iudicael-home-ops"]
-	path = repos/Iudicael-home-ops
-	url = https://github.com/Iudicael/home-ops

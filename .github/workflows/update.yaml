@@ -1,0 +1,21 @@
+name: Update-search-index
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 0 * * *'
+jobs:
+  update-search-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - uses: actions/setup-python@v2
+        with:
+          python: '3.x'
+      - name: Install dependencies
+        run: pip install pyyaml
+      - name: Build DB
+        run: python3 init-db.py
+      - name: Update search index
+        run: python3 search.py
