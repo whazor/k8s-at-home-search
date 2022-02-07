@@ -34,7 +34,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.get-upload-url.outputs.upload_url }}
+          upload_url: ${{ steps.get-upload-url.outputs.uploadUrl }}
           asset_path: ./repos.db
           asset_name: repos.db
           asset_content_type: application/vnd.sqlite3
