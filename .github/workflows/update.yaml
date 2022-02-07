@@ -15,20 +15,26 @@ jobs:
           submodules: true
       - uses: actions/setup-python@v2
         with:
-          python: '3.x'
+          python-version: '3.x'
       - name: Install dependencies
         run: pip install pyyaml
       - name: Build DB
         run: python3 init-db.py
       - name: Update search index
         run: python3 search.py
+      - name: Get the upload URL for a release
+        id: get-upload-url
+        uses: pdamianik/release-tag-to-upload-url-action@v1.0.1
+        with:
+          tag: db
+          token: ${{ github.token }}
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: https://github.com/Whazor/k8s-at-home-search/releases/download/db/repos.db
+          upload_url: ${{ steps.get-upload-url.outputs.upload_url }}
           asset_path: ./repos.db
           asset_name: repos.db
           asset_content_type: application/vnd.sqlite3
