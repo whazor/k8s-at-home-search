@@ -2,7 +2,10 @@ name: Update-search-index
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0 0 * * *'
+    - cron:  '30 0 * * *'
+  push:
+    branches:
+      - main
 jobs:
   update-search-index:
     runs-on: ubuntu-latest
@@ -19,3 +22,13 @@ jobs:
         run: python3 init-db.py
       - name: Update search index
         run: python3 search.py
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: https://github.com/Whazor/k8s-at-home-search/releases/download/db/repos.db
+          asset_path: ./repos.db
+          asset_name: repos.db
+          asset_content_type: application/vnd.sqlite3
