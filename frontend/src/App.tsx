@@ -1,13 +1,10 @@
-// import 'regenerator-runtime/runtime'
-import React, {useEffect, KeyboardEvent, useState } from "react";
+import React, {useState } from "react";
 import { Icon } from '@iconify/react';
-import { pluckFirst, useObservable, useObservableState } from 'observable-hooks'
+import { useObservable, useObservableState } from 'observable-hooks'
 import { from } from 'rxjs'
-import { switchMap, debounceTime, filter, last, pluck, map } from 'rxjs/operators'
+import { switchMap, debounceTime, map } from 'rxjs/operators'
 import {
   Kysely,
-  Generated,
-  DummyDriver,
   SqliteAdapter,
   SqliteIntrospector,
   SqliteQueryCompiler,
@@ -16,7 +13,6 @@ import { SQLJSDriver } from './sqlite';
 
 import { tw } from 'twind'
 import moment from "moment";
-// import tw from 'twin.macro'
 
 interface Repo {
   repo_name: string,
@@ -85,7 +81,6 @@ function wordcloud() {
 
 function MDIIcon(props: {icon: string}) {
   return (props.icon && 
-    // <span className={"material-icons " +tw`text-base leading-none`}>{props.icon}</span>
     <Icon icon={"mdi:"+props.icon} className={tw`text-base leading-none inline-block`} />
   ) 
   || null;
@@ -115,7 +110,7 @@ export function App() {
   );
   const [words] = useObservableState(() => from(wordcloud()), [])
   return (
-    <div className={tw`max-w-xl mx-auto bg-white rounded-xl shadow-lg`}>
+    <div className={tw`w-10/12 mx-auto bg-white rounded-xl shadow-lg`}>
       <h1 
         className={tw`cursor-pointer text-4xl pt-5 pb-5`}
         onClick={() => setSearchValue('')}
@@ -134,7 +129,7 @@ export function App() {
       
       <div >
         {searchValue.length > 2 && results.map(chart => (
-          <div key={chart.url}>
+          <div key={chart.url} className={tw`py-2 text(2xl)`}>
             <MDIIcon icon={chart.hajimari_icon} />
             <a href={chart.url} target="_blank">{chart.chart_name} {chart.repo_name} ({chart.stars} ⭐) - {moment.unix(parseInt(chart.timestamp)).fromNow()}</a> 
           </div>
