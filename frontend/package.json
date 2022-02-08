@@ -5,7 +5,7 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "build": "parcel build --public-url 'k8s-at-home-search/' src/index.html"
   },
   "license": "MIT",
   "dependencies": {
