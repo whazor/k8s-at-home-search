@@ -36,9 +36,6 @@ interface Database {
   charts: Chart
 }
 
-// moment js UTC 2022-02-08
-const date = moment.utc().format('YYYY-MM-DD');
-
 const dataPromise = fetch(`repos.db`).then(res => res.arrayBuffer());
 const db =  new Kysely<Database>({
   dialect: {
@@ -87,7 +84,6 @@ function wordcloud() {
 }
 
 function MDIIcon(props: {icon: string}) {
-  console.log(props.icon);
   return (props.icon && 
     // <span className={"material-icons " +tw`text-base leading-none`}>{props.icon}</span>
     <Icon icon={"mdi:"+props.icon} className={tw`text-base leading-none inline-block`} />
@@ -118,9 +114,6 @@ export function App() {
     ), []
   );
   const [words] = useObservableState(() => from(wordcloud()), [])
-  
-
-  console.log(words)
   return (
     <div className={tw`max-w-xl mx-auto bg-white rounded-xl shadow-lg`}>
       <h1 
