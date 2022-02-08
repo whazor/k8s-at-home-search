@@ -39,7 +39,7 @@ interface Database {
 // moment js UTC 2022-02-08
 const date = moment.utc().format('YYYY-MM-DD');
 
-const dataPromise = fetch(`https://github.com/Whazor/k8s-at-home-search/releases/download/${date}/repos.db`).then(res => res.arrayBuffer());
+const dataPromise = fetch(`repos.db`).then(res => res.arrayBuffer());
 const db =  new Kysely<Database>({
   dialect: {
     createAdapter() { return new SqliteAdapter() },

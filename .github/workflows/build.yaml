@@ -26,6 +26,13 @@ jobs:
       - name: Build frontend 🚧
         run: yarn run build
         working-directory: frontend/
+      - name: Download DB 📙
+        uses: robinraju/release-downloader@v1.3
+        with:
+          repository: "Whazor/k8s-at-home-search"
+          latest: true
+          fileName: "repos.db"
+          out-file-path: "./frontend/dist/"
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:
