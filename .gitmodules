@@ -97,3 +97,93 @@
 [submodule "repos/thaum-xyz-ankhmorpork"]
 	path = repos/thaum-xyz-ankhmorpork
 	url = https://github.com/thaum-xyz/ankhmorpork
+[submodule "repos/espizo-template-cluster-k3s"]
+	path = repos/espizo-template-cluster-k3s
+	url = https://github.com/espizo/template-cluster-k3s
+[submodule "repos/jensneuhaus-template-cluster-k3s"]
+	path = repos/jensneuhaus-template-cluster-k3s
+	url = https://github.com/jensneuhaus/template-cluster-k3s
+[submodule "repos/omercnet-home-cluster"]
+	path = repos/omercnet-home-cluster
+	url = https://github.com/omercnet/home-cluster
+[submodule "repos/Iouns-template-cluster-k3s"]
+	path = repos/Iouns-template-cluster-k3s
+	url = https://github.com/Iouns/template-cluster-k3s
+[submodule "repos/ohthateverest-template-cluster-k3s"]
+	path = repos/ohthateverest-template-cluster-k3s
+	url = https://github.com/ohthateverest/template-cluster-k3s
+[submodule "repos/ChristfriedBalizou-template-cluster-k3s"]
+	path = repos/ChristfriedBalizou-template-cluster-k3s
+	url = https://github.com/ChristfriedBalizou/template-cluster-k3s
+[submodule "repos/Rojikku-template-cluster-k3s"]
+	path = repos/Rojikku-template-cluster-k3s
+	url = https://github.com/Rojikku/template-cluster-k3s
+[submodule "repos/zsiddiqi-template-cluster-k3s"]
+	path = repos/zsiddiqi-template-cluster-k3s
+	url = https://github.com/zsiddiqi/template-cluster-k3s
+[submodule "repos/rahimigit-template-cluster-k3s"]
+	path = repos/rahimigit-template-cluster-k3s
+	url = https://github.com/rahimigit/template-cluster-k3s
+[submodule "repos/symbiontik-template-cluster-k3s"]
+	path = repos/symbiontik-template-cluster-k3s
+	url = https://github.com/symbiontik/template-cluster-k3s
+[submodule "repos/kurtbcox-template-cluster-k3s"]
+	path = repos/kurtbcox-template-cluster-k3s
+	url = https://github.com/kurtbcox/template-cluster-k3s
+[submodule "repos/pgrauman-template-cluster-k3s"]
+	path = repos/pgrauman-template-cluster-k3s
+	url = https://github.com/pgrauman/template-cluster-k3s
+[submodule "repos/c-yco-template-cluster-k3s"]
+	path = repos/c-yco-template-cluster-k3s
+	url = https://github.com/c-yco/template-cluster-k3s
+[submodule "repos/travismoran-template-cluster-k3s"]
+	path = repos/travismoran-template-cluster-k3s
+	url = https://github.com/travismoran/template-cluster-k3s
+[submodule "repos/GeckoSplinter-template-cluster-k3s"]
+	path = repos/GeckoSplinter-template-cluster-k3s
+	url = https://github.com/GeckoSplinter/template-cluster-k3s
+[submodule "repos/devlincashman-template-cluster-k3s"]
+	path = repos/devlincashman-template-cluster-k3s
+	url = https://github.com/devlincashman/template-cluster-k3s
+[submodule "repos/5thsymphony-template-cluster-k3s"]
+	path = repos/5thsymphony-template-cluster-k3s
+	url = https://github.com/5thsymphony/template-cluster-k3s
+[submodule "repos/mrueg-template-cluster-k3s"]
+	path = repos/mrueg-template-cluster-k3s
+	url = https://github.com/mrueg/template-cluster-k3s
+[submodule "repos/eliud-kinyanjui-template-cluster-k3s"]
+	path = repos/eliud-kinyanjui-template-cluster-k3s
+	url = https://github.com/eliud-kinyanjui/template-cluster-k3s
+[submodule "repos/lucacalcaterra-template-cluster-k3s"]
+	path = repos/lucacalcaterra-template-cluster-k3s
+	url = https://github.com/lucacalcaterra/template-cluster-k3s
+[submodule "repos/olufemi2-template-cluster-k3s"]
+	path = repos/olufemi2-template-cluster-k3s
+	url = https://github.com/olufemi2/template-cluster-k3s
+[submodule "repos/heiderich-template-cluster-k3s"]
+	path = repos/heiderich-template-cluster-k3s
+	url = https://github.com/heiderich/template-cluster-k3s
+[submodule "repos/enchantednatures-template-cluster-k3s"]
+	path = repos/enchantednatures-template-cluster-k3s
+	url = https://github.com/enchantednatures/template-cluster-k3s
+[submodule "repos/shawnhank-template-cluster-k3s"]
+	path = repos/shawnhank-template-cluster-k3s
+	url = https://github.com/shawnhank/template-cluster-k3s
+[submodule "repos/heartshare-template-cluster-k3s"]
+	path = repos/heartshare-template-cluster-k3s
+	url = https://github.com/heartshare/template-cluster-k3s
+[submodule "repos/eplord-template-cluster-k3s"]
+	path = repos/eplord-template-cluster-k3s
+	url = https://github.com/eplord/template-cluster-k3s
+[submodule "repos/InsOpDe-template-cluster-k3s"]
+	path = repos/InsOpDe-template-cluster-k3s
+	url = https://github.com/InsOpDe/template-cluster-k3s
+[submodule "repos/Drakkonite-template-cluster-k3s"]
+	path = repos/Drakkonite-template-cluster-k3s
+	url = https://github.com/Drakkonite/template-cluster-k3s
+[submodule "repos/lamlion-template-cluster-k3s"]
+	path = repos/lamlion-template-cluster-k3s
+	url = https://github.com/lamlion/template-cluster-k3s
+[submodule "repos/DragomirAlin-template-cluster-k3s"]
+	path = repos/DragomirAlin-template-cluster-k3s
+	url = https://github.com/DragomirAlin/template-cluster-k3s
