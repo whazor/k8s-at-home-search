@@ -9,7 +9,7 @@ c = conn.cursor()
 # primary key repo_name
 c.execute('''CREATE TABLE IF NOT EXISTS repos
                 (repo_name text primary key, url text, branch text, stars integer)''')
-
+c.execute('''delete from repos''')
 results = json.loads(open('repos.json').read())
 for (repo_name, url, branch, stars) in results:    
     c.execute("INSERT OR REPLACE INTO repos VALUES (?, ?, ?, ?)", (repo_name, url, branch, stars))

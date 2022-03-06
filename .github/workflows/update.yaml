@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          submodules: true
+          submodules: false
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
@@ -16,9 +16,16 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install pyyaml requests
+      - name: Get interesting repositories
+        run: python3 interesting.py
       - name: Build DB
         run: python3 init-db.py
+      - name: Update submodules
+        run: python3 clone.py
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
       - name: Update search index
         run: python3 search.py
       - name: Create Release
