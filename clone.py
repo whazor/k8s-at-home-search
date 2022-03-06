@@ -12,8 +12,6 @@ import subprocess
 import os
 import sqlite3
 
-from attr import has
-
 conn = sqlite3.connect('repos.db')
 c = conn.cursor()
 c.execute("""
