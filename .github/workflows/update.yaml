@@ -13,6 +13,10 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
@@ -24,9 +28,8 @@ jobs:
         run: python3 init-db.py
       - name: Update submodules
         run: python3 clone.py
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
+      - name: Push to main
+        run: git push origin main
       - name: Update search index
         run: python3 search.py
       - name: Create Release

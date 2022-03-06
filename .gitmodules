@@ -1,6 +1,3 @@
-[submodule "repos/bjw-s-home-ops"]
-	path = repos/bjw-s-home-ops
-	url = https://github.com/bjw-s/home-ops
 [submodule "repos/onedr0p-home-cluster"]
 	path = repos/onedr0p-home-cluster
 	url = https://github.com/onedr0p/home-cluster

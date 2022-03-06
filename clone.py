@@ -37,14 +37,8 @@ has_deleted = False
 for line in res.stdout.splitlines():
   repo = line.strip().split(" ")[1].removeprefix("repos/")
   if repo not in dirs:
-    subprocess.run(["git", "submodule", "deinit", "repos/" + repo])
     subprocess.run(["git", "rm", "-f", "repos/" + repo])
-    subprocess.run(["rm", "-rf", ".git/modules/repos/" + repo])
-    # git submodule deinit <path_to_submodule>
-    # git rm <path_to_submodule>
-    # git commit -m "Removed submodule"
     has_deleted = True
-    # rm -rf .git/modules/<path_to_submodule>
   else:
     existing.add(repo)
 
