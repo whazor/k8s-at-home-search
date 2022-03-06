@@ -54,7 +54,7 @@ for repo in to_add:
   has_added = True
 
 # sync modules
-subprocess.run(["git", "submodule", "sync", "--recursive"])
+subprocess.run(["git", "submodule", "update", "--init", "--recursive"])
 
 # git submodule foreach git config --local pull.ff only
 # git submodule foreach git pull 
