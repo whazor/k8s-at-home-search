@@ -3,8 +3,9 @@ import requests
 import os
 import json
 
-github_token = os.environ['GITHUB_TOKEN']
-github_header = {'Authorization': 'Bearer '+github_token, 'content-type': 'application/json'}
+# github_token = os.environ['GITHUB_TOKEN']
+# github_header = {'Authorization': 'Bearer '+github_token, 'content-type': 'application/json'}
+github_header = {'content-type': 'application/json'}
 
 
 results = []
