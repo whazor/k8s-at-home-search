@@ -88,3 +88,63 @@
 [submodule "repos/bjw-s-home-ops"]
 	path = repos/bjw-s-home-ops
 	url = https://github.com/bjw-s/home-ops
+[submodule "repos/ams0-rancher-home"]
+	path = repos/ams0-rancher-home
+	url = https://github.com/ams0/rancher-home
+[submodule "repos/carpenike-k8s-gitops"]
+	path = repos/carpenike-k8s-gitops
+	url = https://github.com/carpenike/k8s-gitops
+[submodule "repos/buvis-net-clusters"]
+	path = repos/buvis-net-clusters
+	url = https://github.com/buvis-net/clusters
+[submodule "repos/xunholy-k8s-gitops"]
+	path = repos/xunholy-k8s-gitops
+	url = https://github.com/xUnholy/k8s-gitops
+[submodule "repos/thaum-xyz-ankhmorpork"]
+	path = repos/thaum-xyz-ankhmorpork
+	url = https://github.com/thaum-xyz/ankhmorpork
+[submodule "repos/phybros-k3s-cluster"]
+	path = repos/phybros-k3s-cluster
+	url = https://github.com/phybros/k3s-cluster
+[submodule "repos/WRMilling-k3s-gitops"]
+	path = repos/WRMilling-k3s-gitops
+	url = https://github.com/wrmilling/k3s-gitops
+[submodule "repos/charlie-haley-home-cluster"]
+	path = repos/charlie-haley-home-cluster
+	url = https://github.com/charlie-haley/home-cluster
+[submodule "repos/lanquarden-roci-gitops"]
+	path = repos/lanquarden-roci-gitops
+	url = https://github.com/lanquarden/roci-gitops
+[submodule "repos/npawelek-k8s-gitops"]
+	path = repos/npawelek-k8s-gitops
+	url = https://github.com/npawelek/k8s-gitops
+[submodule "repos/mcfio-GitOps"]
+	path = repos/mcfio-GitOps
+	url = https://github.com/mcfio/GitOps
+[submodule "repos/blackjid-k8s-gitops"]
+	path = repos/blackjid-k8s-gitops
+	url = https://github.com/blackjid/k8s-gitops
+[submodule "repos/kitos9112-k8s-home"]
+	path = repos/kitos9112-k8s-home
+	url = https://github.com/kitos9112/k8s-home
+[submodule "repos/Diaoul-home-ops"]
+	path = repos/Diaoul-home-ops
+	url = https://github.com/Diaoul/home-ops
+[submodule "repos/h3mmy-bloopysphere"]
+	path = repos/h3mmy-bloopysphere
+	url = https://github.com/h3mmy/bloopySphere
+[submodule "repos/rust84-k8s-gitops"]
+	path = repos/rust84-k8s-gitops
+	url = https://github.com/rust84/k8s-gitops
+[submodule "repos/nicholaswilde-home-cluster"]
+	path = repos/nicholaswilde-home-cluster
+	url = https://github.com/nicholaswilde/home-cluster
+[submodule "repos/angelnu-k8s-gitops"]
+	path = repos/angelnu-k8s-gitops
+	url = https://github.com/angelnu/k8s-gitops
+[submodule "repos/fobiat-k8s-gitops"]
+	path = repos/fobiat-k8s-gitops
+	url = https://github.com/fobiat/k8s-gitops
+[submodule "repos/onedr0p-home-cluster"]
+	path = repos/onedr0p-home-cluster
+	url = https://github.com/onedr0p/home-ops
