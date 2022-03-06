@@ -28,8 +28,6 @@ jobs:
         run: python3 init-db.py
       - name: Update submodules
         run: python3 clone.py
-      - name: Push to main
-        run: git push origin main
       - name: Update search index
         run: python3 search.py
       - name: Create Release
@@ -52,3 +50,5 @@ jobs:
           asset_path: ./repos.db
           asset_name: repos.db
           asset_content_type: application/vnd.sqlite3
+      - name: Push to main
+        run: git push origin main
