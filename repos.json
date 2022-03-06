@@ -1,87 +1,9 @@
 [
   [
-    "mcfio/GitOps",
-    "https://github.com/mcfio/GitOps",
+    "fobiat/k8s-gitops",
+    "https://github.com/fobiat/k8s-gitops",
     "main",
-    9
-  ],
-  [
-    "cbirkenbeul/k3s-gitops",
-    "https://github.com/cbirkenbeul/k3s-gitops",
-    "main",
-    23
-  ],
-  [
-    "rust84/k8s-gitops",
-    "https://github.com/rust84/k8s-gitops",
-    "master",
-    7
-  ],
-  [
-    "WRMilling/k3s-gitops",
-    "https://github.com/wrmilling/k3s-gitops",
-    "master",
-    91
-  ],
-  [
-    "kitos9112/k8s-home",
-    "https://github.com/kitos9112/k8s-home",
-    "main",
-    5
-  ],
-  [
-    "xunholy/k8s-gitops",
-    "https://github.com/xUnholy/k8s-gitops",
-    "main",
-    232
-  ],
-  [
-    "onedr0p/home-cluster",
-    "https://github.com/onedr0p/home-ops",
-    "main",
-    446
-  ],
-  [
-    "thaum-xyz/ankhmorpork",
-    "https://github.com/thaum-xyz/ankhmorpork",
-    "master",
-    31
-  ],
-  [
-    "npawelek/k8s-gitops",
-    "https://github.com/npawelek/k8s-gitops",
-    "master",
-    10
-  ],
-  [
-    "jr0dd/home-ops",
-    "https://github.com/jr0dd/home-ops",
-    "main",
-    13
-  ],
-  [
-    "lanquarden/roci-gitops",
-    "https://github.com/lanquarden/roci-gitops",
-    "main",
-    6
-  ],
-  [
-    "carpenike/k8s-gitops",
-    "https://github.com/carpenike/k8s-gitops",
-    "master",
-    91
-  ],
-  [
-    "billimek/k8s-gitops",
-    "https://github.com/billimek/k8s-gitops",
-    "master",
-    351
-  ],
-  [
-    "Truxnell/home-cluster",
-    "https://github.com/Truxnell/home-cluster",
-    "main",
-    7
+    2
   ],
   [
     "toboshii/home-cluster",
@@ -90,10 +12,46 @@
     100
   ],
   [
-    "h3mmy/bloopysphere",
-    "https://github.com/h3mmy/bloopySphere",
+    "xunholy/k8s-gitops",
+    "https://github.com/xUnholy/k8s-gitops",
     "main",
-    2
+    232
+  ],
+  [
+    "phybros/k3s-cluster",
+    "https://github.com/phybros/k3s-cluster",
+    "main",
+    8
+  ],
+  [
+    "WRMilling/k3s-gitops",
+    "https://github.com/wrmilling/k3s-gitops",
+    "master",
+    91
+  ],
+  [
+    "vaskozl/home-infra",
+    "https://github.com/vaskozl/home-infra",
+    "main",
+    45
+  ],
+  [
+    "kitos9112/k8s-home",
+    "https://github.com/kitos9112/k8s-home",
+    "main",
+    5
+  ],
+  [
+    "anthr76/infra",
+    "https://github.com/anthr76/infra",
+    "main",
+    56
+  ],
+  [
+    "buvis-net/clusters",
+    "https://github.com/buvis-net/clusters",
+    "main",
+    3
   ],
   [
     "angelnu/k8s-gitops",
@@ -102,10 +60,28 @@
     33
   ],
   [
-    "budimanjojo/home-cluster",
-    "https://github.com/budimanjojo/home-cluster",
+    "Diaoul/home-ops",
+    "https://github.com/Diaoul/home-ops",
     "main",
-    7
+    10
+  ],
+  [
+    "onedr0p/home-cluster",
+    "https://github.com/onedr0p/home-ops",
+    "main",
+    446
+  ],
+  [
+    "cbirkenbeul/k3s-gitops",
+    "https://github.com/cbirkenbeul/k3s-gitops",
+    "main",
+    23
+  ],
+  [
+    "billimek/k8s-gitops",
+    "https://github.com/billimek/k8s-gitops",
+    "master",
+    351
   ],
   [
     "nicholaswilde/home-cluster",
@@ -114,28 +90,22 @@
     4
   ],
   [
-    "charlie-haley/home-cluster",
-    "https://github.com/charlie-haley/home-cluster",
+    "mcfio/GitOps",
+    "https://github.com/mcfio/GitOps",
     "main",
-    11
-  ],
-  [
-    "samip5/k8s-cluster",
-    "https://github.com/samip5/k8s-cluster",
-    "main",
-    7
-  ],
-  [
-    "fobiat/k8s-gitops",
-    "https://github.com/fobiat/k8s-gitops",
-    "main",
-    2
+    9
   ],
   [
     "zenxedo/k3s-gitops",
     "https://github.com/zenxedo/k3s-gitops",
     "master",
     14
+  ],
+  [
+    "budimanjojo/home-cluster",
+    "https://github.com/budimanjojo/home-cluster",
+    "main",
+    7
   ],
   [
     "ams0/rancher-home",
@@ -150,28 +120,10 @@
     118
   ],
   [
-    "vaskozl/home-infra",
-    "https://github.com/vaskozl/home-infra",
-    "main",
-    45
-  ],
-  [
-    "anthr76/infra",
-    "https://github.com/anthr76/infra",
-    "main",
-    56
-  ],
-  [
-    "zacheryph/k8s-gitops",
-    "https://github.com/zacheryph/k8s-gitops",
-    "main",
-    18
-  ],
-  [
-    "blackjid/k8s-gitops",
-    "https://github.com/blackjid/k8s-gitops",
+    "thaum-xyz/ankhmorpork",
+    "https://github.com/thaum-xyz/ankhmorpork",
     "master",
-    30
+    31
   ],
   [
     "auricom/home-cluster",
@@ -180,22 +132,70 @@
     33
   ],
   [
-    "buvis-net/clusters",
-    "https://github.com/buvis-net/clusters",
+    "zacheryph/k8s-gitops",
+    "https://github.com/zacheryph/k8s-gitops",
     "main",
-    3
+    18
   ],
   [
-    "phybros/k3s-cluster",
-    "https://github.com/phybros/k3s-cluster",
+    "charlie-haley/home-cluster",
+    "https://github.com/charlie-haley/home-cluster",
     "main",
-    8
+    11
   ],
   [
-    "Diaoul/home-ops",
-    "https://github.com/Diaoul/home-ops",
+    "jr0dd/home-ops",
+    "https://github.com/jr0dd/home-ops",
     "main",
+    13
+  ],
+  [
+    "h3mmy/bloopysphere",
+    "https://github.com/h3mmy/bloopySphere",
+    "main",
+    2
+  ],
+  [
+    "samip5/k8s-cluster",
+    "https://github.com/samip5/k8s-cluster",
+    "main",
+    7
+  ],
+  [
+    "lanquarden/roci-gitops",
+    "https://github.com/lanquarden/roci-gitops",
+    "main",
+    6
+  ],
+  [
+    "rust84/k8s-gitops",
+    "https://github.com/rust84/k8s-gitops",
+    "master",
+    7
+  ],
+  [
+    "blackjid/k8s-gitops",
+    "https://github.com/blackjid/k8s-gitops",
+    "master",
+    30
+  ],
+  [
+    "Truxnell/home-cluster",
+    "https://github.com/Truxnell/home-cluster",
+    "main",
+    7
+  ],
+  [
+    "npawelek/k8s-gitops",
+    "https://github.com/npawelek/k8s-gitops",
+    "master",
     10
+  ],
+  [
+    "carpenike/k8s-gitops",
+    "https://github.com/carpenike/k8s-gitops",
+    "master",
+    91
   ],
   [
     "onedr0p/home-ops",
@@ -282,9 +282,9 @@
     2
   ],
   [
-    "dafrenchyman/dockers_and_helm",
-    "https://github.com/dafrenchyman/dockers_and_helm",
-    "master",
+    "clouedoc/infra",
+    "https://github.com/clouedoc/infra",
+    "main",
     1
   ],
   [
@@ -294,9 +294,9 @@
     1
   ],
   [
-    "clouedoc/infra",
-    "https://github.com/clouedoc/infra",
-    "main",
+    "dafrenchyman/dockers_and_helm",
+    "https://github.com/dafrenchyman/dockers_and_helm",
+    "master",
     1
   ]
 ]

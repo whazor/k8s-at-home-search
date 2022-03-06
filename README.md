@@ -7,11 +7,21 @@ Search Flux HelmReleases through [awesome k8s-at-home](https://github.com/k8s-at
 
 ## development
 Overview:
-[![](https://mermaid.ink/img/pako:eNqF0LFuwyAQBuBXsW623Z2hUztE6tSOpsMZzoHKHBYcQxTn3UvsJO1QqQxw_PpAcGcw0RIoOCZcXPP2rrmp4zB4FkqUxfOxX06ft7jrntdES8z9V468HthLlV46O_5S1-AB7aiarVrNHJmGbe6z-wdnwmTcbrYjD_TU5DKGaMtMdzbsy88T9v0f97bGYZK8TinWD7LduWZoIVAK6G3txfmaahBHgTSoWlqasMyiQfOl0rJYFHq1XmICNeGcqQUsEj9ObEBJKnRHLx5ra8NNXb4B_ROAjA)](https://mermaid.live/edit/#pako:eNqF0LFuwyAQBuBXsW623Z2hUztE6tSOpsMZzoHKHBYcQxTn3UvsJO1QqQxw_PpAcGcw0RIoOCZcXPP2rrmp4zB4FkqUxfOxX06ft7jrntdES8z9V468HthLlV46O_5S1-AB7aiarVrNHJmGbe6z-wdnwmTcbrYjD_TU5DKGaMtMdzbsy88T9v0f97bGYZK8TinWD7LduWZoIVAK6G3txfmaahBHgTSoWlqasMyiQfOl0rJYFHq1XmICNeGcqQUsEj9ObEBJKnRHLx5ra8NNXb4B_ROAjA)
+```mermaid
+graph LR
+    I[interesting.py]
+    I-->|repos.json|Init[init-db.py]
+    Init-->|repos.db: repos|clone[clone.py]
+    Init-->|repos.db: repos|search
+    clone-->|repos/ submodules|search[search.py]
+    search-->|repos.db: repos,charts|frontend
+```
 
 You could download `repos.db` from releases https://github.com/Whazor/k8s-at-home-search/releases/
 
 **To build repos.db**
+
+Python requirements: `pip install requests pyyaml`
 
 Updating `repos.json` (can be skipped, already included in source):
 ```
@@ -19,14 +29,14 @@ pip3 install requests
 python3 interesting.py
 ```
 
-Setting up `repos.db` repos table:
+Setting up `repos.db` repos table (requires `repos.json`):
 ```
 python3 init-db.py
 ```
 
 Updating `repos/` submodules (requires repo.db):
 ```
-./clone.sh
+python3 clone.py
 ```
 
 Setting up `repos.db` charts table:
