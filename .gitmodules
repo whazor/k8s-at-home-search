@@ -85,3 +85,6 @@
 [submodule "repos/omdv-homelab-server"]
 	path = repos/omdv-homelab-server
 	url = https://github.com/omdv/homelab-server
+[submodule "repos/bjw-s-home-ops"]
+	path = repos/bjw-s-home-ops
+	url = https://github.com/bjw-s/home-ops
