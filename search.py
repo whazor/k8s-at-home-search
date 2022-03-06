@@ -41,11 +41,15 @@ for root, dirs, files in os.walk("repos/"):
       contains_api_version = False
       contains_kind = False
       with open(file_path, "r") as stream:
-        for line in stream:
-          if line.strip().startswith(api_version):
-            contains_api_version = True
-          if line.strip() == kind:
-            contains_kind = True
+        try:
+          for line in stream:
+            if line.strip().startswith(api_version):
+              contains_api_version = True
+            if line.strip() == kind:
+              contains_kind = True
+        except UnicodeDecodeError as e:
+          print("unicode error", e) 
+          continue
         if contains_api_version and contains_kind:
           try:
             stream.seek(0)
