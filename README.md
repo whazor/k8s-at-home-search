@@ -1,5 +1,9 @@
 # k8s at home search (unofficial)
-Search Flux HelmReleases through [awesome k8s-at-home](https://github.com/k8s-at-home/awesome-home-kubernetes) projects, check it out at https://whazor.github.io/k8s-at-home-search/
+Search Flux HelmReleases through [awesome k8s-at-home](https://github.com/k8s-at-home/awesome-home-kubernetes) projects, check it out at https://whazor.github.io/k8s-at-home-search/. We index Flux HelmReleases from Github repositories with the [k8s-at-home topic](https://github.com/topics/k8s-at-home). To include your repository in this search it must be public and then add the topic k8s-at-home to your GitHub Repository topics. To learn more visit [the website from k8s@home](https://k8s-at-home.com/).
+
+Thanks to Toboshii and [Hajimari](https://github.com/toboshii/hajimari) for regulating icons to helm charts.
+
+And also thanks to k8s@home community for great charts and configurations.
 
 <img width="848" alt="image" src="https://user-images.githubusercontent.com/184182/152700148-2f41a576-7ae4-4ed5-b14c-840347787036.png">
 
