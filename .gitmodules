@@ -1,150 +1,200 @@
 [submodule "repos/zacheryph-k8s-gitops"]
 	path = repos/zacheryph-k8s-gitops
 	url = https://github.com/zacheryph/k8s-gitops
+	branch = main
 [submodule "repos/anthr76-infra"]
 	path = repos/anthr76-infra
 	url = https://github.com/anthr76/infra
+	branch = main
 [submodule "repos/billimek-k8s-gitops"]
 	path = repos/billimek-k8s-gitops
 	url = https://github.com/billimek/k8s-gitops
+	branch = master
 [submodule "repos/zenxedo-k3s-gitops"]
 	path = repos/zenxedo-k3s-gitops
 	url = https://github.com/zenxedo/k3s-gitops
+	branch = master
 [submodule "repos/vaskozl-home-infra"]
 	path = repos/vaskozl-home-infra
 	url = https://github.com/vaskozl/home-infra
+	branch = main
 [submodule "repos/auricom-home-cluster"]
 	path = repos/auricom-home-cluster
 	url = https://github.com/auricom/home-cluster
+	branch = main
 [submodule "repos/toboshii-home-cluster"]
 	path = repos/toboshii-home-cluster
 	url = https://github.com/toboshii/home-cluster
+	branch = main
 [submodule "repos/cbirkenbeul-k3s-gitops"]
 	path = repos/cbirkenbeul-k3s-gitops
 	url = https://github.com/cbirkenbeul/k3s-gitops
+	branch = main
 [submodule "repos/budimanjojo-home-cluster"]
 	path = repos/budimanjojo-home-cluster
 	url = https://github.com/budimanjojo/home-cluster
+	branch = main
 [submodule "repos/jr0dd-home-ops"]
 	path = repos/jr0dd-home-ops
 	url = https://github.com/jr0dd/home-ops
+	branch = main
 [submodule "repos/samip5-k8s-cluster"]
 	path = repos/samip5-k8s-cluster
 	url = https://github.com/samip5/k8s-cluster
+	branch = main
 [submodule "repos/Kashalls-home-cluster"]
 	path = repos/Kashalls-home-cluster
 	url = https://github.com/Kashalls/home-cluster
+	branch = main
 [submodule "repos/Ornias1993-gitops"]
 	path = repos/Ornias1993-gitops
 	url = https://github.com/Ornias1993/gitops
+	branch = main
 [submodule "repos/christopherburnham-home-ops"]
 	path = repos/christopherburnham-home-ops
 	url = https://github.com/christopherburnham/home-ops
+	branch = main
 [submodule "repos/alexwaibel-home-cluster"]
 	path = repos/alexwaibel-home-cluster
 	url = https://github.com/alexwaibel/home-cluster
+	branch = main
 [submodule "repos/brittonhayes-devops-lab"]
 	path = repos/brittonhayes-devops-lab
 	url = https://github.com/brittonhayes/devops-lab
+	branch = main
 [submodule "repos/dafrenchyman-dockers_and_helm"]
 	path = repos/dafrenchyman-dockers_and_helm
 	url = https://github.com/dafrenchyman/dockers_and_helm
+	branch = master
 [submodule "repos/kasuboski-k8s-gitops"]
 	path = repos/kasuboski-k8s-gitops
 	url = https://github.com/kasuboski/k8s-gitops
+	branch = main
 [submodule "repos/allenporter-k8s-gitops"]
 	path = repos/allenporter-k8s-gitops
 	url = https://github.com/allenporter/k8s-gitops
+	branch = main
 [submodule "repos/rogerrum-k8s-gitops"]
 	path = repos/rogerrum-k8s-gitops
 	url = https://github.com/rogerrum/k8s-gitops
+	branch = main
 [submodule "repos/whalecoiner-home"]
 	path = repos/whalecoiner-home
 	url = https://github.com/whalecoiner/home
+	branch = main
 [submodule "repos/onedr0p-home-ops"]
 	path = repos/onedr0p-home-ops
 	url = https://github.com/onedr0p/home-ops
+	branch = main
 [submodule "repos/rwaltr-infra"]
 	path = repos/rwaltr-infra
 	url = https://github.com/rwaltr/infra
+	branch = master
 [submodule "repos/coolguy1771-home-ops"]
 	path = repos/coolguy1771-home-ops
 	url = https://github.com/coolguy1771/home-ops
+	branch = main
 [submodule "repos/clouedoc-infra"]
 	path = repos/clouedoc-infra
 	url = https://github.com/clouedoc/infra
+	branch = main
 [submodule "repos/Truxnell-home-cluster"]
 	path = repos/Truxnell-home-cluster
 	url = https://github.com/Truxnell/home-cluster
+	branch = main
 [submodule "repos/lethek-k8s-gitops"]
 	path = repos/lethek-k8s-gitops
 	url = https://github.com/lethek/k8s-gitops
+	branch = main
 [submodule "repos/danmanners-homelab-kube-cluster"]
 	path = repos/danmanners-homelab-kube-cluster
 	url = https://github.com/danmanners/homelab-kube-cluster
+	branch = main
 [submodule "repos/omdv-homelab-server"]
 	path = repos/omdv-homelab-server
 	url = https://github.com/omdv/homelab-server
+	branch = main
 [submodule "repos/bjw-s-home-ops"]
 	path = repos/bjw-s-home-ops
 	url = https://github.com/bjw-s/home-ops
+	branch = main
 [submodule "repos/ams0-rancher-home"]
 	path = repos/ams0-rancher-home
 	url = https://github.com/ams0/rancher-home
+	branch = master
 [submodule "repos/carpenike-k8s-gitops"]
 	path = repos/carpenike-k8s-gitops
 	url = https://github.com/carpenike/k8s-gitops
+	branch = master
 [submodule "repos/buvis-net-clusters"]
 	path = repos/buvis-net-clusters
 	url = https://github.com/buvis-net/clusters
+	branch = main
 [submodule "repos/xunholy-k8s-gitops"]
 	path = repos/xunholy-k8s-gitops
 	url = https://github.com/xUnholy/k8s-gitops
+	branch = main
 [submodule "repos/thaum-xyz-ankhmorpork"]
 	path = repos/thaum-xyz-ankhmorpork
 	url = https://github.com/thaum-xyz/ankhmorpork
+	branch = master
 [submodule "repos/phybros-k3s-cluster"]
 	path = repos/phybros-k3s-cluster
 	url = https://github.com/phybros/k3s-cluster
+	branch = main
 [submodule "repos/WRMilling-k3s-gitops"]
 	path = repos/WRMilling-k3s-gitops
 	url = https://github.com/wrmilling/k3s-gitops
+	branch = master
 [submodule "repos/charlie-haley-home-cluster"]
 	path = repos/charlie-haley-home-cluster
 	url = https://github.com/charlie-haley/home-cluster
+	branch = main
 [submodule "repos/lanquarden-roci-gitops"]
 	path = repos/lanquarden-roci-gitops
 	url = https://github.com/lanquarden/roci-gitops
+	branch = main
 [submodule "repos/npawelek-k8s-gitops"]
 	path = repos/npawelek-k8s-gitops
 	url = https://github.com/npawelek/k8s-gitops
+	branch = master
 [submodule "repos/mcfio-GitOps"]
 	path = repos/mcfio-GitOps
 	url = https://github.com/mcfio/GitOps
+	branch = main
 [submodule "repos/blackjid-k8s-gitops"]
 	path = repos/blackjid-k8s-gitops
 	url = https://github.com/blackjid/k8s-gitops
+	branch = master
 [submodule "repos/kitos9112-k8s-home"]
 	path = repos/kitos9112-k8s-home
 	url = https://github.com/kitos9112/k8s-home
+	branch = main
 [submodule "repos/Diaoul-home-ops"]
 	path = repos/Diaoul-home-ops
 	url = https://github.com/Diaoul/home-ops
+	branch = main
 [submodule "repos/h3mmy-bloopysphere"]
 	path = repos/h3mmy-bloopysphere
 	url = https://github.com/h3mmy/bloopySphere
+	branch = main
 [submodule "repos/rust84-k8s-gitops"]
 	path = repos/rust84-k8s-gitops
 	url = https://github.com/rust84/k8s-gitops
+	branch = master
 [submodule "repos/nicholaswilde-home-cluster"]
 	path = repos/nicholaswilde-home-cluster
 	url = https://github.com/nicholaswilde/home-cluster
+	branch = main
 [submodule "repos/angelnu-k8s-gitops"]
 	path = repos/angelnu-k8s-gitops
 	url = https://github.com/angelnu/k8s-gitops
+	branch = main
 [submodule "repos/fobiat-k8s-gitops"]
 	path = repos/fobiat-k8s-gitops
 	url = https://github.com/fobiat/k8s-gitops
+	branch = main
 [submodule "repos/onedr0p-home-cluster"]
 	path = repos/onedr0p-home-cluster
 	url = https://github.com/onedr0p/home-ops
+	branch = main

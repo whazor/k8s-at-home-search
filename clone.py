@@ -25,6 +25,7 @@ repos = c.fetchall()
 
 dirs = set(map(lambda x: x[0], repos))
 urls_map = {x[0]: x[2] for x in repos}
+branch_map = {x[0]: x[1] for x in repos}
 # print(repos)
 
 # execute "git submodule status"
@@ -58,8 +59,15 @@ subprocess.run(["git", "submodule", "update", "--init", "--recursive"])
 
 # git submodule foreach git config --local pull.ff only
 # git submodule foreach git pull 
-subprocess.run(["git", "submodule", "foreach", "git", "config", "--local", "pull.ff", "only"])
-subprocess.run(["git", "submodule", "foreach", "git", "pull"])
+subprocess.run(["git", "submodule", "foreach", "bash -c 'git reset --hard || :'"])
+
+# setup branches
+for repo, branch in branch_map.items():
+  subprocess.run(["git", "submodule", "set-branch", "--branch", branch, "repos/" + repo])
+
+# update them all
+subprocess.run(["git", "submodule", "update", "--recursive", "--remote"])
+
 if has_added:
   # git commit -m "Added submodule"
   subprocess.run(["git", "commit", "-m", "Added submodule"])

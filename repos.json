@@ -1,153 +1,15 @@
 [
   [
-    "fobiat/k8s-gitops",
-    "https://github.com/fobiat/k8s-gitops",
+    "Truxnell/home-cluster",
+    "https://github.com/Truxnell/home-cluster",
     "main",
-    2
-  ],
-  [
-    "toboshii/home-cluster",
-    "https://github.com/toboshii/home-cluster",
-    "main",
-    100
-  ],
-  [
-    "xunholy/k8s-gitops",
-    "https://github.com/xUnholy/k8s-gitops",
-    "main",
-    232
-  ],
-  [
-    "phybros/k3s-cluster",
-    "https://github.com/phybros/k3s-cluster",
-    "main",
-    8
-  ],
-  [
-    "WRMilling/k3s-gitops",
-    "https://github.com/wrmilling/k3s-gitops",
-    "master",
-    91
+    7
   ],
   [
     "vaskozl/home-infra",
     "https://github.com/vaskozl/home-infra",
     "main",
     45
-  ],
-  [
-    "kitos9112/k8s-home",
-    "https://github.com/kitos9112/k8s-home",
-    "main",
-    5
-  ],
-  [
-    "anthr76/infra",
-    "https://github.com/anthr76/infra",
-    "main",
-    56
-  ],
-  [
-    "buvis-net/clusters",
-    "https://github.com/buvis-net/clusters",
-    "main",
-    3
-  ],
-  [
-    "angelnu/k8s-gitops",
-    "https://github.com/angelnu/k8s-gitops",
-    "main",
-    33
-  ],
-  [
-    "Diaoul/home-ops",
-    "https://github.com/Diaoul/home-ops",
-    "main",
-    10
-  ],
-  [
-    "onedr0p/home-cluster",
-    "https://github.com/onedr0p/home-ops",
-    "main",
-    446
-  ],
-  [
-    "cbirkenbeul/k3s-gitops",
-    "https://github.com/cbirkenbeul/k3s-gitops",
-    "main",
-    23
-  ],
-  [
-    "billimek/k8s-gitops",
-    "https://github.com/billimek/k8s-gitops",
-    "master",
-    351
-  ],
-  [
-    "nicholaswilde/home-cluster",
-    "https://github.com/nicholaswilde/home-cluster",
-    "main",
-    4
-  ],
-  [
-    "mcfio/GitOps",
-    "https://github.com/mcfio/GitOps",
-    "main",
-    9
-  ],
-  [
-    "zenxedo/k3s-gitops",
-    "https://github.com/zenxedo/k3s-gitops",
-    "master",
-    14
-  ],
-  [
-    "budimanjojo/home-cluster",
-    "https://github.com/budimanjojo/home-cluster",
-    "main",
-    7
-  ],
-  [
-    "ams0/rancher-home",
-    "https://github.com/ams0/rancher-home",
-    "master",
-    4
-  ],
-  [
-    "bjw-s/home-ops",
-    "https://github.com/bjw-s/home-ops",
-    "main",
-    118
-  ],
-  [
-    "thaum-xyz/ankhmorpork",
-    "https://github.com/thaum-xyz/ankhmorpork",
-    "master",
-    31
-  ],
-  [
-    "auricom/home-cluster",
-    "https://github.com/auricom/home-cluster",
-    "main",
-    33
-  ],
-  [
-    "zacheryph/k8s-gitops",
-    "https://github.com/zacheryph/k8s-gitops",
-    "main",
-    18
-  ],
-  [
-    "charlie-haley/home-cluster",
-    "https://github.com/charlie-haley/home-cluster",
-    "main",
-    11
-  ],
-  [
-    "jr0dd/home-ops",
-    "https://github.com/jr0dd/home-ops",
-    "main",
-    13
   ],
   [
     "h3mmy/bloopysphere",
@@ -162,6 +24,138 @@
     7
   ],
   [
+    "phybros/k3s-cluster",
+    "https://github.com/phybros/k3s-cluster",
+    "main",
+    8
+  ],
+  [
+    "zenxedo/k3s-gitops",
+    "https://github.com/zenxedo/k3s-gitops",
+    "master",
+    14
+  ],
+  [
+    "zacheryph/k8s-gitops",
+    "https://github.com/zacheryph/k8s-gitops",
+    "main",
+    18
+  ],
+  [
+    "carpenike/k8s-gitops",
+    "https://github.com/carpenike/k8s-gitops",
+    "master",
+    91
+  ],
+  [
+    "angelnu/k8s-gitops",
+    "https://github.com/angelnu/k8s-gitops",
+    "main",
+    33
+  ],
+  [
+    "xunholy/k8s-gitops",
+    "https://github.com/xUnholy/k8s-gitops",
+    "main",
+    232
+  ],
+  [
+    "cbirkenbeul/k3s-gitops",
+    "https://github.com/cbirkenbeul/k3s-gitops",
+    "main",
+    23
+  ],
+  [
+    "ams0/rancher-home",
+    "https://github.com/ams0/rancher-home",
+    "master",
+    4
+  ],
+  [
+    "charlie-haley/home-cluster",
+    "https://github.com/charlie-haley/home-cluster",
+    "main",
+    11
+  ],
+  [
+    "Diaoul/home-ops",
+    "https://github.com/Diaoul/home-ops",
+    "main",
+    10
+  ],
+  [
+    "bjw-s/home-ops",
+    "https://github.com/bjw-s/home-ops",
+    "main",
+    118
+  ],
+  [
+    "anthr76/infra",
+    "https://github.com/anthr76/infra",
+    "main",
+    56
+  ],
+  [
+    "nicholaswilde/home-cluster",
+    "https://github.com/nicholaswilde/home-cluster",
+    "main",
+    4
+  ],
+  [
+    "onedr0p/home-cluster",
+    "https://github.com/onedr0p/home-ops",
+    "main",
+    446
+  ],
+  [
+    "WRMilling/k3s-gitops",
+    "https://github.com/wrmilling/k3s-gitops",
+    "master",
+    91
+  ],
+  [
+    "mcfio/GitOps",
+    "https://github.com/mcfio/GitOps",
+    "main",
+    9
+  ],
+  [
+    "auricom/home-cluster",
+    "https://github.com/auricom/home-cluster",
+    "main",
+    33
+  ],
+  [
+    "blackjid/k8s-gitops",
+    "https://github.com/blackjid/k8s-gitops",
+    "master",
+    30
+  ],
+  [
+    "fobiat/k8s-gitops",
+    "https://github.com/fobiat/k8s-gitops",
+    "main",
+    2
+  ],
+  [
+    "toboshii/home-cluster",
+    "https://github.com/toboshii/home-cluster",
+    "main",
+    100
+  ],
+  [
+    "budimanjojo/home-cluster",
+    "https://github.com/budimanjojo/home-cluster",
+    "main",
+    7
+  ],
+  [
+    "kitos9112/k8s-home",
+    "https://github.com/kitos9112/k8s-home",
+    "main",
+    5
+  ],
+  [
     "lanquarden/roci-gitops",
     "https://github.com/lanquarden/roci-gitops",
     "main",
@@ -174,28 +168,34 @@
     7
   ],
   [
-    "blackjid/k8s-gitops",
-    "https://github.com/blackjid/k8s-gitops",
-    "master",
-    30
-  ],
-  [
-    "Truxnell/home-cluster",
-    "https://github.com/Truxnell/home-cluster",
-    "main",
-    7
-  ],
-  [
     "npawelek/k8s-gitops",
     "https://github.com/npawelek/k8s-gitops",
     "master",
     10
   ],
   [
-    "carpenike/k8s-gitops",
-    "https://github.com/carpenike/k8s-gitops",
+    "billimek/k8s-gitops",
+    "https://github.com/billimek/k8s-gitops",
     "master",
-    91
+    351
+  ],
+  [
+    "jr0dd/home-ops",
+    "https://github.com/jr0dd/home-ops",
+    "main",
+    13
+  ],
+  [
+    "buvis-net/clusters",
+    "https://github.com/buvis-net/clusters",
+    "main",
+    3
+  ],
+  [
+    "thaum-xyz/ankhmorpork",
+    "https://github.com/thaum-xyz/ankhmorpork",
+    "master",
+    31
   ],
   [
     "onedr0p/home-ops",
@@ -282,12 +282,6 @@
     2
   ],
   [
-    "clouedoc/infra",
-    "https://github.com/clouedoc/infra",
-    "main",
-    1
-  ],
-  [
     "lethek/k8s-gitops",
     "https://github.com/lethek/k8s-gitops",
     "main",
@@ -297,6 +291,12 @@
     "dafrenchyman/dockers_and_helm",
     "https://github.com/dafrenchyman/dockers_and_helm",
     "master",
+    1
+  ],
+  [
+    "clouedoc/infra",
+    "https://github.com/clouedoc/infra",
+    "main",
     1
   ]
 ]
