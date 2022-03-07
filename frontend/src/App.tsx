@@ -86,7 +86,7 @@ function MDIIcon(props: {icon: string}) {
   || null;
 }
 export function App() {
-  
+  const linkTw = tw` text-blue-500 cursor-pointer text-underline `;
   const [searchValue, setSearchValueInt] = useState(window.location.hash.substring(1));
   const setSearchValue = (v: string) => {
     window.location.hash = v;
@@ -110,11 +110,13 @@ export function App() {
   );
   const [words] = useObservableState(() => from(wordcloud()), [])
   return (
-    <div className={tw`w-10/12 mx-auto bg-white rounded-xl shadow-lg`}>
+    <div className={tw`w-10/12 mt-2 mx-auto bg-white rounded-xl shadow-lg p-2`}>
       <h1 
         className={tw`cursor-pointer text-4xl pt-5 pb-5`}
         onClick={() => setSearchValue('')}
       >k8s at home search</h1>
+      <p className={tw`mb-2`}>We index Flux HelmReleases from Github repositories with the <a href="https://github.com/topics/k8s-at-home" className={linkTw} target="_blank">k8s-at-home topic</a>.
+      To include your repository in this search it must be public and then add the topic <code>k8s-at-home</code> to your GitHub Repository topics. To learn more visit <a href="https://k8s-at-home.com/" target={'_blank'} className={linkTw}>the website from k8s@home</a>.</p>
       <div className={tw`relative`}>
       {searchValue.length > 0 && <span 
         className={tw`text-black float-right absolute right-2 top-1 text-xl cursor-pointer`}
@@ -124,6 +126,7 @@ export function App() {
         onChange={(e) => setSearchValue(e.target.value)} 
         className={tw`p-1 rounded border-2 w-full`} 
         value={searchValue}
+        placeholder="search a chart"
       />
       </div>
       
@@ -137,7 +140,7 @@ export function App() {
       </div>
       <div>
         {searchValue.length <= 2 && words.map(word => (
-          <div key={word.chart_name}  className={tw`rounded-xl pb-0 pt-0 m-1 mb-0 cursor-pointer inline-block text-blue-300 ml-0 p-2 border-1`} 
+          <div key={word.chart_name}  className={tw`rounded-xl pb-0 pt-0 m-1 mb-0 inline-block ml-0 p-2 border-1` + ' ' + linkTw} 
             title={`${word.count} times`} onClick={() => setSearchValue(word.chart_name)}>
             <MDIIcon icon={word.icon} />{' '}
             <span className={tw`underline`}>{word.chart_name}</span>
