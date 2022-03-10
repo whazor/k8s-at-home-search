@@ -102,10 +102,6 @@
 	path = repos/Truxnell-home-cluster
 	url = https://github.com/Truxnell/home-cluster
 	branch = main
-[submodule "repos/lethek-k8s-gitops"]
-	path = repos/lethek-k8s-gitops
-	url = https://github.com/lethek/k8s-gitops
-	branch = main
 [submodule "repos/danmanners-homelab-kube-cluster"]
 	path = repos/danmanners-homelab-kube-cluster
 	url = https://github.com/danmanners/homelab-kube-cluster
