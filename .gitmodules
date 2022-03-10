@@ -194,3 +194,6 @@
 	path = repos/onedr0p-home-cluster
 	url = https://github.com/onedr0p/home-ops
 	branch = main
+[submodule "repos/HeroCC-infra"]
+	path = repos/HeroCC-infra
+	url = https://github.com/HeroCC/infra
