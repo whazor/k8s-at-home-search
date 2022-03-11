@@ -194,3 +194,6 @@
 	path = repos/onedr0p-home-cluster
 	url = https://github.com/onedr0p/home-ops
 	branch = main
+[submodule "repos/lethek-k8s-gitops"]
+	path = repos/lethek-k8s-gitops
+	url = https://github.com/lethek/k8s-gitops
