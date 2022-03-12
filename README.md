@@ -15,13 +15,13 @@ Overview:
 graph LR
     I[interesting.py]
     I-->|repos.json|Init[init-db.py]
-    Init-->|repos.db: repos|clone[clone.py]
+    Init-->|repos.db: repos|download[download.py]
     Init-->|repos.db: repos|search
-    clone-->|repos/ submodules|search[search.py]
+    download-->|repos/ submodules|search[search.py]
     search-->|repos.db: repos,charts|frontend
 ```
 
-You could download `repos.db` from releases https://github.com/Whazor/k8s-at-home-search/releases/
+If you are only interested in developing the frontend, you can directly download `repos.db` from releases https://github.com/Whazor/k8s-at-home-search/releases/ and skip the Python steps.
 
 **To build repos.db**
 
@@ -38,9 +38,9 @@ Setting up `repos.db` repos table (requires `repos.json`):
 python3 init-db.py
 ```
 
-Updating `repos/` submodules (requires repo.db):
+Download repos into `repos/` (requires repo.db):
 ```
-python3 clone.py
+python3 download.py
 ```
 
 Setting up `repos.db` charts table:

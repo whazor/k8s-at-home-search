@@ -26,8 +26,8 @@ jobs:
         run: python3 interesting.py
       - name: Build DB
         run: python3 init-db.py
-      - name: Update submodules
-        run: python3 clone.py
+      - name: Download repos
+        run: python3 download.py
       - name: Update search index
         run: python3 search.py
       - name: Create Release
@@ -50,5 +50,3 @@ jobs:
           asset_path: ./repos.db
           asset_name: repos.db
           asset_content_type: application/vnd.sqlite3
-      - name: Push to main
-        run: git push origin main
