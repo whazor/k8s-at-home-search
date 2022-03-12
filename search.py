@@ -18,7 +18,8 @@ c = conn.cursor()
 # fields: chart name, repo name, url, timestamp
 c.execute('''DROP TABLE IF EXISTS charts''')
 c.execute('''CREATE TABLE IF NOT EXISTS charts
-              (chart_name text NOT NULL, 
+              (release_name text NOT NULL, 
+               chart_name text NOT NULL, 
                repo_name text NOT NULL, 
                hajimari_icon text NULL, 
                url text NOT NULL, 
@@ -68,6 +69,7 @@ for root, dirs, files in os.walk("repos/"):
                   walk('spec.chart.spec.chart', lambda x: x is not None) and \
                   walk('spec.chart.spec.sourceRef.kind', lambda x: x == "HelmRepository"):
                 chart_name = walk('spec.chart.spec.chart')
+                release_name = walk('metadata.name')
                 
                 hajimari_icon = walk(
                   'spec.values.ingress.main.annotations.hajimari\.io/icon',
@@ -83,7 +85,7 @@ for root, dirs, files in os.walk("repos/"):
                 timestamp = timestamp.decode('utf-8').strip()
                 branch = branches[repo_name]
                 url = "https://github.com/" + repo_name + "/blob/"+branch+"/" + file_path.split('/', 2)[2]
-                c.execute("INSERT INTO charts VALUES (?, ?, ?, ?, ?)", (chart_name, repo_name, hajimari_icon, url, timestamp))
+                c.execute("INSERT INTO charts VALUES (?, ?, ?, ?, ?, ?)", (release_name, chart_name, repo_name, hajimari_icon, url, timestamp))
           except yaml.YAMLError as exc:
             print(exc)
 conn.commit()
