@@ -14,10 +14,10 @@ interface Repo {
   stars: number
 }
 interface Chart {
-  release_name: string,
-  chart_name: string,
-  repo_name: string,
-  hajimari_icon: string,
+  release_name?: string,
+  chart_name?: string,
+  repo_name?: string,
+  hajimari_icon?: string,
   lines: number,
   url: string,
   timestamp: string

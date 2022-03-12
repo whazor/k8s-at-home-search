@@ -37,25 +37,48 @@ function SearchView(props: {results: ReturnType<typeof searchObservable>[0]}) {
   const hasIcon = results.some(r => !!r.hajimari_icon);
   const hasCustomNames = results.some(r => r.release_name !== r.chart_name);
   
+  type Item = typeof results[0]
+  const [reverse, setReverseState] = useState(false);
+  const sorts: Record<string, (a: Item, b: Item) => number> = 
+  {
+    "release_name": (a: Item, b: Item) => (a.release_name ?? "").localeCompare(b.release_name ?? ""),
+    "chart_name": (a: Item, b: Item) => (a.chart_name ?? "").localeCompare(b.chart_name ?? ""),
+    "timestamp": (a: Item, b: Item) => parseInt(b.timestamp) - parseInt(a.timestamp),
+    "repo": (a: Item, b: Item) => a.repo_name.localeCompare(b.repo_name),
+    "stars": (a: Item, b: Item) => b.stars - a.stars,
+    "lines": (a: Item, b: Item) => a.lines - b.lines,
+    "icon": (a: Item, b: Item) => (a.hajimari_icon ?? "").localeCompare(b.hajimari_icon ?? ""),
+  }
+  const [sort, setSortState] = useState<keyof typeof sorts>("timestamp");
+  const setSort = (next: keyof typeof sorts) => {
+    if(sort === next) {
+      setReverseState(!reverse);
+    } else {
+      setSortState(next);
+    }
+  }
   const Th = (props: any) => 
-    <th className={tw`text-sm text-gray-600 `} {...props} />;
+    <th className={tw`text-sm text-gray-600 cursor-pointer`} {...props} />;
+  const sorted = results.sort(sorts[sort]);
+  const reverseSorted = reverse ? sorted.reverse() : sorted;
   return <table className={tw`table-auto w-full text-left`}>
     <thead>
       <tr>
-        {hasIcon && <Th>Icon</Th>}
-        {hasCustomNames && <Th>Release</Th>}
-        {hasCustomNames && <Th>Chart</Th>}
-        {!hasCustomNames && <Th>Release&Chart</Th>}
-        <Th>Repo</Th>
-        <Th>Lines</Th>
-        <Th>Stars</Th>
-        <Th>Last modified</Th>
+        {hasIcon && <Th onClick={() => setSort("icon")}>Icon</Th>}
+        {hasCustomNames && <Th onClick={()=>setSort("release_name")}>Release</Th>}
+        {hasCustomNames && <Th onClick={()=>setSort("chart_name")}>Chart</Th>}
+        {!hasCustomNames && <Th onClick={()=>setSort("chart_name")}>Release&Chart</Th>}
+        <Th onClick={()=>setSort("repo")}>Repo</Th>
+        <Th onClick={()=>setSort("lines")}>Lines</Th>
+        <Th onClick={()=>setSort("stars")}>Stars</Th>
+        <Th onClick={()=>setSort("timestamp")}>Last modified</Th>
       </tr>
     </thead>
     <tbody>
-    {results.map(release => (
+    {reverseSorted
+      .map(release => (
         <tr>
-          {hasIcon && <td><MDIIcon icon={release.hajimari_icon} /></td>}
+          {hasIcon && <td>{!!release.hajimari_icon && <MDIIcon icon={release.hajimari_icon} />}</td>}
           <td>
             <a href={release.url} target="_blank" className={linkTw}>
               {release.release_name}
@@ -79,7 +102,7 @@ function WordCloudview(props: {
   const { words, setSearchValue } = props;
   return <div>{words.map(word => (
     <div key={word.chart_name}  className={tw`rounded-xl pb-0 pt-0 m-1 mb-0 inline-block ml-0 p-2 border-1` + ' ' + linkTw} 
-      title={`${word.count} times`} onClick={() => setSearchValue(word.chart_name)}>
+      title={`${word.count} times`} onClick={() => setSearchValue(word.chart_name ?? "")}>
       <MDIIcon icon={word.icon} />{' '}
       <span className={tw`underline`}>{word.chart_name}</span>
     </div>
