@@ -1,92 +1,89 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { Icon } from '@iconify/react';
 import { useObservable, useObservableState } from 'observable-hooks'
-import { from } from 'rxjs'
-import { switchMap, debounceTime, map } from 'rxjs/operators'
-import {
-  Kysely,
-  SqliteAdapter,
-  SqliteIntrospector,
-  SqliteQueryCompiler,
-} from 'kysely/dist/esm/index-nodeless.js'
-import { SQLJSDriver } from './sqlite';
+import { from, Observable } from 'rxjs'
+import { switchMap, map, debounceTime } from 'rxjs/operators'
+
 
 import { tw } from 'twind'
 import moment from "moment";
+import { searchQuery, wordcloud } from "./queries";
 
-interface Repo {
-  repo_name: string,
-  url: string,
-  branch: string,
-  stars: number
-}
-interface Chart {
-  chart_name: string,
-  repo_name: string,
-  hajimari_icon: string,
-  url: string,
-  timestamp: string
-}
-interface Database {
-  repos: Repo,
-  charts: Chart
-}
 
-const dataPromise = fetch(`repos.db`).then(res => res.arrayBuffer());
-const db =  new Kysely<Database>({
-  dialect: {
-    createAdapter() { return new SqliteAdapter() },
-    createDriver() { return new SQLJSDriver(
-      dataPromise
-      ) },
-    createIntrospector(db: Kysely<unknown>) { return new SqliteIntrospector(db)},
-    createQueryCompiler() { return new SqliteQueryCompiler() },
-  },
-})
-
-function searchQuery(query: string) {
-  query = query.trim().replace(' ', '%');
-  const s = db.selectFrom('charts')
-          .innerJoin('repos', 'charts.repo_name', 'repos.repo_name')
-          .select([
-            'charts.chart_name as chart_name', 
-            'repos.repo_name as repo_name',
-            'charts.url as url',
-            'charts.hajimari_icon as hajimari_icon',
-            'charts.timestamp as timestamp',
-            'repos.stars as stars'
-          ]) // 'stars', 
-          .where('chart_name', 'like', `%${query}%`)
-          .groupBy('charts.url')
-          .orderBy('timestamp', 'desc');
-  return s.execute();
-}
-function wordcloud() {
-  const st = db.selectFrom('charts')
-    .groupBy('chart_name')
-    .select([
-      'chart_name', 
-      db.raw<number>('count(*)').as('count'),
-      db.raw<string>(`
-        (select ci.hajimari_icon from charts ci
-        where ci.chart_name = charts.chart_name and 
-          ci.hajimari_icon is not null and
-          ci.hajimari_icon != ''
-        group by ci.hajimari_icon
-        order by count(ci.hajimari_icon) desc)
-      `).as('icon'),
-    ]).orderBy('count', 'desc');
-  return st.execute();
-}
-
+const linkTw = tw` text-blue-500 cursor-pointer text-underline `;
 function MDIIcon(props: {icon: string}) {
   return (props.icon && 
     <Icon icon={"mdi:"+props.icon} className={tw`text-base leading-none inline-block`} />
   ) 
   || null;
 }
+
+const wordcloudObservable = () => useObservableState(() => from(wordcloud()), []);
+const searchObservable = (search$: Observable<string>) => 
+  useObservableState(
+    () => search$.pipe(
+      debounceTime(100),
+      switchMap((val) => {
+        if(val.length < 3) {
+          return from([])
+        }
+        return from(searchQuery(val))
+      })
+    ), []
+  );
+
+function SearchView(props: {results: ReturnType<typeof searchObservable>[0]}) {
+  const { results } = props;
+  const hasIcon = results.some(r => !!r.hajimari_icon);
+  const hasCustomNames = results.some(r => r.release_name !== r.chart_name);
+  
+  const Th = (props: any) => 
+    <th className={tw`text-sm text-gray-600 `} {...props} />;
+  return <table className={tw`table-auto w-full text-left`}>
+    <thead>
+      <tr>
+        {hasIcon && <Th>Icon</Th>}
+        {hasCustomNames && <Th>Release name</Th>}
+        <Th>Chart name</Th>
+        <Th>Repo</Th>
+        <Th>Stars</Th>
+        <Th>Last modified</Th>
+      </tr>
+    </thead>
+    <tbody>
+    {results.map(release => (
+        <tr>
+          {hasIcon && <td><MDIIcon icon={release.hajimari_icon} /></td>}
+          {hasCustomNames && <td>
+            <a href={release.url} target="_blank" className={linkTw}>
+              {release.release_name}
+            </a></td>}
+          <td>{release.chart_name}</td>
+          <td><a href={release.repo_url} target="_blank" className={linkTw}>{release.repo_name}</a></td>
+          <td>{release.stars} ⭐</td>
+          <td>{moment.unix(parseInt(release.timestamp)).fromNow()}</td>
+        </tr>
+    ))}
+    </tbody>
+  </table>
+}
+
+function WordCloudview(props: {
+  words: ReturnType<typeof wordcloudObservable>[0],
+  setSearchValue: (val: string) => void
+}) {
+  const { words, setSearchValue } = props;
+  return <div>{words.map(word => (
+    <div key={word.chart_name}  className={tw`rounded-xl pb-0 pt-0 m-1 mb-0 inline-block ml-0 p-2 border-1` + ' ' + linkTw} 
+      title={`${word.count} times`} onClick={() => setSearchValue(word.chart_name)}>
+      <MDIIcon icon={word.icon} />{' '}
+      <span className={tw`underline`}>{word.chart_name}</span>
+    </div>
+  ))}</div>
+}
+
 export function App() {
-  const linkTw = tw` text-blue-500 cursor-pointer text-underline `;
+  
   const [searchValue, setSearchValueInt] = useState(window.location.hash.substring(1));
   const setSearchValue = (v: string) => {
     window.location.hash = v;
@@ -96,19 +93,9 @@ export function App() {
     map(item => item[0]),
     [searchValue]   
   ) 
-  const [results] = useObservableState(
-    () => search$.pipe(
-      debounceTime(100),
-      // withLatestFrom(db$),
-      switchMap((val) => {
-        if(val.length < 3) {
-          return from([])
-        }
-        return from(searchQuery(val))
-      })
-    ), []
-  );
-  const [words] = useObservableState(() => from(wordcloud()), [])
+  const [results] = searchObservable(search$);
+  const [words] = wordcloudObservable();
+
   return (
     <div className={tw`w-10/12 mt-2 mx-auto bg-white rounded-xl shadow-lg p-2`}>
       <h1 
@@ -124,30 +111,19 @@ export function App() {
       <input 
         type="text" 
         onChange={(e) => setSearchValue(e.target.value)} 
-        className={tw`p-1 rounded border-2 w-full`} 
+        className={tw`p-1 pb-0 mb-2 rounded border-2 w-full`} 
         value={searchValue}
         placeholder="search a chart"
       />
       </div>
       
       <div >
-        {searchValue.length > 2 && results.map(chart => (
-          <div key={chart.url} className={tw`py-2 text(2xl)`}>
-            <MDIIcon icon={chart.hajimari_icon} />
-            <a href={chart.url} target="_blank">{chart.chart_name} {chart.repo_name} ({chart.stars} ⭐) - {moment.unix(parseInt(chart.timestamp)).fromNow()}</a> 
-          </div>
-        ))}
+        {searchValue.length > 2 && <SearchView results={results} />}
       </div>
       <div>
-        {searchValue.length <= 2 && words.map(word => (
-          <div key={word.chart_name}  className={tw`rounded-xl pb-0 pt-0 m-1 mb-0 inline-block ml-0 p-2 border-1` + ' ' + linkTw} 
-            title={`${word.count} times`} onClick={() => setSearchValue(word.chart_name)}>
-            <MDIIcon icon={word.icon} />{' '}
-            <span className={tw`underline`}>{word.chart_name}</span>
-          </div>
-        ))}
+        {searchValue.length <= 2 && <WordCloudview words={words} setSearchValue={setSearchValue} />}
       </div>
     </div>
   )
-  // return <h1 class="text-3xl font-bold underline">    Hello world!  </h1>;
 }
+
