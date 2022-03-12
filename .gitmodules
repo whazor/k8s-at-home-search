@@ -61,3 +61,15 @@
 [submodule "repos/lethek-k8s-gitops"]
 	path = repos/lethek-k8s-gitops
 	url = https://github.com/lethek/k8s-gitops
+[submodule "repos/h3mmy-bloopySphere"]
+	path = repos/h3mmy-bloopySphere
+	url = https://github.com/h3mmy/bloopySphere
+[submodule "repos/xUnholy-k8s-gitops"]
+	path = repos/xUnholy-k8s-gitops
+	url = https://github.com/xUnholy/k8s-gitops
+[submodule "repos/HeroCC-infra"]
+	path = repos/HeroCC-infra
+	url = https://github.com/HeroCC/infra
+[submodule "repos/wrmilling-k3s-gitops"]
+	path = repos/wrmilling-k3s-gitops
+	url = https://github.com/wrmilling/k3s-gitops
