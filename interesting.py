@@ -18,7 +18,7 @@ for repo in data['user_repositories']:
         name = repo['repo']
         repos.add(name)
 
-for given_repo_name in repos:
+for given_repo_name in repos.copy():
     repo_info = requests.get('https://api.github.com/repos/'+given_repo_name, headers=github_header).json()
     if 'stargazers_count' in repo_info and 'default_branch' in repo_info:
         repo_name = repo_info['full_name']
