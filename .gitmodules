@@ -50,10 +50,6 @@
 	path = repos/Ornias1993-gitops
 	url = https://github.com/Ornias1993/gitops
 	branch = main
-[submodule "repos/christopherburnham-home-ops"]
-	path = repos/christopherburnham-home-ops
-	url = https://github.com/christopherburnham/home-ops
-	branch = main
 [submodule "repos/alexwaibel-home-cluster"]
 	path = repos/alexwaibel-home-cluster
 	url = https://github.com/alexwaibel/home-cluster
