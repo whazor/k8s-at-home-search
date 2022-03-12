@@ -9,16 +9,17 @@ if 'GITHUB_TOKEN' in os.environ:
 
 results = []
 
-repos = set()
+awesome_repos = set()
 repos_url = "https://raw.githubusercontent.com/k8s-at-home/awesome-home-kubernetes/main/data.json"
 data = requests.get(repos_url).json()
 for repo in data['user_repositories']:
     # if flux
     if 'gitops_tool' in repo and repo['gitops_tool'] == 'flux':
         name = repo['repo']
-        repos.add(name)
+        awesome_repos.add(name)
 
-for given_repo_name in repos.copy():
+repos = set()
+for given_repo_name in awesome_repos:
     repo_info = requests.get('https://api.github.com/repos/'+given_repo_name, headers=github_header).json()
     if 'stargazers_count' in repo_info and 'default_branch' in repo_info:
         repo_name = repo_info['full_name']

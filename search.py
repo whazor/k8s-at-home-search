@@ -22,6 +22,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS charts
                chart_name text NOT NULL, 
                repo_name text NOT NULL, 
                hajimari_icon text NULL, 
+               lines number NOT NULL,
                url text NOT NULL, 
                timestamp text NOT NULL)''')
 
@@ -54,6 +55,8 @@ for root, dirs, files in os.walk("repos/"):
         if contains_api_version and contains_kind:
           try:
             stream.seek(0)
+            amount_lines = len(stream.readlines())
+            stream.seek(0)
             for doc in yaml.safe_load_all(stream):
               def walk(path, check=lambda x: x):
                 global doc
@@ -85,7 +88,7 @@ for root, dirs, files in os.walk("repos/"):
                 timestamp = timestamp.decode('utf-8').strip()
                 branch = branches[repo_name]
                 url = "https://github.com/" + repo_name + "/blob/"+branch+"/" + file_path.split('/', 2)[2]
-                c.execute("INSERT INTO charts VALUES (?, ?, ?, ?, ?, ?)", (release_name, chart_name, repo_name, hajimari_icon, url, timestamp))
+                c.execute("INSERT INTO charts VALUES (?, ?, ?, ?, ?, ?, ?)", (release_name, chart_name, repo_name, hajimari_icon, amount_lines, url, timestamp))
           except yaml.YAMLError as exc:
             print(exc)
 conn.commit()
