@@ -45,6 +45,9 @@ for repo_info in items:
         branch = repo_info['default_branch']
         results.append((repo_name, url, branch, stars))
 
+# sort results on repo_name
+results = sorted(results, key=lambda x: x[0])
+
 j = json.dumps(results, indent=2)
 with open('repos.json', 'w') as f:
     f.write(j)
