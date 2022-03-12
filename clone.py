@@ -51,7 +51,7 @@ has_added = False
 # add new submodules
 to_add = dirs - existing
 for repo in to_add:
-  subprocess.run(["git", "submodule", "add", urls_map[repo], "repos/" + repo])
+  subprocess.run(["git", "submodule", "add", "--force", urls_map[repo], "repos/" + repo])
   has_added = True
 
 # sync modules

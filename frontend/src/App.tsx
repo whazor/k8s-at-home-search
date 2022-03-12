@@ -47,6 +47,7 @@ function SearchView(props: {results: ReturnType<typeof searchObservable>[0]}) {
         {hasCustomNames && <Th>Chart</Th>}
         {!hasCustomNames && <Th>Release&Chart</Th>}
         <Th>Repo</Th>
+        <Th>Lines</Th>
         <Th>Stars</Th>
         <Th>Last modified</Th>
       </tr>
@@ -62,6 +63,7 @@ function SearchView(props: {results: ReturnType<typeof searchObservable>[0]}) {
           </td>
           {hasCustomNames && <td>{release.chart_name}</td>}
           <td><a href={release.repo_url} target="_blank" className={linkTw}>{release.repo_name}</a></td>
+          <td>{release.lines}</td>
           <td>{release.stars} ⭐</td>
           <td>{moment.unix(parseInt(release.timestamp)).fromNow()}</td>
         </tr>

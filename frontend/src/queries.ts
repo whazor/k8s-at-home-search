@@ -18,6 +18,7 @@ interface Chart {
   chart_name: string,
   repo_name: string,
   hajimari_icon: string,
+  lines: number,
   url: string,
   timestamp: string
 }
@@ -50,6 +51,7 @@ export function searchQuery(query: string) {
             'repos.url as repo_url',
             'charts.url as url',
             'charts.hajimari_icon as hajimari_icon',
+            'charts.lines as lines',
             'charts.timestamp as timestamp',
             'repos.stars as stars'
           ]) // 'stars', 
