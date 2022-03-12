@@ -43,8 +43,9 @@ function SearchView(props: {results: ReturnType<typeof searchObservable>[0]}) {
     <thead>
       <tr>
         {hasIcon && <Th>Icon</Th>}
-        {hasCustomNames && <Th>Release name</Th>}
-        <Th>Chart name</Th>
+        {hasCustomNames && <Th>Release</Th>}
+        {hasCustomNames && <Th>Chart</Th>}
+        {!hasCustomNames && <Th>Release&Chart</Th>}
         <Th>Repo</Th>
         <Th>Stars</Th>
         <Th>Last modified</Th>
@@ -54,11 +55,12 @@ function SearchView(props: {results: ReturnType<typeof searchObservable>[0]}) {
     {results.map(release => (
         <tr>
           {hasIcon && <td><MDIIcon icon={release.hajimari_icon} /></td>}
-          {hasCustomNames && <td>
+          <td>
             <a href={release.url} target="_blank" className={linkTw}>
               {release.release_name}
-            </a></td>}
-          <td>{release.chart_name}</td>
+            </a>
+          </td>
+          {hasCustomNames && <td>{release.chart_name}</td>}
           <td><a href={release.repo_url} target="_blank" className={linkTw}>{release.repo_name}</a></td>
           <td>{release.stars} ⭐</td>
           <td>{moment.unix(parseInt(release.timestamp)).fromNow()}</td>
