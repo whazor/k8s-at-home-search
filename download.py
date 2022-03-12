@@ -32,13 +32,13 @@ repos = c.fetchall()
 # mkdir repos
 subprocess.run(['mkdir', 'repos'])
 
-# mkdir repos/dir_name/
-# curl -L https://github.com/Diaoul/home-ops/tarball/main | tar -xz --strip-components=1 -C repos/Diaoul-home-ops/
-
 for repo in repos:
   dir_name, branch, url = repo
   bash_command('mkdir repos/'+dir_name)
   tarball_url = url + '/tarball/' + branch
-  bash_command('curl -L '+tarball_url+' | tar -xz --strip-components=1 -C repos/' + dir_name)
+  bash_command('git clone '+url+' repos/'+dir_name+' --branch '+branch+' --single-branch --depth 1')
+
+print('')
+print('')
 
 print("done")
