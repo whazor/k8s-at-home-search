@@ -193,3 +193,6 @@
 [submodule "repos/lethek-k8s-gitops"]
 	path = repos/lethek-k8s-gitops
 	url = https://github.com/lethek/k8s-gitops
+[submodule "repos/HeroCC-infra"]
+	path = repos/HeroCC-infra
+	url = https://github.com/HeroCC/infra
