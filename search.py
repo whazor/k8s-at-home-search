@@ -1,9 +1,14 @@
 import os
 import sqlite3
-import yaml
-import sys
+from ruamel.yaml import YAML
+from ruamel.yaml.error import YAMLError
 import sqlite3
 from subprocess import check_output
+import warnings
+
+from ruamel.yaml.error import ReusedAnchorWarning
+warnings.simplefilter("ignore", ReusedAnchorWarning)
+
 # find all .yaml files in repos/ dir
 
 # check for "apiVersion: helm.toolkit.fluxcd.io/v2beta1"
@@ -32,10 +37,12 @@ repos = dict(c.fetchall())
 c.execute("SELECT repo_name, branch FROM repos")
 branches = dict(c.fetchall())
 
+yaml=YAML(typ="safe", pure=True)
+
 for root, dirs, files in os.walk("repos/"):
   for file in files:
+    file_path = os.path.join(root, file)
     if file.endswith(".yaml"):
-      file_path = os.path.join(root, file)
       repo_dir_name = file_path.split('/')[1]
       if repo_dir_name not in repos:
         print("repo", repo_dir_name, "not found in repos")
@@ -57,13 +64,13 @@ for root, dirs, files in os.walk("repos/"):
             stream.seek(0)
             amount_lines = len(stream.readlines())
             stream.seek(0)
-            for doc in yaml.safe_load_all(stream):
+            for doc in yaml.load_all(stream):
               def walk(path, check=lambda x: x):
                 global doc
                 cur = doc
                 keys = [key.replace('@', '.') for key in path.replace('\\.', '@').split('.')]
                 for key in keys:
-                  if not key in cur or cur[key] is None:
+                  if not isinstance(cur, dict) or key not in cur or cur[key] is None:
                     return False
                   cur = cur[key]
                 return check(cur)
@@ -89,7 +96,8 @@ for root, dirs, files in os.walk("repos/"):
                 branch = branches[repo_name]
                 url = "https://github.com/" + repo_name + "/blob/"+branch+"/" + file_path.split('/', 2)[2]
                 c.execute("INSERT INTO charts VALUES (?, ?, ?, ?, ?, ?, ?)", (release_name, chart_name, repo_name, hajimari_icon, amount_lines, url, timestamp))
-          except yaml.YAMLError as exc:
+          except YAMLError as exc:
+            print("yaml err")
             print(exc)
 conn.commit()
 c.close()
