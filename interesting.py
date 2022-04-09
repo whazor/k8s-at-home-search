@@ -34,7 +34,7 @@ for given_repo_name in awesome_repos:
 repos_url = "https://raw.githubusercontent.com/k8s-at-home/awesome-home-kubernetes/main/data.json"
 data = requests.get(repos_url).json()
 
-url = "https://api.github.com/search/repositories?q=topic:k8s-at-home"
+url = "https://api.github.com/search/repositories?q=topic:k8s-at-home&per_page=100"
 items = requests.get(url, headers=github_header).json()['items']
 
 for repo_info in items:
