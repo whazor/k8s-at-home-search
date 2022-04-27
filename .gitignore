@@ -3,3 +3,5 @@
 **/dist/
 repos.db*
 repos/
+.venv/
+**/__pycache__/
