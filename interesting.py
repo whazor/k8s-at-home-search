@@ -31,10 +31,15 @@ for given_repo_name in awesome_repos:
             # insert or update
             results.append((repo_name, url, branch, stars))
 
+if len(repos) < 20:
+    print("Not enough repos, error fetching awesome-home-kubernetes/main/data.json")
+    exit(1)
+
 repos_url = "https://raw.githubusercontent.com/k8s-at-home/awesome-home-kubernetes/main/data.json"
 data = requests.get(repos_url).json()
 
 url = "https://api.github.com/search/repositories?q=topic:k8s-at-home&per_page=100"
+
 items = requests.get(url, headers=github_header).json()['items']
 
 for repo_info in items:
@@ -44,6 +49,10 @@ for repo_info in items:
         url = repo_info['html_url']
         branch = repo_info['default_branch']
         results.append((repo_name, url, branch, stars))
+
+if len(results) < 50:
+    print("Not enough repos, error fetching topic github repos")
+    exit(1)
 
 # sort results on repo_name
 results = sorted(results, key=lambda x: x[0])
