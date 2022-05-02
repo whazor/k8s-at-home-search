@@ -6,7 +6,7 @@ describe('k8s at home search', () => {
     })
   
     it('should have word search', () => {
-      cy.get('span.word-cloud-word').should('have.length.gte', 50)
+      cy.get('a.word-cloud-word').should('have.length.gte', 50)
     })
   
     it('should have functional search', () => {
