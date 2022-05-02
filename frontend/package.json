@@ -2,7 +2,7 @@
   "name": "flux-search",
   "version": "1.0.0",
   "source": "src/index.html",
-  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "browserslist": "> 0.5%, last 2 versions, not dead, not ios_saf < 13",
   "scripts": {
     "start": "parcel src/index.html",
     "build": "parcel build --public-url './' src/index.html"
@@ -26,7 +26,7 @@
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
     "events": "^3.3.0",
-    "parcel": "^2.2.1",
+    "parcel": "^2.5.0",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",
     "stream-browserify": "^3.0.0",
