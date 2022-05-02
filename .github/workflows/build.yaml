@@ -36,10 +36,12 @@ jobs:
           fileName: "repos.db"
           out-file-path: "./frontend/public/"
       - name: Cypress run
-        uses: cypress-io/github-action@v1
+        uses: cypress-io/github-action@v2
         with:
           start: yarn run serve
+          working-directory: frontend/
           wait-on: http://localhost:4173
+        
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:
