@@ -23,7 +23,7 @@ SELECT
   replace(repo_name, '/', '-') as dir_name, 
   branch,
   url
-FROM repos
+FROM repo
 """)
 repos = c.fetchall()
 

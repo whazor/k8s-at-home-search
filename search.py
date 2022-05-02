@@ -1,5 +1,7 @@
 import os
 import sqlite3
+import sys
+from typing import Any, List
 from ruamel.yaml import YAML
 from ruamel.yaml.error import YAMLError
 import sqlite3
@@ -7,6 +9,9 @@ from subprocess import check_output
 import warnings
 
 from ruamel.yaml.error import ReusedAnchorWarning
+from info_model import InfoModel
+
+from scanners.flux_helm_release import FluxHelmReleaseScanner
 warnings.simplefilter("ignore", ReusedAnchorWarning)
 
 # find all .yaml files in repos/ dir
@@ -19,25 +24,21 @@ kind = "kind: HelmRelease"
 # create sqlite db
 conn = sqlite3.connect('repos.db')
 c = conn.cursor()
-# table name: charts
-# fields: chart name, repo name, url, timestamp
-c.execute('''DROP TABLE IF EXISTS charts''')
-c.execute('''CREATE TABLE IF NOT EXISTS charts
-              (release_name text NOT NULL, 
-               chart_name text NOT NULL, 
-               repo_name text NOT NULL, 
-               hajimari_icon text NULL, 
-               lines number NOT NULL,
-               url text NOT NULL, 
-               timestamp text NOT NULL)''')
 
-c.execute("SELECT replace(repo_name, '/', '-'), repo_name FROM repos")
+c.execute("SELECT replace(repo_name, '/', '-'), repo_name FROM repo")
 # to map
 repos = dict(c.fetchall())
-c.execute("SELECT repo_name, branch FROM repos")
+c.execute("SELECT repo_name, branch FROM repo")
 branches = dict(c.fetchall())
 
 yaml=YAML(typ="safe", pure=True)
+
+scanners = [
+  FluxHelmReleaseScanner()
+]
+
+for scanner in scanners:
+  scanner.create_table(c)
 
 for root, dirs, files in os.walk("repos/"):
   for file in files:
@@ -50,54 +51,65 @@ for root, dirs, files in os.walk("repos/"):
       contains_api_version = False
       contains_kind = False
       with open(file_path, "r") as stream:
+        found_scanners = []
         try:
-          for line in stream:
-            if line.strip().startswith(api_version):
-              contains_api_version = True
-            if line.strip() == kind:
-              contains_kind = True
+          for s in scanners:
+            if s.pre_check(stream):
+              found_scanners.append(s)
         except UnicodeDecodeError as e:
           print("unicode error", e) 
           continue
-        if contains_api_version and contains_kind:
+        if len(found_scanners) > 0:
+          stream.seek(0)
           try:
-            stream.seek(0)
             amount_lines = len(stream.readlines())
-            stream.seek(0)
-            for doc in yaml.load_all(stream):
+          except UnicodeDecodeError as e:
+            print("unicode error", e) 
+            continue
+          stream.seek(0)
+          try:
+            docs: List[Any] = yaml.load_all(stream)
+            def prepare_walk(doc: Any):
               def walk(path, check=lambda x: x):
-                global doc
-                cur = doc
-                keys = [key.replace('@', '.') for key in path.replace('\\.', '@').split('.')]
-                for key in keys:
-                  if not isinstance(cur, dict) or key not in cur or cur[key] is None:
-                    return False
-                  cur = cur[key]
-                return check(cur)
-              if walk('apiVersion', lambda x: x.startswith("helm.toolkit.fluxcd.io")) and \
-                  walk('kind', lambda x: x == 'HelmRelease') and \
-                  walk('spec.chart.spec.chart', lambda x: x is not None) and \
-                  walk('spec.chart.spec.sourceRef.kind', lambda x: x == "HelmRepository"):
-                chart_name = walk('spec.chart.spec.chart')
-                release_name = walk('metadata.name')
-                
-                hajimari_icon = walk(
-                  'spec.values.ingress.main.annotations.hajimari\.io/icon',
-                  lambda x: x.strip()) or None
-
-                repo_name = repos[repo_dir_name]
+                  cur = doc
+                  keys = [key.replace('@', '.') for key in path.replace('\\.', '@').split('.')]
+                  for key in keys:
+                    if not isinstance(cur, dict) or key not in cur or cur[key] is None:
+                      return False
+                    cur = cur[key]
+                  return check(cur)
+              return walk
+            for doc in docs:
+              found_scanners = [
+                s for s in scanners 
+                  if s.check(prepare_walk(doc))]
+              if len(found_scanners) > 0:
                 cmd = "git log -1 --format=%ct -- "+ file_path.split("repos/"+repo_dir_name+"/")[1]
                 timestamp = check_output(
                   cmd,
                   shell=True,
                   cwd="repos/" + repo_dir_name,
                 )
-                timestamp = timestamp.decode('utf-8').strip()
+                repo_name = repos[repo_dir_name]
                 branch = branches[repo_name]
                 url = "https://github.com/" + repo_name + "/blob/"+branch+"/" + file_path.split('/', 2)[2]
-                c.execute("INSERT INTO charts VALUES (?, ?, ?, ?, ?, ?, ?)", (release_name, chart_name, repo_name, hajimari_icon, amount_lines, url, timestamp))
+                rest = InfoModel(
+                  repo_name=repos[repo_dir_name],
+                  timestamp=timestamp.decode("utf-8").strip(),
+                  url=url,
+                  amount_lines=amount_lines,
+                )
+                for s in found_scanners:
+                  result = s.parse(prepare_walk(doc), rest)
+                  s.insert(c, result)
           except YAMLError as exc:
             print("yaml err")
             print(exc)
 conn.commit()
+
+for scanner in scanners:
+  if not scanner.test(c):
+    print("scanner", str(type(scanner)), "failed")
+    sys.exit(1)
+
 c.close()

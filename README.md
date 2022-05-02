@@ -64,13 +64,13 @@ yarn run start
 
 ### tables
 
-**Repos**
+**repo**
 | **column name** | repo_name        | url                                | branch          | stars   |
 |-----------------|------------------|------------------------------------|-----------------|---------|
 | **value**       | text primary key | text                               | text            | integer |
 | **example**     | user-reponame    | "https://github.com/user/reponame" | main/master/... | 42      |
 
-**Charts**
+**flux_helm_release**
 | **column name** | chart_name | repo_name     | url                                                                 | hajimari_icon | timestamp  |
 |-----------------|------------|---------------|---------------------------------------------------------------------|---------------|------------|
 | **value**       | text       | text          | text                                                                | text null     | integer    |
