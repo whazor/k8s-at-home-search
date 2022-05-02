@@ -35,7 +35,11 @@ function Body(props: { children: React.ReactNode,  }) {
 }
 
 const currentLocation = () => {
-  return window.location.hash.replace(/^#/, "") || "/";
+  const hash = window.location.hash.replace(/^#/, "") || "/";
+  if(!hash.startsWith("/")) {
+    return "/" + hash;
+  }
+  return hash;
 };
 
 const navigate = (to) => (window.location.hash = to);
