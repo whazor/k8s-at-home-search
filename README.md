@@ -21,9 +21,7 @@ graph LR
     search-->|repos.db: repos,charts|frontend
 ```
 
-If you are only interested in developing the frontend, you can directly download `repos.db` from releases https://github.com/Whazor/k8s-at-home-search/releases/ and skip the Python steps.
-
-**To build repos.db**
+**To build repos.db (optional for frontend, check step below)**
 
 Python requirements: `pip install -r requirements.txt`
 
@@ -50,15 +48,16 @@ python3 search.py
 **Setting up the frontend**
 
 ```
-mkdir -p frontend/dist/
+mkdir -p frontend/public/
 wget https://github.com/sql-js/sql.js/releases/download/v1.6.2/sqljs-worker-wasm.zip
-unzip sqljs-worker-wasm.zip -d frontend/dist/
+unzip sqljs-worker-wasm.zip -d frontend/public/
 
-cp repos.db frontend/dist/
+wget https://github.com/Whazor/k8s-at-home-search/releases/latest/download/repos.db
+cp repos.db frontend/public/
 
 cd frontend/
 yarn install
-yarn run start
+yarn run dev
 ```
 
 ### tables
