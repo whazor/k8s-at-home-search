@@ -29,7 +29,6 @@ Python requirements: `pip install -r requirements.txt`
 
 Updating `repos.json` (can be skipped, already included in source):
 ```
-pip3 install requests
 python3 interesting.py
 ```
 

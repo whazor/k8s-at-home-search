@@ -9,9 +9,7 @@
 # git submodule foreach git pull 
 from re import sub
 import subprocess
-import os
 import sqlite3
-
 
 def bash_command(cmd):
     subprocess.Popen(['/bin/bash', '-c', cmd])
@@ -36,7 +34,8 @@ for repo in repos:
   dir_name, branch, url = repo
   bash_command('mkdir repos/'+dir_name)
   tarball_url = url + '/tarball/' + branch
-  bash_command('git clone '+url+' repos/'+dir_name+' --branch '+branch+' --single-branch --depth 1')
+  # max 1 year
+  bash_command('git clone '+url+' repos/'+dir_name+' --branch '+branch+' --filter=blob:limit=1m --single-branch --shallow-since="1 year"')
 
 print('')
 print('')
