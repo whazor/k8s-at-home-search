@@ -40,7 +40,7 @@ jobs:
         with:
           start: yarn run serve
           working-directory: frontend/
-          wait-on: http://localhost:4173
+          wait-on: http://localhost:4173/k8s-at-home-search/
         
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.3
