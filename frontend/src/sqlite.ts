@@ -1,8 +1,6 @@
 
 import {
   Kysely,
-  Generated,
-  DummyDriver,
   SqliteAdapter,
   SqliteIntrospector,
   SqliteQueryCompiler,
@@ -14,8 +12,14 @@ import {
   Dialect,
   DatabaseIntrospector,
   DialectAdapter,
-  QueryCompiler
+  QueryCompiler,
+  sql
 } from 'kysely/dist/esm/index-nodeless.js'
+
+export {
+    sql,
+    Kysely,
+}
 
 export class SQLLiteDialect implements Dialect {
   buf: Promise<ArrayBuffer>;
@@ -76,13 +80,13 @@ class SQLJSConnection implements DatabaseConnection {
   id: number = 1;
 
   constructor(buf: Promise<ArrayBuffer>) {
-    // this.worker = new Worker("sql.js/dist/worker.sql-wasm.js");
-    this.worker = new Worker(new URL('/dist/worker.sql-wasm.js', import.meta.url), { type: "module" });
+    this.worker = new Worker('/worker.sql-wasm.js');
     const _this = this;
     this.worker.onmessage = (e) => {
       if (!('data' in e) || !('id' in e.data)) {
         return;
       }
+      console.log(e.data)
       const id = e.data.id;
       if (!id || 
         !(id in _this.resolvers) || 

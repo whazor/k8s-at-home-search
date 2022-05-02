@@ -1,8 +1,4 @@
-import {
-  sql,
-  Kysely,
-} from 'kysely/dist/esm/index-nodeless.js'
-import { SQLLiteDialect } from './sqlite';
+import { SQLLiteDialect, sql, Kysely } from './sqlite';
 
 
 interface Repo {
@@ -50,6 +46,7 @@ export function searchQuery(query: string) {
   return s.execute();
 }
 export function wordcloud() {
+  console.log("working")
   const st = db.selectFrom('flux_helm_release')
     .groupBy('chart_name')
     .select([

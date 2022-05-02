@@ -4,9 +4,9 @@
   "source": "src/index.html",
   "browserslist": "> 0.5%, last 2 versions, not dead, not ios_saf < 13",
   "scripts": {
-    "start": "parcel src/index.html",
-    "build": "parcel build --public-url './' src/index.html",
-    "serve": "parcel serve src/index.html"
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
   },
   "license": "MIT",
   "dependencies": {
@@ -25,13 +25,9 @@
     "@types/react": "^18.0.8",
     "@types/react-dom": "^18.0.3",
     "@types/sql.js": "^1.4.3",
-    "buffer": "^6.0.3",
-    "crypto-browserify": "^3.12.0",
-    "events": "^3.3.0",
-    "parcel": "^2.5.0",
-    "path-browserify": "^1.0.1",
-    "process": "^0.11.10",
-    "stream-browserify": "^3.0.0",
-    "typescript": "^4.6.4"
+    "@vitejs/plugin-react": "^1.3.1",
+    "cypress": "^9.6.0",
+    "typescript": "^4.6.4",
+    "vite": "^2.9.6"
   }
 }

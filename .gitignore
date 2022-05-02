@@ -1,6 +1,8 @@
 **/node_modules/
 **/.*cache/
 **/dist/
+**/public/repos.db
+**/public/*wasm*
 repos.db*
 repos/
 .venv/

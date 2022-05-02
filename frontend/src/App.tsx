@@ -18,6 +18,15 @@ function MDIIcon(props: {icon: string}) {
   || null;
 }
 
+// async function wordcloud() {
+//   return [
+//     {'chart_name': 'test', 'count':4}
+//   ]
+// }
+// async function searchQuery(query: string) {
+//   return []
+// }
+
 const wordcloudObservable = () => useObservableState(() => from(wordcloud()), []);
 const searchObservable = (search$: Observable<string>) => 
   useObservableState(
@@ -61,7 +70,7 @@ function SearchView(props: {results: ReturnType<typeof searchObservable>[0]}) {
     <th className={tw`text-sm text-gray-600 cursor-pointer`} {...props} />;
   const sorted = results.sort(sorts[sort]);
   const reverseSorted = reverse ? sorted.reverse() : sorted;
-  return <table className={tw`table-auto w-full text-left`}>
+  return <table className={'search-results '+ tw`table-auto w-full text-left`}>
     <thead>
       <tr>
         {hasIcon && <Th onClick={() => setSort("icon")}>Icon</Th>}
@@ -78,17 +87,17 @@ function SearchView(props: {results: ReturnType<typeof searchObservable>[0]}) {
     {reverseSorted
       .map(release => (
         <tr>
-          {hasIcon && <td>{!!release.hajimari_icon && <MDIIcon icon={release.hajimari_icon} />}</td>}
-          <td>
+          {hasIcon && <td className="icon">{!!release.hajimari_icon && <MDIIcon icon={release.hajimari_icon} />}</td>}
+          <td className="release-name">
             <a href={release.url} target="_blank" className={linkTw}>
               {release.release_name}
             </a>
           </td>
-          {hasCustomNames && <td>{release.chart_name}</td>}
-          <td><a href={release.repo_url} target="_blank" className={linkTw}>{release.repo_name}</a></td>
-          <td>{release.lines}</td>
-          <td>{release.stars} ⭐</td>
-          <td>{moment.unix(parseInt(release.timestamp)).fromNow()}</td>
+          {hasCustomNames && <td className='chart-name'>{release.chart_name}</td>}
+          <td className='repo-name'><a href={release.repo_url} target="_blank" className={linkTw}>{release.repo_name}</a></td>
+          <td className='amount-lines'>{release.lines}</td>
+          <td className='stars'>{release.stars} ⭐</td>
+          <td className='last-modified'>{moment.unix(parseInt(release.timestamp)).fromNow()}</td>
         </tr>
     ))}
     </tbody>
@@ -104,7 +113,7 @@ function WordCloudview(props: {
     <div key={word.chart_name}  className={tw`rounded-xl pb-0 pt-0 m-1 mb-0 inline-block ml-0 p-2 border-1` + ' ' + linkTw} 
       title={`${word.count} times`} onClick={() => setSearchValue(word.chart_name ?? "")}>
       <MDIIcon icon={word.icon} />{' '}
-      <span className={tw`underline`}>{word.chart_name}</span>
+      <span className={'word-cloud-word ' + tw`underline`}>{word.chart_name}</span>
     </div>
   ))}</div>
 }
@@ -138,7 +147,7 @@ export function App() {
       <input 
         type="text" 
         onChange={(e) => setSearchValue(e.target.value)} 
-        className={tw`p-1 pb-0 mb-2 rounded border-2 w-full`} 
+        className={'search-field ' + tw`p-1 pb-0 mb-2 rounded border-2 w-full`} 
         value={searchValue}
         placeholder="search a chart"
       />
