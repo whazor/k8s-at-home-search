@@ -69,7 +69,7 @@ export function topReposQuery() {
       'repo.url as url',
       'repo.stars as stars',
       sql<number>`
-        (select count(*) from flux_helm_release fr
+        (select count(distinct fr.release_name) from flux_helm_release fr
         where fr.repo_name = repo.repo_name)`.as('count'),
     ]).orderBy('count', 'desc');
   return st.execute();
