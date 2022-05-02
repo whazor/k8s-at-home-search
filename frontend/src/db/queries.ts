@@ -62,3 +62,15 @@ export function wordcloud() {
     ]).orderBy('count', 'desc');
   return st.execute();
 }
+export function topReposQuery() {
+  const st = db.selectFrom('repo')
+    .select([
+      'repo.repo_name as name',
+      'repo.url as url',
+      'repo.stars as stars',
+      sql<number>`
+        (select count(*) from flux_helm_release fr
+        where fr.repo_name = repo.repo_name)`.as('count'),
+    ]).orderBy('count', 'desc');
+  return st.execute();
+}

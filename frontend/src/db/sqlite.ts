@@ -80,7 +80,7 @@ class SQLJSConnection implements DatabaseConnection {
   id: number = 1;
 
   constructor(buf: Promise<ArrayBuffer>) {
-    this.worker = new Worker(import.meta.env.BASE_URL + '/worker.sql-wasm.js');
+    this.worker = new Worker(import.meta.env.BASE_URL + 'worker.sql-wasm.js');
     const _this = this;
     this.worker.onmessage = (e) => {
       if (!('data' in e) || !('id' in e.data)) {

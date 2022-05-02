@@ -8,3 +8,4 @@ repos/
 .venv/
 **/__pycache__/
 sqljs-worker-wasm.zip
+.DS_Store

@@ -1,7 +1,10 @@
-import { setup } from 'twind'
+import { apply, setup } from 'twind'
 import * as colors from 'twind/colors'
 
 setup({
+  preflight: {
+    a: apply('text(blue-500 underline) cursor-pointer')
+  },
   theme: {
     colors: {
       gray: colors.coolGray,
