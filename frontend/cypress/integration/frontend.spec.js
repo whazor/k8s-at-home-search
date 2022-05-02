@@ -2,7 +2,7 @@
 
 describe('k8s at home search', () => {
     beforeEach(() => {
-      cy.visit('http://localhost:4173/')
+      cy.visit('http://localhost:4173/k8s-at-home-search/')
     })
   
     it('should have word search', () => {

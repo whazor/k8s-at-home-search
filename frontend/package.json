@@ -5,8 +5,8 @@
   "browserslist": "> 0.5%, last 2 versions, not dead, not ios_saf < 13",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
+    "build": "vite build --base=/k8s-at-home-search/",
+    "serve": "vite preview --base=/k8s-at-home-search/"
   },
   "license": "MIT",
   "dependencies": {
