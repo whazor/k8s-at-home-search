@@ -1,11 +1,8 @@
 import {
   sql,
   Kysely,
-  SqliteAdapter,
-  SqliteIntrospector,
-  SqliteQueryCompiler,
 } from 'kysely/dist/esm/index-nodeless.js'
-import { SQLJSDriver } from './sqlite';
+import { SQLLiteDialect } from './sqlite';
 
 
 interface Repo {
@@ -30,17 +27,8 @@ interface Database {
 
 const dataPromise = fetch(`repos.db`).then(res => res.arrayBuffer());
 const db =  new Kysely<Database>({
-  dialect: {
-    createAdapter() { return new SqliteAdapter() },
-    createDriver() { return new SQLJSDriver(
-      dataPromise
-      ) },
-    createIntrospector(db: Kysely<unknown>) { return new SqliteIntrospector(db)},
-    createQueryCompiler() { return new SqliteQueryCompiler() },
-  },
-})
-
-
+  dialect: new SQLLiteDialect(dataPromise),
+});
 export function searchQuery(query: string) {
   query = query.trim().replace(' ', '%');
   const s = db.selectFrom('flux_helm_release')

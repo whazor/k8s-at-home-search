@@ -10,9 +10,33 @@ import {
   CompiledQuery,
   QueryResult,
   Driver,
-  TransactionSettings
+  TransactionSettings,
+  Dialect,
+  DatabaseIntrospector,
+  DialectAdapter,
+  QueryCompiler
 } from 'kysely/dist/esm/index-nodeless.js'
 
+export class SQLLiteDialect implements Dialect {
+  buf: Promise<ArrayBuffer>;
+  constructor(_buf: Promise<ArrayBuffer>) {
+    this.buf = _buf;
+  }
+  createDriver(): Driver {
+    return new SQLJSDriver(
+      this.buf
+    );
+  }
+  createQueryCompiler(): QueryCompiler {
+    return new SqliteQueryCompiler();
+  }
+  createAdapter(): DialectAdapter {
+    return new SqliteAdapter();
+  }
+  createIntrospector(db: Kysely<any>): DatabaseIntrospector {
+    return new SqliteIntrospector(db);
+  }
+}
 export class SQLJSDriver implements Driver {
   connection: SQLJSConnection;
   constructor(buf: Promise<ArrayBuffer>) {
