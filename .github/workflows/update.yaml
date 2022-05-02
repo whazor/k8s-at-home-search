@@ -21,7 +21,7 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       - name: Install dependencies
-        run: pip install ruamel.yaml requests
+        run: pip install -r requirements.txt
       - name: Get interesting repositories
         run: python3 interesting.py
       - name: Build DB

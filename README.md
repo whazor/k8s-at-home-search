@@ -25,7 +25,7 @@ If you are only interested in developing the frontend, you can directly download
 
 **To build repos.db**
 
-Python requirements: `pip install requests ruamel.yaml`
+Python requirements: `pip install -r requirements.txt`
 
 Updating `repos.json` (can be skipped, already included in source):
 ```
