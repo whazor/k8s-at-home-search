@@ -41,6 +41,7 @@ export function searchQuery(query: string) {
             'repo.stars as stars'
           ]) // 'stars', 
           .where('chart_name', 'like', `%${query}%`)
+          .orWhere('release_name', 'like', `%${query}%`)
           .groupBy('flux_helm_release.url')
           .orderBy('timestamp', 'desc');
   return s.execute();
