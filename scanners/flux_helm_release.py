@@ -8,11 +8,7 @@ from info_model import InfoModel
 class FluxHelmRelease(InfoModel):
   release_name: str
   chart_name: str
-  repo_name: str
   hajimari_icon: Optional[str]
-  amount_lines: int
-  url: str
-  timestamp: str
 
 class FluxHelmReleaseScanner:
   api_version = "helm.toolkit.fluxcd.io"
