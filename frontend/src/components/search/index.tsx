@@ -9,7 +9,7 @@ import moment from "moment";
 import { searchQuery } from "../../db/queries";
 import { MDIIcon } from "../mdi_icon";
 
-const searchObservable = (search$: Observable<string>) => 
+const searchObservable = (search$: Observable<string>): [Observable<ReturnType<typeof searchQuery>>] => 
   useObservableState(
     () => search$.pipe(
       debounceTime(100),
@@ -53,6 +53,7 @@ export function SearchView(props: {searchValue: string}) {
       <th className={tw`text-sm text-gray-600 cursor-pointer`} {...props} />;
     const sorted = results.sort(sorts[sort]);
     const reverseSorted = reverse ? sorted.reverse() : sorted;
+    const repo_link = (rel) => !!rel.helm_repo_url && <span>(<a href={rel.helm_repo_url} target="_blank">repo</a>)</span>
     return <table className={'search-results '+ tw`table-auto w-full text-left`}>
       <thead>
         <tr>
@@ -69,14 +70,14 @@ export function SearchView(props: {searchValue: string}) {
       <tbody>
       {reverseSorted
         .map(release => (
-          <tr>
+          <tr key={release.url}>
             {hasIcon && <td className="icon">{!!release.hajimari_icon && <MDIIcon icon={release.hajimari_icon} />}</td>}
             <td className="release-name">
               <a href={release.url} target="_blank">
                 {release.release_name}
-              </a>
+              </a> {!hasCustomNames && repo_link(release)}
             </td>
-            {hasCustomNames && <td className='chart-name'>{release.chart_name}</td>}
+            {hasCustomNames && <td className='chart-name'>{release.chart_name} {repo_link(release)}</td>}
             <td className='repo-name'><a href={release.repo_url} target="_blank">{release.repo_name}</a></td>
             <td className='amount-lines'>{release.lines}</td>
             <td className='stars'>{release.stars} ⭐</td>

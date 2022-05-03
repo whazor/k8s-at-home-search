@@ -8,17 +8,33 @@ interface Repo {
   stars: number
 }
 interface FluxHelmRelease {
-  release_name?: string,
-  chart_name?: string,
-  repo_name?: string,
+  release_name: string,
+  chart_name: string,
+  namespace?: string,
+  repo_name: string,
   hajimari_icon?: string,
   lines: number,
   url: string,
   timestamp: string
+  helm_repo_name: string,
+  helm_repo_namespace?: string,
 }
+
+interface FluxHelmRepo {
+  helm_repo_name: string,
+  namespace?: string,
+  helm_repo_url: string,
+  interval?: string,
+  repo_name: string,
+  lines: number,
+  url: string,
+  timestamp: string
+}
+  
 interface Database {
   repo: Repo,
-  flux_helm_release: FluxHelmRelease
+  flux_helm_release: FluxHelmRelease,
+  flux_helm_repo: FluxHelmRepo
 }
 
 const dataPromise = fetch(`repos.db`).then(res => res.arrayBuffer());
@@ -29,9 +45,17 @@ export function searchQuery(query: string) {
   query = query.trim().replace(' ', '%');
   const s = db.selectFrom('flux_helm_release')
           .innerJoin('repo', 'flux_helm_release.repo_name', 'repo.repo_name')
+          .leftJoin('flux_helm_repo', join =>
+            join.onRef('flux_helm_release.repo_name', '=', 'flux_helm_repo.repo_name')
+              .onRef('flux_helm_release.helm_repo_name','=', 'flux_helm_repo.helm_repo_name')
+              .onRef('flux_helm_release.helm_repo_namespace', '=', 'flux_helm_repo.namespace')
+          )
           .select([
             'flux_helm_release.release_name as release_name', 
             'flux_helm_release.chart_name as chart_name', 
+            'flux_helm_repo.helm_repo_name as helm_repo_name',
+            // 'flux_helm_repo.namespace as helm_repo_namespace',
+            'flux_helm_repo.url as helm_repo_url',
             'repo.repo_name as repo_name',
             'repo.url as repo_url',
             'flux_helm_release.url as url',

@@ -1,5 +1,4 @@
 from typing import Optional
-from pydantic import BaseModel
 
 from info_model import InfoModel
 
@@ -8,7 +7,10 @@ from info_model import InfoModel
 class FluxHelmRelease(InfoModel):
   release_name: str
   chart_name: str
+  namespace: Optional[str]
   hajimari_icon: Optional[str]
+  helm_repo_name: str
+  helm_repo_namespace: Optional[str]
 
 class FluxHelmReleaseScanner:
   api_version = "helm.toolkit.fluxcd.io"
@@ -37,6 +39,9 @@ class FluxHelmReleaseScanner:
   def parse(self, walk, rest: InfoModel) -> FluxHelmRelease:
     chart_name = walk('spec.chart.spec.chart')
     release_name = walk('metadata.name')
+    namespace = walk('metadata.namespace')
+    helm_repo_name = walk('spec.chart.spec.sourceRef.name')
+    helm_repo_namespace = walk('spec.chart.spec.sourceRef.namespace')
     
     hajimari_icon = walk(
       'spec.values.ingress.main.annotations.hajimari\.io/icon',
@@ -45,6 +50,9 @@ class FluxHelmReleaseScanner:
       'chart_name': chart_name,
       'release_name': release_name,
       'hajimari_icon': hajimari_icon,
+      'namespace': namespace,
+      'helm_repo_name': helm_repo_name,
+      'helm_repo_namespace': helm_repo_namespace
     })
 
   def create_table(self, c):
@@ -52,16 +60,29 @@ class FluxHelmReleaseScanner:
     c.execute('''CREATE TABLE IF NOT EXISTS flux_helm_release
                   (release_name text NOT NULL, 
                   chart_name text NOT NULL, 
+                  namespace text NULL,
                   repo_name text NOT NULL, 
                   hajimari_icon text NULL, 
                   lines number NOT NULL,
                   url text NOT NULL, 
-                  timestamp text NOT NULL)''')
+                  timestamp text NOT NULL,
+                  helm_repo_name text NOT NULL,
+                  helm_repo_namespace text NULL)''')
 
   def insert(self, c, data: FluxHelmRelease):
     c.execute(
-      "INSERT INTO flux_helm_release VALUES (?, ?, ?, ?, ?, ?, ?)", 
-      (data.release_name, data.chart_name, data.repo_name, data.hajimari_icon, data.amount_lines, data.url, data.timestamp))
+      "INSERT INTO flux_helm_release VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      (
+        data.release_name, 
+        data.chart_name, 
+        data.namespace,
+        data.repo_name, 
+        data.hajimari_icon, 
+        data.amount_lines, 
+        data.url, 
+        data.timestamp,
+        data.helm_repo_name, 
+        data.helm_repo_namespace))
   
   def test(self, c) -> bool:
     c.execute("SELECT count(*) FROM flux_helm_release")
