@@ -27,6 +27,7 @@ function Body(props: { children: React.ReactNode,  }) {
       className={'search-field ' + tw`p-1 pb-0 mb-2 rounded border-2 w-full`} 
       value={params?.['search'] || ''}
       placeholder="search a chart"
+      autoFocus
     />
     </div>
     
