@@ -1,6 +1,4 @@
-from argparse import Namespace
 from typing import Optional
-from pydantic import BaseModel
 
 from info_model import InfoModel
 
@@ -43,7 +41,7 @@ class FluxHelmRepoScanner:
     return FluxHelmRepo.parse_obj(rest.dict() | {
       'helm_repo_name': name,
       'namespace': namespace,
-      'helm_repo_url': url,
+      'helm_repo_url': url.rstrip('/') + '/',
       'interval': interval,
     })
 

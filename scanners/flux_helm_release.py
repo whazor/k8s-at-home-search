@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 
 from info_model import InfoModel
@@ -7,10 +8,12 @@ from info_model import InfoModel
 class FluxHelmRelease(InfoModel):
   release_name: str
   chart_name: str
+  chart_version: Optional[str]
   namespace: Optional[str]
   hajimari_icon: Optional[str]
   helm_repo_name: str
   helm_repo_namespace: Optional[str]
+  values: Optional[str]
 
 class FluxHelmReleaseScanner:
   api_version = "helm.toolkit.fluxcd.io"
@@ -38,21 +41,26 @@ class FluxHelmReleaseScanner:
 
   def parse(self, walk, rest: InfoModel) -> FluxHelmRelease:
     chart_name = walk('spec.chart.spec.chart')
+    chart_version = walk('spec.chart.spec.version')
     release_name = walk('metadata.name')
     namespace = walk('metadata.namespace')
     helm_repo_name = walk('spec.chart.spec.sourceRef.name')
     helm_repo_namespace = walk('spec.chart.spec.sourceRef.namespace')
+    values = walk('spec.values')
+    
     
     hajimari_icon = walk(
       'spec.values.ingress.main.annotations.hajimari\.io/icon',
       lambda x: x.strip()) or None
     return FluxHelmRelease.parse_obj(rest.dict() | {
       'chart_name': chart_name,
+      'chart_version': chart_version,
       'release_name': release_name,
       'hajimari_icon': hajimari_icon,
       'namespace': namespace,
       'helm_repo_name': helm_repo_name,
-      'helm_repo_namespace': helm_repo_namespace
+      'helm_repo_namespace': helm_repo_namespace,
+      'values': json.dumps(values)
     })
 
   def create_table(self, c):
@@ -60,6 +68,7 @@ class FluxHelmReleaseScanner:
     c.execute('''CREATE TABLE IF NOT EXISTS flux_helm_release
                   (release_name text NOT NULL, 
                   chart_name text NOT NULL, 
+                  chart_version text NULL,
                   namespace text NULL,
                   repo_name text NOT NULL, 
                   hajimari_icon text NULL, 
@@ -67,14 +76,16 @@ class FluxHelmReleaseScanner:
                   url text NOT NULL, 
                   timestamp text NOT NULL,
                   helm_repo_name text NOT NULL,
-                  helm_repo_namespace text NULL)''')
+                  helm_repo_namespace text NULL,
+                  val longtext null)''')
 
   def insert(self, c, data: FluxHelmRelease):
     c.execute(
-      "INSERT INTO flux_helm_release VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO flux_helm_release VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       (
         data.release_name, 
         data.chart_name, 
+        data.chart_version,
         data.namespace,
         data.repo_name, 
         data.hajimari_icon, 
@@ -82,7 +93,8 @@ class FluxHelmReleaseScanner:
         data.url, 
         data.timestamp,
         data.helm_repo_name, 
-        data.helm_repo_namespace))
+        data.helm_repo_namespace,
+        data.values))
   
   def test(self, c) -> bool:
     c.execute("SELECT count(*) FROM flux_helm_release")
