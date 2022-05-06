@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { BaseLocationHook, Link, Route, Router, useRoute } from "wouter";
+import { BaseLocationHook, Link, Route, Switch, Router, useRoute } from "wouter";
 
 
 import { tw } from 'twind'
 import { WordCloudview } from "./components/word_cloud";
 import { SearchView } from "./components/search";
 import { TopReposview } from "./components/top_repos";
-
+import { ChartView } from "./components/chart";
 
 function Body(props: { children: React.ReactNode,  }) {
-  const [, params] = useRoute<{search: string}>("/:search");
-
+  const [, params] = useRoute<{search: string}>("/:search+");
+  console.log("params", params)
+  const [hasSlash, addSlash] = useState(false);
   return <div className={tw`w-10/12 mt-2 mx-auto bg-white rounded-xl shadow-lg p-2`}>
       <Link href="/"><h1 
         className={tw`cursor-pointer text-4xl pt-5 pb-5`}
@@ -23,9 +24,12 @@ function Body(props: { children: React.ReactNode,  }) {
       onClick={() => navigate('/')}>✕</span>
     <input 
       type="text" 
-      onChange={(e) => navigate('/' + e.target.value)} 
+      onChange={(e) => {
+        addSlash(e.target.value.endsWith("/"));
+        return navigate('/' + e.target.value);
+      }} 
       className={'search-field ' + tw`p-1 pb-0 mb-2 rounded border-2 w-full`} 
-      value={params?.['search'] || ''}
+      value={(params?.['search'] || '') + (!hasSlash ? '' : '/')}
       placeholder="search a chart"
       autoFocus
     />
@@ -69,17 +73,20 @@ export function App() {
   return (
     <Router hook={useHashLocation}>
       <Body>
-      
-      <Route path="/" component={WordCloud} />
-      <Route path="/top" component={TopReposview} />
-      <Route<{search: string}> path="/:search" component={({params}) => {
-        console.log(params);
-        if (params['search'] !== 'top') {
-          return <SearchView searchValue={params['search']} />
-        }
-        return null;
-      }} />
-    </Body>
+        <Switch>
+          <Route path="/" component={WordCloud} />
+          <Route path="/top" component={TopReposview} />
+          <Route<{name: string}> path="/chart::name+" component={({params}) => 
+            <ChartView name={params['name']} />
+          } />
+          <Route<{name: string}> path="/repo::search+" component={({params}) => 
+            <SearchView repo={params['search']} />
+          } />
+          <Route<{search: string}> path="/:search+" component={({params}) => 
+            <SearchView search={params['search']} />
+          } />
+        </Switch>
+      </Body>
     </Router>
   )
 }

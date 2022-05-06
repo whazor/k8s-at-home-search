@@ -16,6 +16,8 @@
     "react": ">=16.8.0",
     "react-dom": "^18.1.0",
     "rxjs": "^7.5.2",
+    "semver": "^7.3.7",
+    "semver-regex": "^4.0.2",
     "sql.js": "^1.6.2",
     "twind": "^0.16.16",
     "wouter": "^2.8.0-alpha.2"

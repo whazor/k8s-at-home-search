@@ -10,6 +10,7 @@ interface Repo {
 interface FluxHelmRelease {
   release_name: string,
   chart_name: string,
+  chart_version?: string,
   namespace?: string,
   repo_name: string,
   hajimari_icon?: string,
@@ -18,6 +19,7 @@ interface FluxHelmRelease {
   timestamp: string
   helm_repo_name: string,
   helm_repo_namespace?: string,
+  val?: string
 }
 
 interface FluxHelmRepo {
@@ -41,9 +43,13 @@ const dataPromise = fetch(`repos.db`).then(res => res.arrayBuffer());
 const db =  new Kysely<Database>({
   dialect: new SQLLiteDialect(dataPromise),
 });
-export function searchQuery(query: string) {
-  query = query.trim().replace(' ', '%');
-  const s = db.selectFrom('flux_helm_release')
+export function searchQuery(query: {
+  search?: string, 
+  repo?: string
+}) {
+  let { search, repo } = query;
+  console.log("search query:", query)
+  let select = db.selectFrom('flux_helm_release')
           .innerJoin('repo', 'flux_helm_release.repo_name', 'repo.repo_name')
           .leftJoin('flux_helm_repo', join =>
             join.onRef('flux_helm_release.repo_name', '=', 'flux_helm_repo.repo_name')
@@ -53,6 +59,7 @@ export function searchQuery(query: string) {
           .select([
             'flux_helm_release.release_name as release_name', 
             'flux_helm_release.chart_name as chart_name', 
+            'flux_helm_release.chart_version as chart_version',
             'flux_helm_repo.helm_repo_name as helm_repo_name',
             // 'flux_helm_repo.namespace as helm_repo_namespace',
             'flux_helm_repo.url as helm_repo_url',
@@ -63,13 +70,76 @@ export function searchQuery(query: string) {
             'flux_helm_release.lines as lines',
             'flux_helm_release.timestamp as timestamp',
             'repo.stars as stars'
-          ]) // 'stars', 
-          .where('chart_name', 'like', `%${query}%`)
-          .orWhere('release_name', 'like', `%${query}%`)
-          .groupBy('flux_helm_release.url')
+          ]);
+  if (search) {
+    search = search.trim().replace(' ', '%');
+    select = select.where('flux_helm_release.chart_name', 'like', `%${search}%`)
+            .orWhere('flux_helm_release.release_name', 'like', `%${search}%`)
+  }
+  if (repo) {
+    select = select.where('flux_helm_release.repo_name', '=', repo);
+  }
+          
+  select = select.groupBy('flux_helm_release.url')
           .orderBy('timestamp', 'desc');
-  return s.execute();
+  return select.execute();
 }
+
+// CREATE TABLE json_tree(
+//   key ANY,             -- key for current element relative to its parent
+//   value ANY,           -- value for the current element
+//   type TEXT,           -- 'object','array','string','integer', etc.
+//   atom ANY,            -- value for primitive types, null for array & object
+//   id INTEGER,          -- integer ID for this element
+//   parent INTEGER,      -- integer ID for the parent of this element
+//   fullkey TEXT,        -- full path describing the current element
+//   path TEXT,           -- path to the container of the current row
+//   json JSON HIDDEN,    -- 1st input parameter: the raw JSON
+//   root TEXT HIDDEN     -- 2nd input parameter: the PATH at which to start
+// );
+interface SqliteJsonTreeWalk {
+  key: string,
+  value: string,
+  type: string,
+  atom: string,
+  id: number,
+  parent: number,
+  fullkey: string,
+  path: string,
+}
+
+export function releasesByChartname(chartName: string) {
+  const a = db
+    .selectFrom([
+      'flux_helm_release as fhr',
+      sql<SqliteJsonTreeWalk>`json_each(fhr.val) as val`
+    ]).select([
+      sql<string>`val.key as key`,
+      sql<number>`count(val.key) as amount`
+    ])
+    .where('fhr.chart_name', '=', chartName)
+    .groupBy('val.key')
+    .orderBy('amount', 'desc');
+  return a.execute();
+}
+
+export function releasesByValue(chartname: string, value: string) {
+  const a = db
+    .selectFrom([
+      'flux_helm_release as fhr',
+      sql<SqliteJsonTreeWalk>`json_each(fhr.val) as val`
+    ]).select([
+      'fhr.repo_name as repo_name',
+      'val.key as keyName',
+      'val.value as value',
+      'fhr.url as url',
+      'fhr.release_name as release_name'
+    ])
+    .where('fhr.chart_name', '=', chartname)
+    .where('val.key', '=', value);
+  return a.execute();
+}
+
 export function wordcloud() {
   console.log("working")
   const st = db.selectFrom('flux_helm_release')
