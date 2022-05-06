@@ -5,6 +5,8 @@ import { from } from 'rxjs'
 import { tw } from 'twind'
 import { topReposQuery } from "../../db/queries";
 import { MDIIcon } from "../mdi_icon";
+import { Link } from "wouter";
+import { Icon } from "@iconify/react";
 
 
 const topReposObservable = () => useObservableState(() => from(topReposQuery()), []);
@@ -28,7 +30,9 @@ export function TopReposview() {
                     <td>
                         <a href={repo.url}>
                             {repo.name}
-                        </a>
+                        </a> <Link href={`/repo:${repo.name}`} className={tw`cursor-pointer`}>
+                            <Icon icon={'mdi:search'} className={tw`inline`} />
+                        </Link>
                     </td>
                     <td>
                         {repo.stars} stars
