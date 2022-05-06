@@ -20,11 +20,23 @@ interface SearchProps {
 
 const sr = semverRegex();
 function parseVersion(str?: string) {
-  const res = sr.exec(str || "0.0.0");
+  const res = sr.exec(str || "0.0.1");
   if(res) {
-    return res[0] || str || "0.0.0";
+    return res[0] || str || "0.0.1";
   }
-  return str || "0.0.0";
+  return str || "0.0.1";
+}
+function compareVersions(a: string, b: string) {
+  console.log(a, b)
+  let aClean = "0.0.1", bClean = "0.0.1";
+  try {
+    aClean = semver.clean(a);
+  } catch (_e) {}
+  try {
+    bClean = semver.clean(b);
+  } catch (_e) {}
+  console.log(aClean, bClean);
+  return semver.compare(aClean || "0.0.1", bClean || "0.0.1");
 }
 
 type SearchResults = Awaited<ReturnType<typeof searchQuery>>;
@@ -54,7 +66,7 @@ export function SearchView(props: SearchProps) {
     {
       "release_name": (a: Item, b: Item) => (a.release_name ?? "").localeCompare(b.release_name ?? ""),
       "chart_name": (a: Item, b: Item) => (a.chart_name ?? "").localeCompare(b.chart_name ?? ""),
-      "chart_version": (a: Item, b: Item) => semver.compare(parseVersion(a.chart_version), parseVersion(b.chart_version)),
+      "chart_version": (a: Item, b: Item) => compareVersions(parseVersion(a.chart_version), parseVersion(b.chart_version)),
       "timestamp": (a: Item, b: Item) => parseInt(b.timestamp) - parseInt(a.timestamp),
       "repo": (a: Item, b: Item) => a.repo_name.localeCompare(b.repo_name),
       "stars": (a: Item, b: Item) => b.stars - a.stars,
