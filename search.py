@@ -70,7 +70,7 @@ for root, dirs, files in os.walk("repos/"):
                   keys = [key.replace('@', '.') for key in path.replace('\\.', '@').split('.')]
                   for key in keys:
                     if not isinstance(cur, dict) or key not in cur or cur[key] is None:
-                      return False
+                      return None
                     cur = cur[key]
                   return check(cur)
               return walk
