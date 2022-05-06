@@ -35,7 +35,6 @@ function compareVersions(a: string, b: string) {
   try {
     bClean = semver.clean(b);
   } catch (_e) {}
-  console.log(aClean, bClean);
   return semver.compare(aClean || "0.0.1", bClean || "0.0.1");
 }
 
