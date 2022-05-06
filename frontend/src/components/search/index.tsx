@@ -21,7 +21,6 @@ interface SearchProps {
 const sr = semverRegex();
 function parseVersion(str?: string) {
   const res = sr.exec(str || "0.0.0");
-  console.log(res);
   if(res) {
     return res[0] || str || "0.0.0";
   }
