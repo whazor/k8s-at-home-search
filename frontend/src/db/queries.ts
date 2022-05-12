@@ -53,7 +53,7 @@ export async function dataProgress() {
     const reader = response.body.getReader();
     const contentLength = Number(response.headers.get('content-length'));
     let received = 0;
-    
+    let lastSend = 0;
     let chunks = [];
     while (true) {
       const {done, value} = await reader.read();
@@ -62,7 +62,10 @@ export async function dataProgress() {
       }
       chunks.push(value);
       received += value.length;
-      dataProgressSubject.next({ received, contentLength: Math.max(received, contentLength) });
+      if(received - lastSend > 1000) {
+        dataProgressSubject.next({ received, contentLength: Math.max(received, contentLength) });
+        lastSend = received;
+      }
     }
     let chunksAll = new Uint8Array(received);
     let position = 0;
