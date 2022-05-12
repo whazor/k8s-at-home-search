@@ -50,7 +50,6 @@ export const dataProgressSubject = new Subject<Progress>();
 
 export async function dataProgress() {
     const response = await fetch(`repos.db`);
-    await new Promise(r => setTimeout(r, 3000));
     const reader = response.body.getReader();
     const contentLength = Number(response.headers.get('content-length'));
     let received = 0;
