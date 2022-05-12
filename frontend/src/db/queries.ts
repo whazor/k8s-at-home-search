@@ -63,7 +63,7 @@ export async function dataProgress() {
       }
       chunks.push(value);
       received += value.length;
-      dataProgressSubject.next({ received, contentLength });
+      dataProgressSubject.next({ received, contentLength: Math.max(received, contentLength) });
     }
     let chunksAll = new Uint8Array(received);
     let position = 0;
