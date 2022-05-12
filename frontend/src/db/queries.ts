@@ -54,19 +54,25 @@ export async function dataProgress() {
     const reader = response.body.getReader();
     const contentLength = Number(response.headers.get('content-length'));
     let received = 0;
-    const chunks = new Uint8Array(contentLength);
+    
+    let chunks = [];
     while (true) {
       const {done, value} = await reader.read();
       if (done) {
         break;
       }
-      chunks.set(value, received);
+      chunks.push(value);
       received += value.length;
       dataProgressSubject.next({ received, contentLength });
     }
+    let chunksAll = new Uint8Array(received);
+    let position = 0;
+    for(let chunk of chunks) {
+      chunksAll.set(chunk, position); // (4.2)
+      position += chunk.length;
+    }
     dataProgressSubject.complete();
-    console.log("done")
-    return chunks;
+    return chunksAll;
 }
 
 const dataPromise = dataProgress();
