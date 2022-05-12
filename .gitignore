@@ -9,4 +9,5 @@ repos/
 **/__pycache__/
 sqljs-worker-wasm.zip
 .DS_Store
-frontend/cypress/videos/*
+frontend/cypress/videos/
+frontend/cypress/screenshots/

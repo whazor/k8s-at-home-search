@@ -21,27 +21,27 @@ function JSONStringToYaml(json: string) {
 function JSONToYaml(json: any, level: number = 0, isFirst=(level==0)) {
   const spaces = " ".repeat(level*2);
   let result = "";
-  if (json) {
-    if(Array.isArray(json)) {
-      result += `\n`
-      for (const item of json) {
-        result += `${spaces}- ${JSONToYaml(item, level+1, true)}`;
-      }
-    } else if(typeof json === "object") {
-      for (const key in json) {
-        if (json.hasOwnProperty(key)) {
-          if(isFirst) {
-            isFirst = false;
-            result += `${key}: ${JSONToYaml(json[key], level+1)}`;
-          } else {
-            result += `\n${spaces}${key}: ${JSONToYaml(json[key], level+1)}`;
-          }
+
+  if(Array.isArray(json)) {
+    result += `\n`
+    for (const item of json) {
+      result += `${spaces}- ${JSONToYaml(item, level+1, true)}`;
+    }
+  } else if(typeof json === "object") {
+    for (const key in json) {
+      if (json.hasOwnProperty(key)) {
+        if(isFirst) {
+          isFirst = false;
+          result += `${key}: ${JSONToYaml(json[key], level+1)}`;
+        } else {
+          result += `\n${spaces}${key}: ${JSONToYaml(json[key], level+1)}`;
         }
       }
-    } else {
-      result += json;
     }
+  } else {
+    result += String(json);
   }
+
   return result
 }
 
@@ -51,7 +51,7 @@ function ResultView(props: ValueResult[0]) {
   return <div>
   <a href={r.url} target='_blank'>{r.release_name}</a>{' '}
   <span>{r.repo_name}</span> {' '}
-  <Icon icon={'mdi:code'} onClick={() => setShowCode(!showCode)} className={tw`inline cursor-pointer`} />
+  <Icon icon={'mdi:code'} onClick={() => setShowCode(!showCode)} className={tw`inline cursor-pointer border-1 rounded`} />
   {showCode && <pre>{JSONStringToYaml(`{"${r.keyName}":${r.value}}`)}</pre>}
 </div> 
 }

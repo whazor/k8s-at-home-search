@@ -140,7 +140,7 @@ export function releasesByValue(chartname: string, value: string) {
   return a.execute();
 }
 
-export function wordcloud() {
+export function wordcloud(atLeast=1) {
   console.log("working")
   const st = db.selectFrom('flux_helm_release')
     .groupBy('chart_name')
@@ -154,7 +154,9 @@ export function wordcloud() {
           ci.hajimari_icon != ''
         group by ci.hajimari_icon
         order by count(ci.hajimari_icon) desc)`.as('icon'),
-    ]).orderBy('count', 'desc');
+    ])
+    .having(sql<number>`count(*)`, '>', atLeast)
+    .orderBy('count', 'desc');
   return st.execute();
 }
 export function topReposQuery() {

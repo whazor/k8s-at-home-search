@@ -2,7 +2,7 @@
 
 describe('k8s at home search', () => {
     beforeEach(() => {
-      cy.visit('http://localhost:4173/k8s-at-home-search/')
+      cy.visit('/')
     })
   
     it('should have word search', () => {
@@ -12,7 +12,7 @@ describe('k8s at home search', () => {
     it('should have functional search', () => {
       cy.get('input.search-field').type(`plex{enter}`)
 
-      cy.get('table.search-results tbody tr')
+      cy.get('table#search-results tbody tr')
         .should('have.length.gte', 20)
         .first()
         .children(".release-name")
@@ -22,7 +22,7 @@ describe('k8s at home search', () => {
     it('should have top repos page', () => {
       cy.get('input.search-field').type(`top{enter}`)
 
-      cy.get('table.search-results tbody tr')
+      cy.get('table#top-repos tbody tr')
         .should('have.length.gte', 20)
         .first()
         .children("tr td")

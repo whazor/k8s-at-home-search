@@ -66,15 +66,11 @@ const useHashLocation: BaseLocationHook = () => {
 
 
 export function App() {
-  const WordCloud = () => {
-    return <WordCloudview setSearchValue={s => navigate('/' + s)} />
-  }
-
   return (
-    <Router hook={useHashLocation}>
+    <Router hook={useHashLocation} base={import.meta.env.BASE_URL + "#"}>
       <Body>
         <Switch>
-          <Route path="/" component={WordCloud} />
+          <Route path="/" component={() => <WordCloudview />} />
           <Route path="/top" component={TopReposview} />
           <Route<{name: string}> path="/chart::name+" component={({params}) => 
             <ChartView name={params['name']} />
