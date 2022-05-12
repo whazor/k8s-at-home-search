@@ -7,11 +7,32 @@ import { WordCloudview } from "./components/word_cloud";
 import { SearchView } from "./components/search";
 import { TopReposview } from "./components/top_repos";
 import { ChartView } from "./components/chart";
+import { dataProgress, dataProgressSubject, Progress } from "./db/queries";
+import { useObservableState, useSubscription } from "observable-hooks";
+import { map } from "rxjs/operators";
 
 function Body(props: { children: React.ReactNode,  }) {
   const [, params] = useRoute<{search: string}>("/:search+");
   console.log("params", params)
   const [hasSlash, addSlash] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  // p.contentLength p.received
+  const [res] = useObservableState(() => dataProgressSubject.pipe(
+    // calculate percentage as number
+    map(p => Math.round((p.received / p.contentLength) * 100)),
+  ), 0);
+  const [res2] = useObservableState(() => dataProgressSubject.pipe(
+    map(p => ({
+      received: Math.round(p.received / 1000),
+      contentLength: Math.round(p.contentLength / 1000),
+    })),
+  ), {
+    contentLength: 0,
+    received: 0,
+  });
+  useSubscription(dataProgressSubject, null, null, () => {
+    setLoaded(true);
+  });
   return <div className={tw`w-10/12 mt-2 mx-auto bg-white rounded-xl shadow-lg p-2`}>
       <Link href="/"><h1 
         className={tw`cursor-pointer text-4xl pt-5 pb-5`}
@@ -34,8 +55,14 @@ function Body(props: { children: React.ReactNode,  }) {
       autoFocus
     />
     </div>
-    
-      {props.children}
+      {!loaded && <div>
+        <span>Loading...</span>
+        {res2.contentLength > 0 && <div>
+        <span>Downloading database... {res2.received} of {res2.contentLength} kb</span>
+        <div className={tw`w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700`}>
+        <div className={tw`bg-blue-600 h-2.5 rounded-full`} style={{width: `${res}%`}}></div>
+      </div></div>}</div>}
+      {!!loaded && props.children}
     </div>;
 }
 
@@ -63,7 +90,6 @@ const useHashLocation: BaseLocationHook = () => {
 
   return [loc, navigate];
 };
-
 
 export function App() {
   return (

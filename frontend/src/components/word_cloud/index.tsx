@@ -21,11 +21,12 @@ export function WordCloudview() {
   const [words, ] = useObservableState(() => query$, []);
   return <div>
     {words.map(word => (
-      <Link href={`/${word.chart_name ?? ""}`}  title={`${word.count} times`} className={'word-cloud-word '+tw`cursor-pointer rounded-xl pb-0 pt-0 m-1 mb-0 inline-block ml-0 p-2 border-1`}>
+      <Link key={word.chart_name} href={`/${word.chart_name ?? ""}`}  title={`${word.count} times`} className={'word-cloud-word '+tw`cursor-pointer rounded-xl pb-0 pt-0 m-1 mb-0 inline-block ml-0 p-2 border-1`}>
         <MDIIcon icon={word.icon} />{' '}{word.chart_name}
       </Link>
     ))}
-    {!showAll && <button onClick={() => setShowAll(true)}>...</button>}
+    {words.length === 0 && <span>Loading...</span>}
+    {!showAll && words.length > 1 && <button onClick={() => setShowAll(true)}>...</button>}
   </div>
 }
   

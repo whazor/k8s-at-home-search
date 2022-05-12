@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { SQLLiteDialect, sql, Kysely } from './sqlite';
 
 
@@ -39,7 +40,37 @@ interface Database {
   flux_helm_repo: FluxHelmRepo
 }
 
-const dataPromise = fetch(`repos.db`).then(res => res.arrayBuffer());
+
+
+export interface Progress {
+  received: number; contentLength: number; 
+}
+
+export const dataProgressSubject = new Subject<Progress>();
+
+export async function dataProgress() {
+    const response = await fetch(`repos.db`);
+    await new Promise(r => setTimeout(r, 3000));
+    const reader = response.body.getReader();
+    const contentLength = Number(response.headers.get('content-length'));
+    let received = 0;
+    const chunks = new Uint8Array(contentLength);
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) {
+        break;
+      }
+      chunks.set(value, received);
+      received += value.length;
+      dataProgressSubject.next({ received, contentLength });
+    }
+    dataProgressSubject.complete();
+    console.log("done")
+    return chunks;
+}
+
+const dataPromise = dataProgress();
+
 const db =  new Kysely<Database>({
   dialect: new SQLLiteDialect(dataPromise),
 });
