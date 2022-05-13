@@ -33,7 +33,7 @@ function Body(props: { children: React.ReactNode,  }) {
   useSubscription(dataProgressSubject, null, null, () => {
     setLoaded(true);
   });
-  return <div className={tw`w-10/12 mt-2 mx-auto bg-white rounded-xl shadow-lg p-2`}>
+  return <div className={tw`md:w-11/12 lg:w-10/12 mt-2 mx-auto bg-white rounded-xl shadow-lg p-2`}>
       <Link href="/"><h1 
         className={tw`cursor-pointer text-4xl pt-5 pb-5`}
       >k8s at home search</h1></Link>
