@@ -91,7 +91,7 @@ export function ChartView(props: ChartProps) {
   return <div>
     <h1 className={tw`text-3xl pb-3 font-bold`}>{props.name}</h1>
     <p>Below you find all the different types of values used for this helm chart:</p>
-    {charts.map(chart => <div key={chart.key}>
+    {charts.filter(c => c.amount > 0).map(chart => <div key={chart.key}>
       <a onClick={() => setOpened(chart.key !== opened ? chart.key : null)}>
         <Icon icon={"mdi:chevron-" + (chart.key === opened ? "down" : "right")} className={tw`inline`} />
       </a>
