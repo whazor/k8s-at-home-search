@@ -1,4 +1,3 @@
-import semverRegex from 'semver-regex';
 import semver from 'semver';
 
 
@@ -13,7 +12,8 @@ export const intSort = <Item, Key extends keyof Item>(key: Key, inversed=false) 
   return inversed ? bInt - aInt : aInt - bInt;
 }
 
-const sr = semverRegex();
+const sr = /(\d+)\.(\d+)\.(\d+)-?([a-zA-Z-\d\.]*)\+?([a-zA-Z-\d\.]*)/gi;
+
 export function parseVersion(str?: string) {
   const res = sr.exec(str || "0.0.1");
   if(res) {

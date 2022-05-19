@@ -7,7 +7,7 @@ import { WordCloudview } from "./components/word_cloud";
 import { SearchView } from "./components/search";
 import { TopReposview } from "./components/top_repos";
 import { ChartView } from "./components/chart";
-import { dataProgress, dataProgressSubject, Progress } from "./db/queries";
+import { dataProgressSubject } from "./db/queries";
 import { useObservableState, useSubscription } from "observable-hooks";
 import { map } from "rxjs/operators";
 
@@ -97,7 +97,7 @@ export function App() {
       <Body>
         <Switch>
           <Route path="/" component={() => <WordCloudview />} />
-          <Route path="/top" component={TopReposview} />
+          <Route path="/top" component={() => <TopReposview />} />
           <Route<{name: string}> path="/chart::name+" component={({params}) => 
             <ChartView name={params['name']} />
           } />

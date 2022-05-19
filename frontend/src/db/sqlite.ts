@@ -14,7 +14,7 @@ import {
   DialectAdapter,
   QueryCompiler,
   sql
-} from 'kysely/dist/esm/index-nodeless.js'
+} from 'kysely'
 
 export {
     sql,
