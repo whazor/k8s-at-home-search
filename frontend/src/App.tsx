@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { BaseLocationHook, Link, Route, Switch, Router, useRoute } from "wouter";
-
-
 import { tw } from 'twind'
 import { WordCloudview } from "./components/word_cloud";
 import { SearchView } from "./components/search";
@@ -10,6 +8,7 @@ import { ChartView } from "./components/chart";
 import { dataProgressSubject } from "./db/queries";
 import { useObservableState, useSubscription } from "observable-hooks";
 import { map } from "rxjs/operators";
+import GitHubButton from 'react-github-btn';
 
 function Body(props: { children: React.ReactNode,  }) {
   const [, params] = useRoute<{search: string}>("/:search+");
@@ -34,11 +33,15 @@ function Body(props: { children: React.ReactNode,  }) {
     setLoaded(true);
   });
   return <div className={tw`md:w-11/12 lg:w-10/12 mt-2 mx-auto bg-white rounded-xl shadow-lg p-2`}>
+      <div className={tw`float-right p-4`}>
+        <GitHubButton href="https://github.com/whazor/k8s-at-home-search" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star whazor/k8s-at-home on GitHub">Star</GitHubButton>
+      </div>
       <Link href="/"><h1 
         className={tw`cursor-pointer text-4xl pt-5 pb-5`}
       >k8s at home search</h1></Link>
       <p className={tw`mb-2`}>We index Flux HelmReleases from Github repositories with the <a href="https://github.com/topics/k8s-at-home" target="_blank">k8s-at-home topic</a>.
-      To include your repository in this search it must be public and then add the topic <code>k8s-at-home</code> to your GitHub Repository topics. To learn more visit <a href="https://k8s-at-home.com/" target={'_blank'}>the website from k8s@home</a>.</p>
+      To include your repository in this search it must be public and then add the topic <code>k8s-at-home</code> to your GitHub Repository topics. To learn more visit <a href="https://k8s-at-home.com/" target={'_blank'}>the website from k8s@home</a>.
+      </p>
       <div className={tw`relative`}>
     <span 
       className={tw`text-black float-right absolute right-2 top-1 text-xl cursor-pointer`}

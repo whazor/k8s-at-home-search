@@ -1380,6 +1380,11 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
+github-buttons@^2.21.1:
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/github-buttons/-/github-buttons-2.21.1.tgz#9e55eb83b70c9149a21c235db2e971c53d4d98a2"
+  integrity sha512-n9bCQ8sj+5oX1YH5NeyWGbAclRDtHEhMBzqw2ctsWpdEHOwVgfruRu0VIVy01Ah10dd/iFajMHYU71L7IBWBOw==
+
 glob@^7.1.3:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.2.0.tgz#d15535af7732e02e948f4c41628bd910293f6023"
@@ -1902,6 +1907,13 @@ react-dom@^18.1.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.22.0"
+
+react-github-btn@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-github-btn/-/react-github-btn-1.3.0.tgz#d5a64d05d3615ec03e863874eac10e70d5e8aff8"
+  integrity sha512-IpyNbbYENfmYOLoRkeKauAZF5PTkplawRquSiI7uDVJBUCVrR5jQ9zYBx4TlpzhWeYU+BIfKNnXtz2wvQJPsZg==
+  dependencies:
+    github-buttons "^2.21.1"
 
 react-is@^17.0.1:
   version "17.0.2"
