@@ -9,6 +9,7 @@ import { dataProgressSubject } from "./db/queries";
 import { useObservableState, useSubscription } from "observable-hooks";
 import { map } from "rxjs/operators";
 import GitHubButton from 'react-github-btn';
+import { GrafanaDashboardsView } from "./components/grafana";
 
 function Body(props: { children: React.ReactNode,  }) {
   const [, params] = useRoute<{search: string}>("/:search+");
@@ -101,6 +102,7 @@ export function App() {
         <Switch>
           <Route path="/" component={() => <WordCloudview />} />
           <Route path="/top" component={() => <TopReposview />} />
+          <Route path="/dashboards" component={() => <GrafanaDashboardsView />} />
           <Route<{name: string}> path="/chart::name+" component={({params}) => 
             <ChartView name={params['name']} />
           } />

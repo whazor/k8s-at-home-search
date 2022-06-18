@@ -5,44 +5,12 @@ import { debounceTime, filter, from, switchMap } from 'rxjs'
 import { tw } from 'twind'
 import { releasesByChartname, releasesByValue, searchQuery } from "../../db/queries";
 import { Icon } from "@iconify/react";
+import { JSONStringToYaml } from "../../helpers/jsontoyaml";
 
 type ValueResult = Awaited<ReturnType<typeof releasesByValue>>;
 type ValueProps = {
   chartname: string,
   value: string,
-}
-function JSONStringToYaml(json: string) {
-  try{
-    return JSONToYaml(JSON.parse(json));
-  } catch(e) {
-    return json;
-  }
-}
-function JSONToYaml(json: any, level: number = 0, isFirst=(level==0)) {
-  const spaces = " ".repeat(level*2);
-  let result = "";
-
-  if(Array.isArray(json)) {
-    result += `\n`
-    for (const item of json) {
-      result += `${spaces}- ${JSONToYaml(item, level+1, true)}`;
-    }
-  } else if(typeof json === "object") {
-    for (const key in json) {
-      if (json.hasOwnProperty(key)) {
-        if(isFirst) {
-          isFirst = false;
-          result += `${key}: ${JSONToYaml(json[key], level+1)}`;
-        } else {
-          result += `\n${spaces}${key}: ${JSONToYaml(json[key], level+1)}`;
-        }
-      }
-    }
-  } else {
-    result += String(json);
-  }
-
-  return result
 }
 
 function ResultView(props: ValueResult[0]) {
