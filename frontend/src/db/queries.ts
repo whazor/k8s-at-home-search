@@ -44,7 +44,7 @@ const interesting = [
   // ingress
   ...[ 'traefik', 'nginx', 'ingress-nginx', 'istio'],
   // storage backends
-  ...['rook','longhorn','openepbs'],
+  ...['rook-ceph','longhorn','openebs'],
   // backup
   ...['k10', 'velero',]
   
