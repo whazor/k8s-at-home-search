@@ -17,7 +17,7 @@
   "dependencies": {
     "@twind/react": "^0.0.4",
     "better-sqlite3": "^7.5.3",
-    "kysely": "^0.19.2",
+    "kysely": "^0.19.5",
     "moment": "^2.29.1",
     "observable-hooks": "^4.2.0",
     "react": ">=16.8.0",

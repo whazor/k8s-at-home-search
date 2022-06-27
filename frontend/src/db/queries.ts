@@ -40,7 +40,15 @@ interface Database {
   flux_helm_repo: FluxHelmRepo
 }
 
-
+const interesting = [
+  // ingress
+  ...[ 'traefik', 'nginx', 'ingress-nginx', 'istio'],
+  // storage backends
+  ...['rook','longhorn','openepbs'],
+  // backup
+  ...['k10', 'velero',]
+  
+]
 
 export interface Progress {
   received: number; contentLength: number; 
@@ -50,11 +58,12 @@ export const dataProgressSubject = new Subject<Progress>();
 
 export async function dataProgress() {
     const response = await fetch(`repos.db`);
-    const reader = response.body.getReader();
+    const reader = response.body?.getReader();
+    if(!reader) throw new Error('No db found');
     const contentLength = Number(response.headers.get('content-length'));
     let received = 0;
     let lastSend = 0;
-    let chunks = [];
+    let chunks: Uint8Array[] = [];
     while (true) {
       const {done, value} = await reader.read();
       if (done) {
@@ -87,39 +96,42 @@ export function searchQuery(query: {
   repo?: string
 }) {
   let { search, repo } = query;
-  console.log("search query:", query)
-  let select = db.selectFrom('flux_helm_release')
-          .innerJoin('repo', 'flux_helm_release.repo_name', 'repo.repo_name')
+  let select = db.selectFrom('flux_helm_release as fhr')
+          .innerJoin('repo', 'fhr.repo_name', 'repo.repo_name')
           .leftJoin('flux_helm_repo', join =>
-            join.onRef('flux_helm_release.repo_name', '=', 'flux_helm_repo.repo_name')
-              .onRef('flux_helm_release.helm_repo_name','=', 'flux_helm_repo.helm_repo_name')
-              .onRef('flux_helm_release.helm_repo_namespace', '=', 'flux_helm_repo.namespace')
+            join.onRef('fhr.repo_name', '=', 'flux_helm_repo.repo_name')
+              .onRef('fhr.helm_repo_name','=', 'flux_helm_repo.helm_repo_name')
+              .onRef('fhr.helm_repo_namespace', '=', 'flux_helm_repo.namespace')
           )
           .select([
-            'flux_helm_release.release_name as release_name', 
-            'flux_helm_release.chart_name as chart_name', 
-            'flux_helm_release.chart_version as chart_version',
+            sql<string|undefined>`(select group_concat(distinct intr.chart_name) 
+                 from flux_helm_release intr
+                 where intr.repo_name = fhr.repo_name and 
+                 intr.chart_name in (${sql.join(interesting)}))`.as('releases'),
+            'fhr.release_name as release_name', 
+            'fhr.chart_name as chart_name', 
+            'fhr.chart_version as chart_version',
             'flux_helm_repo.helm_repo_name as helm_repo_name',
             // 'flux_helm_repo.namespace as helm_repo_namespace',
             'flux_helm_repo.url as helm_repo_url',
             'repo.repo_name as repo_name',
             'repo.url as repo_url',
-            'flux_helm_release.url as url',
-            'flux_helm_release.hajimari_icon as hajimari_icon',
-            'flux_helm_release.lines as lines',
-            'flux_helm_release.timestamp as timestamp',
+            'fhr.url as url',
+            'fhr.hajimari_icon as hajimari_icon',
+            'fhr.lines as lines',
+            'fhr.timestamp as timestamp',
             'repo.stars as stars'
           ]);
   if (search) {
     search = search.trim().replace(' ', '%');
-    select = select.where('flux_helm_release.chart_name', 'like', `%${search}%`)
-            .orWhere('flux_helm_release.release_name', 'like', `%${search}%`)
+    select = select.where('fhr.chart_name', 'like', `%${search}%`)
+            .orWhere('fhr.release_name', 'like', `%${search}%`)
   }
   if (repo) {
-    select = select.where('flux_helm_release.repo_name', '=', repo);
+    select = select.where('fhr.repo_name', '=', repo);
   }
           
-  select = select.groupBy('flux_helm_release.url')
+  select = select.groupBy('fhr.url')
           .orderBy('timestamp', 'desc');
   return select.execute();
 }
@@ -151,10 +163,10 @@ export function releasesByChartname(chartName: string) {
   const a = db
     .selectFrom([
       'flux_helm_release as fhr',
-      sql<SqliteJsonTreeWalk>`json_each(fhr.val) as val`
+      sql<SqliteJsonTreeWalk>`json_each(fhr.val)`.as('val')
     ]).select([
-      sql<string>`val.key as key`,
-      sql<number>`count(val.key) as amount`
+      sql<string>`val.key`.as('key'),
+      sql<number>`count(val.key)`.as('amount'),
     ])
     .where('fhr.chart_name', '=', chartName)
     .groupBy('val.key')
@@ -166,9 +178,13 @@ export function releasesByValue(chartname: string, value: string) {
   const a = db
     .selectFrom([
       'flux_helm_release as fhr',
-      sql<SqliteJsonTreeWalk>`json_each(fhr.val) as val`
+      sql<SqliteJsonTreeWalk>`json_each(fhr.val)`.as('val')
     ]).select([
       'fhr.repo_name as repo_name',
+      sql<string|undefined>`(select group_concat(distinct intr.chart_name) 
+                 from flux_helm_release intr
+                 where intr.repo_name = fhr.repo_name and 
+                 intr.chart_name in (${sql.join(interesting)}))`.as('releases'),
       'val.key as keyName',
       'val.value as value',
       'fhr.url as url',
@@ -179,7 +195,7 @@ export function releasesByValue(chartname: string, value: string) {
   return a.execute();
 }
 
-export function wordcloud(atLeast=1, onlyWithIcon=False) {
+export function wordcloud(atLeast=1, onlyWithIcon=false) {
   console.log("working")
   let st = db.selectFrom('flux_helm_release')
     .groupBy('chart_name')

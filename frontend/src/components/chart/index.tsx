@@ -6,6 +6,9 @@ import { tw } from 'twind'
 import { releasesByChartname, releasesByValue, searchQuery } from "../../db/queries";
 import { Icon } from "@iconify/react";
 import { JSONStringToYaml } from "../../helpers/jsontoyaml";
+import { Table, TR, TD } from "../base/Table";
+import { localCompareSort } from "../../helpers/sort";
+import { Tag } from "../base/Tag";
 
 type ValueResult = Awaited<ReturnType<typeof releasesByValue>>;
 type ValueProps = {
@@ -13,15 +16,23 @@ type ValueProps = {
   value: string,
 }
 
-function ResultView(props: ValueResult[0]) {
+function ResultView(props: ValueResult[0] & {key: string}) {
   const r = props;
   const [showCode, setShowCode] = useState(false);
-  return <div>
-  <a href={r.url} target='_blank'>{r.release_name}</a>{' '}
-  <span>{r.repo_name}</span> {' '}
-  <Icon icon={'mdi:code'} onClick={() => setShowCode(!showCode)} className={tw`inline cursor-pointer border-1 rounded`} />
-  {showCode && <pre>{JSONStringToYaml(`{"${r.keyName}":${r.value}}`)}</pre>}
-</div> 
+  return <><TR key={r.key}>
+    <TD>
+      <Icon icon={'mdi:code'} onClick={() => setShowCode(!showCode)} className={tw`inline cursor-pointer border-1 rounded`} />
+      {showCode && <Icon icon={'mdi:arrow-down'} className={tw`inline cursor-pointer`} />}
+    </TD>
+    <TD><a href={r.url} target='_blank'>{r.release_name}</a></TD>
+  <TD>{r.repo_name}</TD>
+  <TD>{r.releases?.split(',').map((x, i) => 
+      <Tag key={r.repo_name+x+i} text={x} />
+    )}
+  </TD>
+  </TR>
+  {showCode && <TR><TD colSpan={4}><pre>{JSONStringToYaml(`{"${r.keyName}":${r.value}}`)}</pre></TD></TR>}
+  </>;
 }
 
 function ValueView(props: ValueProps) {
@@ -35,9 +46,26 @@ function ValueView(props: ValueProps) {
   const results = useObservableState(
     value$, []
     );
-  return <div className={tw`pl-5`}>
-    {results.map(r => <ResultView key={r.repo_name + r.release_name} {...r} />)}
-  </div>
+  return <Table headers={
+    {
+      "release_name": {
+        "label": "Release",
+        "sort": localCompareSort("release_name")
+      },
+      "repo_name": {
+        "label": "Repo",
+        "sort": localCompareSort("repo_name")
+      },
+      "keyName": {
+        "label": "Show code",
+      },
+      "releases": {
+        "label": "Also has",
+        "sort": localCompareSort("releases")
+      }
+    }} defaultSort="release_name" className={tw`pl-5`} items={results} 
+    renderRow={r => <ResultView key={r.repo_name + r.release_name} {...r} />}>
+  </Table>
 }
 
 type ChartResults = Awaited<ReturnType<typeof releasesByChartname>>;

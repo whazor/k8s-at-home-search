@@ -12,6 +12,7 @@ import { Icon } from "@iconify/react";
 import { Table, TD, TR } from "../base/Table";
 import {localCompareSort,intSort, versionSort } from "../../helpers/sort";
 import { reverse } from "cypress/types/lodash";
+import { Tag } from "../base/Tag";
 
 
 interface SearchProps {
@@ -79,6 +80,10 @@ export function SearchView(props: SearchProps) {
         "label": "Last Modified",
         "sort": intSort("timestamp", true)
       },
+      "releases": {
+        "label": "Also has",
+        "sort": localCompareSort("releases")
+      }
     }}
     renderRow={(release: Item) => <TR key={release.url}>
             {hasIcon && 
@@ -100,6 +105,10 @@ export function SearchView(props: SearchProps) {
             <TD className='amount-lines'>{release.lines}</TD>
             <TD className='stars'>{release.stars} ⭐</TD>
             <TD className='last-modified'>{moment.unix(parseInt(release.timestamp)).fromNow()}</TD>
+            <TD>{release.releases?.split(',').map((x, i) => 
+                <Tag key={release.repo_name+x+i} text={x} />
+              )}
+            </TD>
           </TR>}
     />
   }
