@@ -33,7 +33,7 @@ interface FluxHelmRepo {
   url: string,
   timestamp: string
 }
-  
+
 interface Database {
   repo: Repo,
   flux_helm_release: FluxHelmRelease,
@@ -42,97 +42,97 @@ interface Database {
 
 const interesting = [
   // ingress
-  ...[ 'traefik', 'nginx', 'ingress-nginx', 'istio'],
+  ...['traefik', 'nginx', 'ingress-nginx', 'istio'],
   // storage backends
-  ...['rook-ceph','longhorn','openebs'],
+  ...['rook-ceph', 'longhorn', 'openebs'],
   // backup
   ...['k10', 'velero',]
-  
+
 ]
 
 export interface Progress {
-  received: number; contentLength: number; 
+  received: number; contentLength: number;
 }
 
 export const dataProgressSubject = new Subject<Progress>();
 
 export async function dataProgress() {
-    const response = await fetch(`repos.db`);
-    const reader = response.body?.getReader();
-    if(!reader) throw new Error('No db found');
-    const contentLength = Number(response.headers.get('content-length'));
-    let received = 0;
-    let lastSend = 0;
-    let chunks: Uint8Array[] = [];
-    while (true) {
-      const {done, value} = await reader.read();
-      if (done) {
-        break;
-      }
-      chunks.push(value);
-      received += value.length;
-      if(received - lastSend > 1000) {
-        dataProgressSubject.next({ received, contentLength: Math.max(received, contentLength) });
-        lastSend = received;
-      }
+  const response = await fetch(`repos.db`);
+  const reader = response.body?.getReader();
+  if (!reader) throw new Error('No db found');
+  const contentLength = Number(response.headers.get('content-length'));
+  let received = 0;
+  let lastSend = 0;
+  let chunks: Uint8Array[] = [];
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) {
+      break;
     }
-    let chunksAll = new Uint8Array(received);
-    let position = 0;
-    for(let chunk of chunks) {
-      chunksAll.set(chunk, position); // (4.2)
-      position += chunk.length;
+    chunks.push(value);
+    received += value.length;
+    if (received - lastSend > 1000) {
+      dataProgressSubject.next({ received, contentLength: Math.max(received, contentLength) });
+      lastSend = received;
     }
-    dataProgressSubject.complete();
-    return chunksAll;
+  }
+  let chunksAll = new Uint8Array(received);
+  let position = 0;
+  for (let chunk of chunks) {
+    chunksAll.set(chunk, position); // (4.2)
+    position += chunk.length;
+  }
+  dataProgressSubject.complete();
+  return chunksAll;
 }
 
 const dataPromise = dataProgress();
 
-const db =  new Kysely<Database>({
+const db = new Kysely<Database>({
   dialect: new SQLLiteDialect(dataPromise),
 });
 export function searchQuery(query: {
-  search?: string, 
+  search?: string,
   repo?: string
 }) {
   let { search, repo } = query;
   let select = db.selectFrom('flux_helm_release as fhr')
-          .innerJoin('repo', 'fhr.repo_name', 'repo.repo_name')
-          .leftJoin('flux_helm_repo', join =>
-            join.onRef('fhr.repo_name', '=', 'flux_helm_repo.repo_name')
-              .onRef('fhr.helm_repo_name','=', 'flux_helm_repo.helm_repo_name')
-              .onRef('fhr.helm_repo_namespace', '=', 'flux_helm_repo.namespace')
-          )
-          .select([
-            sql<string|undefined>`(select group_concat(distinct intr.chart_name) 
+    .innerJoin('repo', 'fhr.repo_name', 'repo.repo_name')
+    .leftJoin('flux_helm_repo', join =>
+      join.onRef('fhr.repo_name', '=', 'flux_helm_repo.repo_name')
+        .onRef('fhr.helm_repo_name', '=', 'flux_helm_repo.helm_repo_name')
+        .onRef('fhr.helm_repo_namespace', '=', 'flux_helm_repo.namespace')
+    )
+    .select([
+      sql<string | undefined>`(select group_concat(distinct intr.chart_name) 
                  from flux_helm_release intr
                  where intr.repo_name = fhr.repo_name and 
                  intr.chart_name in (${sql.join(interesting)}))`.as('releases'),
-            'fhr.release_name as release_name', 
-            'fhr.chart_name as chart_name', 
-            'fhr.chart_version as chart_version',
-            'flux_helm_repo.helm_repo_name as helm_repo_name',
-            // 'flux_helm_repo.namespace as helm_repo_namespace',
-            'flux_helm_repo.url as helm_repo_url',
-            'repo.repo_name as repo_name',
-            'repo.url as repo_url',
-            'fhr.url as url',
-            'fhr.hajimari_icon as hajimari_icon',
-            'fhr.lines as lines',
-            'fhr.timestamp as timestamp',
-            'repo.stars as stars'
-          ]);
+      'fhr.release_name as release_name',
+      'fhr.chart_name as chart_name',
+      'fhr.chart_version as chart_version',
+      'flux_helm_repo.helm_repo_name as helm_repo_name',
+      // 'flux_helm_repo.namespace as helm_repo_namespace',
+      'flux_helm_repo.url as helm_repo_url',
+      'repo.repo_name as repo_name',
+      'repo.url as repo_url',
+      'fhr.url as url',
+      'fhr.hajimari_icon as hajimari_icon',
+      'fhr.lines as lines',
+      'fhr.timestamp as timestamp',
+      'repo.stars as stars'
+    ]);
   if (search) {
     search = search.trim().replace(' ', '%');
     select = select.where('fhr.chart_name', 'like', `%${search}%`)
-            .orWhere('fhr.release_name', 'like', `%${search}%`)
+      .orWhere('fhr.release_name', 'like', `%${search}%`)
   }
   if (repo) {
     select = select.where('fhr.repo_name', '=', repo);
   }
-          
+
   select = select.groupBy('fhr.url')
-          .orderBy('timestamp', 'desc');
+    .orderBy('timestamp', 'desc');
   return select.execute();
 }
 
@@ -181,7 +181,7 @@ export function releasesByValue(chartname: string, value: string) {
       sql<SqliteJsonTreeWalk>`json_each(fhr.val)`.as('val')
     ]).select([
       'fhr.repo_name as repo_name',
-      sql<string|undefined>`(select group_concat(distinct intr.chart_name) 
+      sql<string | undefined>`(select group_concat(distinct intr.chart_name) 
                  from flux_helm_release intr
                  where intr.repo_name = fhr.repo_name and 
                  intr.chart_name in (${sql.join(interesting)}))`.as('releases'),
@@ -195,14 +195,14 @@ export function releasesByValue(chartname: string, value: string) {
   return a.execute();
 }
 
-export function wordcloud(atLeast=1, onlyWithIcon=false) {
+export function wordcloud(atLeast = 1, onlyWithIcon = false) {
   console.log("working")
   let st = db.selectFrom('flux_helm_release')
     .groupBy('chart_name')
     .select([
-      'chart_name', 
+      'chart_name',
       sql<number>`count(*)`.as('count'),
-      sql<string>`
+      sql<string | undefined>`
         (select ci.hajimari_icon from flux_helm_release ci
         where ci.chart_name = flux_helm_release.chart_name and 
           ci.hajimari_icon is not null and
@@ -211,10 +211,10 @@ export function wordcloud(atLeast=1, onlyWithIcon=false) {
         order by count(ci.hajimari_icon) desc)`.as('icon'),
     ])
     .orderBy('count', 'desc');
-  if(!onlyWithIcon) {
+  if (!onlyWithIcon) {
     st = st.having(sql<number>`count(*)`, '>', atLeast);
   } else {
-    st = st.having('icon', '!=', 'null');
+    st = st.having(sql<string | undefined>`icon`, '!=', 'null');
   }
   return st.execute();
 }
@@ -224,6 +224,10 @@ export function topReposQuery() {
       'repo.repo_name as name',
       'repo.url as url',
       'repo.stars as stars',
+      sql<string | undefined>`(select group_concat(distinct intr.chart_name) 
+           from flux_helm_release intr
+           where intr.repo_name = repo.repo_name and 
+           intr.chart_name in (${sql.join(interesting)}))`.as('releases'),
       sql<number>`
         (select count(distinct fr.release_name) from flux_helm_release fr
         where fr.repo_name = repo.repo_name)`.as('count'),

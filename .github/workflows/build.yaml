@@ -36,7 +36,7 @@ jobs:
         run: yarn run build
         working-directory: frontend/
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         with:
           start: yarn run serve
           working-directory: frontend/
