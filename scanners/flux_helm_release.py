@@ -60,7 +60,7 @@ class FluxHelmReleaseScanner:
       'namespace': namespace,
       'helm_repo_name': helm_repo_name,
       'helm_repo_namespace': helm_repo_namespace,
-      'values': json.dumps(values)
+      'values': json.dumps(values, default=str)
     })
 
   def create_table(self, c):
