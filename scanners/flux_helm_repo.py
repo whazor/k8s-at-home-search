@@ -45,9 +45,9 @@ class FluxHelmRepoScanner:
       'interval': interval,
     })
 
-  def create_table(self, c):
-    c.execute('''DROP TABLE IF EXISTS flux_helm_repo''')
-    c.execute('''CREATE TABLE IF NOT EXISTS flux_helm_repo
+  def create_table(self, c1, c2):
+    c1.execute('''DROP TABLE IF EXISTS flux_helm_repo''')
+    c1.execute('''CREATE TABLE IF NOT EXISTS flux_helm_repo
                   (helm_repo_name text NOT NULL,
                   namespace text NOT NULL,
                   helm_repo_url text NOT NULL,
@@ -58,12 +58,12 @@ class FluxHelmRepoScanner:
                   timestamp text NOT NULL)''')
 
 
-  def insert(self, c, data: FluxHelmRepo):
-    c.execute(
+  def insert(self, c1, c2, data: FluxHelmRepo):
+    c1.execute(
       "INSERT INTO flux_helm_repo VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       (data.helm_repo_name, data.namespace, data.helm_repo_url, data.interval, data.repo_name, data.amount_lines, data.url, data.timestamp))
 
   
-  def test(self, c) -> bool:
-    c.execute("SELECT count(*) FROM flux_helm_repo")
-    return c.fetchone()[0] > 1000
+  def test(self, c1, c2) -> bool:
+    c1.execute("SELECT count(*) FROM flux_helm_repo")
+    return c1.fetchone()[0] > 1000

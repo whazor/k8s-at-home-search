@@ -23,14 +23,14 @@ jobs:
       - name: Download sqlite.js 📙
         run: |
           mkdir -p frontend/dist/
-          wget https://github.com/sql-js/sql.js/releases/download/v1.6.2/sqljs-worker-wasm.zip
+          wget https://github.com/sql-js/sql.js/releases/download/v1.7.0/sqljs-worker-wasm.zip
           unzip sqljs-worker-wasm.zip -d frontend/public/
       - name: Download DB 📙
         uses: robinraju/release-downloader@v1.3
         with:
           repository: "Whazor/k8s-at-home-search"
           latest: true
-          fileName: "repos.db"
+          fileName: "repos*.db"
           out-file-path: "./frontend/public/"
       - name: Build frontend 🚧
         run: yarn run build

@@ -17,8 +17,8 @@ import {
 } from 'kysely'
 
 export {
-    sql,
-    Kysely,
+  sql,
+  Kysely,
 }
 
 export class SQLLiteDialect implements Dialect {
@@ -75,7 +75,8 @@ class SQLJSConnection implements DatabaseConnection {
   // db: Database;
   worker: Worker;
 
-  resolvers: Record<number, (result: QueryResult<any>) => void> = {};
+  resolvers: Record<number, (result: any) => void> = {};
+
   rejecters: Record<number, (error: any) => void> = {};
   id: number = 1;
 
@@ -88,26 +89,29 @@ class SQLJSConnection implements DatabaseConnection {
       }
       console.log(e.data)
       const id = e.data.id;
-      if (!id || 
-        !(id in _this.resolvers) || 
-        !(id in _this.rejecters) || 
-        !_this.rejecters[id] || 
+      if (!id ||
+        !(id in _this.resolvers) ||
+        !(id in _this.rejecters) ||
+        !_this.rejecters[id] ||
         !_this.resolvers[id]) {
         throw new Error(`Unknown id: ${id}`);
       }
-      if('error' in e.data) {
+      if ('error' in e.data) {
         _this.rejecters[id]?.(e.data.error);
       }
-      if('results' in e.data) {
-        if(e.data.results.length > 0) {
+      if ('finished' in e.data) {
+        _this.resolvers[id]?.([e.data?.row, e.data.finished])
+      }
+      if ('results' in e.data) {
+        if (e.data.results.length > 0) {
           const columns = e.data.results[0].columns as string[];
           const values = e.data.results[0].values;
           _this.resolvers[id]?.(
-              {
-                rows: values.map((row: any) => 
-                  Object.fromEntries(columns.map((_, i) => [columns[i], row[i]]))
-                ),
-              }
+            {
+              rows: values.map((row: any) =>
+                Object.fromEntries(columns.map((_, i) => [columns[i], row[i]]))
+              ),
+            }
           )
         } else {
           _this.resolvers[id]?.({
@@ -129,16 +133,16 @@ class SQLJSConnection implements DatabaseConnection {
       buf.then(buffer => {
         this.worker.postMessage({
           id: _this.id,
-          action:"open",
+          action: "open",
           buffer
         });
       });
-      
+
       this.worker.onerror = (e: any) => {
         console.error(e);
-        if('data' in e && 'id' in e.data) {
+        if ('data' in e && 'id' in e.data) {
           const id = e.data.id;
-          if('error' in e.data && id in _this.rejecters && _this.rejecters[id]) {
+          if ('error' in e.data && id in _this.rejecters && _this.rejecters[id]) {
             _this.rejecters?.[id](e);
           }
         }
@@ -146,12 +150,12 @@ class SQLJSConnection implements DatabaseConnection {
     });
   }
   opened: Promise<void>;
-  
+
 
   executeQuery<R>(compiledQuery: CompiledQuery): Promise<QueryResult<R>> {
     return new Promise<QueryResult<R>>((resolve, reject) => {
       const currentId = this.id++;
-      console.log("query", currentId , compiledQuery.sql);
+      console.log("query", currentId, compiledQuery.sql);
 
       this.resolvers[currentId] = (result: QueryResult<R>) => {
         console.log("result", currentId, result);
@@ -160,15 +164,19 @@ class SQLJSConnection implements DatabaseConnection {
       this.rejecters[currentId] = (error: any) => {
         reject(error);
       }
-    
+
       this.worker.postMessage({
         id: currentId,
         action: "exec",
         sql: compiledQuery.sql,
         params: compiledQuery.parameters
       });
-      
+
     });
+  }
+
+  streamQuery<R>(compiledQuery: CompiledQuery, chunkSize?: number | undefined): AsyncIterableIterator<QueryResult<R>> {
+    throw new Error("not implemented");
   }
 
 }

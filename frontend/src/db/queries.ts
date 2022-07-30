@@ -23,6 +23,11 @@ interface FluxHelmRelease {
   val?: string
 }
 
+interface FluxHelmReleaseValues {
+  url: string,
+  val?: string
+}
+
 interface FluxHelmRepo {
   helm_repo_name: string,
   namespace?: string,
@@ -34,10 +39,14 @@ interface FluxHelmRepo {
   timestamp: string
 }
 
-interface Database {
+interface Database1 {
   repo: Repo,
   flux_helm_release: FluxHelmRelease,
   flux_helm_repo: FluxHelmRepo
+}
+
+interface Database2 {
+  flux_helm_release_values: FluxHelmReleaseValues
 }
 
 const interesting = [
@@ -56,8 +65,8 @@ export interface Progress {
 
 export const dataProgressSubject = new Subject<Progress>();
 
-export async function dataProgress() {
-  const response = await fetch(`repos.db`);
+export async function dataProgress(dbFile: string) {
+  const response = await fetch(dbFile);
   const reader = response.body?.getReader();
   if (!reader) throw new Error('No db found');
   const contentLength = Number(response.headers.get('content-length'));
@@ -86,11 +95,25 @@ export async function dataProgress() {
   return chunksAll;
 }
 
-const dataPromise = dataProgress();
+const dataPromise = dataProgress('repos.db');
 
-const db = new Kysely<Database>({
+const db = new Kysely<Database1>({
   dialect: new SQLLiteDialect(dataPromise),
 });
+
+async function copyTables() {
+  const data2Promise = dataProgress('repos-extended.db');
+
+  const db2 = new Kysely<Database2>({
+    dialect: new SQLLiteDialect(data2Promise),
+  });
+  for (const fhrv of await db2.selectFrom('flux_helm_release_values')
+    .selectAll().execute()) {
+    console.log(fhrv)
+
+  }
+}
+
 export function searchQuery(query: {
   search?: string,
   repo?: string
@@ -160,6 +183,7 @@ interface SqliteJsonTreeWalk {
 }
 
 export function releasesByChartname(chartName: string) {
+
   const a = db
     .selectFrom([
       'flux_helm_release as fhr',

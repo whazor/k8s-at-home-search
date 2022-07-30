@@ -63,9 +63,9 @@ class FluxHelmReleaseScanner:
       'values': json.dumps(values, default=str)
     })
 
-  def create_table(self, c):
-    c.execute('''DROP TABLE IF EXISTS flux_helm_release''')
-    c.execute('''CREATE TABLE IF NOT EXISTS flux_helm_release
+  def create_table(self, c1, c2):
+    c1.execute('''DROP TABLE IF EXISTS flux_helm_release''')
+    c1.execute('''CREATE TABLE IF NOT EXISTS flux_helm_release
                   (release_name text NOT NULL, 
                   chart_name text NOT NULL, 
                   chart_version text NULL,
@@ -76,12 +76,16 @@ class FluxHelmReleaseScanner:
                   url text NOT NULL, 
                   timestamp text NOT NULL,
                   helm_repo_name text NOT NULL,
-                  helm_repo_namespace text NULL,
-                  val longtext null)''')
+                  helm_repo_namespace text NULL)''')
+    # in second DB, store the val longtext. create table in first db for later copying
+    for c in [c1, c2]:
+        c.execute('''DROP TABLE IF EXISTS flux_helm_release_values''')
+        c.execute('''CREATE TABLE IF NOT EXISTS flux_helm_release_values
+                  (url text NOT NULL, val longtext null)''')
 
-  def insert(self, c, data: FluxHelmRelease):
-    c.execute(
-      "INSERT INTO flux_helm_release VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+  def insert(self, c1, c2, data: FluxHelmRelease):
+    c1.execute(
+      "INSERT INTO flux_helm_release VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       (
         data.release_name, 
         data.chart_name, 
@@ -93,9 +97,13 @@ class FluxHelmReleaseScanner:
         data.url, 
         data.timestamp,
         data.helm_repo_name, 
-        data.helm_repo_namespace,
-        data.values))
+        data.helm_repo_namespace,))
+    c2.execute("INSERT INTO flux_helm_release_values VALUES (?, ?)",
+      (
+          data.url,
+          data.values
+      ))
   
-  def test(self, c) -> bool:
-    c.execute("SELECT count(*) FROM flux_helm_release")
-    return c.fetchone()[0] > 1600
+  def test(self, c1, c2) -> bool:
+    c1.execute("SELECT count(*) FROM flux_helm_release")
+    return c1.fetchone()[0] > 1600

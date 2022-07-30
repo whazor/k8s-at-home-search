@@ -16,14 +16,16 @@ from scanners.flux_helm_repo import FluxHelmRepoScanner
 warnings.simplefilter("ignore", ReusedAnchorWarning)
 
 # create sqlite db
-conn = sqlite3.connect('repos.db')
-c = conn.cursor()
+conn1 = sqlite3.connect('repos.db')
+conn2 = sqlite3.connect('repos-extended.db')
+c1 = conn1.cursor()
+c2 = conn2.cursor()
 
-c.execute("SELECT replace(repo_name, '/', '-'), repo_name FROM repo")
+c1.execute("SELECT replace(repo_name, '/', '-'), repo_name FROM repo")
 # to map
-repos = dict(c.fetchall())
-c.execute("SELECT repo_name, branch FROM repo")
-branches = dict(c.fetchall())
+repos = dict(c1.fetchall())
+c1.execute("SELECT repo_name, branch FROM repo")
+branches = dict(c1.fetchall())
 
 yaml=YAML(typ="safe", pure=True)
 
@@ -33,7 +35,7 @@ scanners = [
 ]
 
 for scanner in scanners:
-  scanner.create_table(c)
+  scanner.create_table(c1, c2)
 
 for root, dirs, files in os.walk("repos/"):
   for file in files:
@@ -96,15 +98,17 @@ for root, dirs, files in os.walk("repos/"):
                 )
                 for s in current_scanners:
                   result = s.parse(prepare_walk(doc), rest)
-                  s.insert(c, result)
+                  s.insert(c1, c2, result)
           except YAMLError as exc:
             print("yaml err")
             print(exc)
-conn.commit()
+conn1.commit()
+conn2.commit()
 
 for scanner in scanners:
-  if not scanner.test(c):
+  if not scanner.test(c1, c2):
     print("scanner", str(type(scanner)), "failed")
     sys.exit(1)
 
-c.close()
+c1.close()
+c2.close()

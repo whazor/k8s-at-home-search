@@ -1619,10 +1619,10 @@ jsprim@^2.0.2:
     json-schema "0.4.0"
     verror "1.10.0"
 
-kysely@^0.19.5:
-  version "0.19.5"
-  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.19.5.tgz#14e8676b0ba68fe280e294022c4b4a84b905caee"
-  integrity sha512-K/DaCKVAns1DtRF0VYSfTQvncXYFdLxpxGtzKvrHMJw++UOd/h2wT23uNn1DsiXgra6keAMMu7Zgw/MupLGYMQ==
+kysely@^0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.20.0.tgz#33b58024a5a4692231c2878b740b8abf1ff91617"
+  integrity sha512-qtt8zHpzj3wXb+j9VVvQj72Hsl4pF5N+rnFOEsTvGEK08K4iizQLTY6agiwlGhghzCzOuP71Y94Kbh+ylQV7bQ==
 
 lazy-ass@1.6.0, lazy-ass@^1.6.0:
   version "1.6.0"
@@ -2160,7 +2160,7 @@ split@0.3:
   dependencies:
     through "2"
 
-sql.js@^1.6.2:
+sql.js@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/sql.js/-/sql.js-1.7.0.tgz#cadfed9773b643fbba0fc1ed1847e3a647e1fcb9"
   integrity sha512-qAfft3xkSgHqmmfNugWTp/59PsqIw8gbeao5TZmpmzQQsAJ49de3iDDKuxVixidYs6dkHNksY8m27v2dZNn2jw==
