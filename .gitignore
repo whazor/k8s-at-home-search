@@ -3,7 +3,7 @@
 **/dist/
 **/public/repos.db
 **/public/*wasm*
-repos.db*
+repos*.db*
 repos/
 .venv/
 **/__pycache__/
