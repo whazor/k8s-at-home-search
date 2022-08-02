@@ -10,9 +10,10 @@ test('test search', async ({ page }) => {
   await page.locator('[placeholder="search a chart"]').fill('plex');
   await expect(page).toHaveURL('#/plex');
 
-
-  const links = await page.$$('a:has-text("plex")');
-  expect(links).not.toHaveLength(0)
+  const links = page.locator('a:has-text("plex")');
+  for (let i = 0; i < 30; i++) {
+    await expect(links).not.toHaveCount(i);
+  }
 
   const rows = page.locator('table tbody tr');
   for (let i = 0; i < 30; i++) {

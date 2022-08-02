@@ -10,7 +10,7 @@ test('test top', async ({ page }) => {
   // Click text=83 >> nth=0
 
   const rows = page.locator('table tbody tr');
-  for (let i = 0; i < 80; i++) {
+  for (let i = 0; i < 40; i++) {
     await expect(rows).not.toHaveCount(i);
   }
 
