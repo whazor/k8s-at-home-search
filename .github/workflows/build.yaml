@@ -35,13 +35,18 @@ jobs:
       - name: Build frontend 🚧
         run: yarn run build
         working-directory: frontend/
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
+      - name: Install Playwright Browsers
+        run: yarn playwright install --with-deps
+        working-directory: frontend/
+      - name: Run Playwright tests
+        run: yarn playwright test
+        working-directory: frontend/
+      - uses: actions/upload-artifact@v2
+        if: always()
         with:
-          start: yarn run serve
-          working-directory: frontend/
-          wait-on: http://localhost:4173/k8s-at-home-search/
-        
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 30
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:

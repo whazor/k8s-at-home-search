@@ -8,10 +8,7 @@
     "test": "vitest",
     "build": "vite build --base=/k8s-at-home-search/",
     "serve": "vite preview --base=/k8s-at-home-search/",
-    "build-serve": "yarn run build && yarn run serve",
-    "it-test": "cypress run",
-    "cypress-open": "cypress open --config pageLoadTimeout=30000,baseUrl=http://localhost:3000",
-    "ci": "start-server-and-test 'build-serve' http://localhost:4173/k8s-at-home-search/ 'it-test'"
+    "build-serve": "yarn run build && yarn run serve"
   },
   "license": "MIT",
   "dependencies": {
@@ -31,13 +28,12 @@
   },
   "devDependencies": {
     "@iconify/react": "^3.1.3",
+    "@playwright/test": "^1.24.2",
     "@testing-library/react": "^13.2.0",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
     "@types/sql.js": "^1.4.3",
     "@vitejs/plugin-react": "^1.3.2",
-    "cypress": "^10.3.1",
-    "start-server-and-test": "^1.14.0",
     "typescript": "^4.6.4",
     "vite": "^2.9.9",
     "vitest": "^0.12.6"
