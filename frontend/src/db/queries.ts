@@ -43,6 +43,7 @@ interface Database1 {
   repo: Repo,
   flux_helm_release: FluxHelmRelease,
   flux_helm_repo: FluxHelmRepo
+  flux_helm_release_values: FluxHelmReleaseValues
 }
 
 interface Database2 {
@@ -104,14 +105,18 @@ const db = new Kysely<Database1>({
 async function copyTables() {
   const data2Promise = dataProgress('repos-extended.db');
 
+  const count = await db.selectFrom('flux_helm_release_values').selectAll().limit(1).execute();
+  console.log("checking...");
+  if (count.length > 0) return;
+  console.log("error");
+
   const db2 = new Kysely<Database2>({
     dialect: new SQLLiteDialect(data2Promise),
   });
-  for (const fhrv of await db2.selectFrom('flux_helm_release_values')
-    .selectAll().execute()) {
-    console.log(fhrv)
-
-  }
+  const rows = await db2.selectFrom('flux_helm_release_values')
+    .selectAll().execute();
+  await db.insertInto('flux_helm_release_values')
+    .values(rows).execute();
 }
 
 export function searchQuery(query: {
@@ -182,27 +187,31 @@ interface SqliteJsonTreeWalk {
   path: string,
 }
 
-export function releasesByChartname(chartName: string) {
-
+export async function releasesByChartname(chartName: string) {
+  await copyTables();
   const a = db
     .selectFrom([
       'flux_helm_release as fhr',
-      sql<SqliteJsonTreeWalk>`json_each(fhr.val)`.as('val')
+      'flux_helm_release_values as fhrv',
+      sql<SqliteJsonTreeWalk>`json_each(fhrv.val)`.as('val')
     ]).select([
       sql<string>`val.key`.as('key'),
       sql<number>`count(val.key)`.as('amount'),
     ])
     .where('fhr.chart_name', '=', chartName)
+    .whereRef('fhrv.url', '=', 'fhr.url')
     .groupBy('val.key')
     .orderBy('amount', 'desc');
   return a.execute();
 }
 
-export function releasesByValue(chartname: string, value: string) {
+export async function releasesByValue(chartname: string, value: string) {
+  await copyTables();
   const a = db
     .selectFrom([
       'flux_helm_release as fhr',
-      sql<SqliteJsonTreeWalk>`json_each(fhr.val)`.as('val')
+      'flux_helm_release_values as fhrv',
+      sql<SqliteJsonTreeWalk>`json_each(fhrv.val)`.as('val')
     ]).select([
       'fhr.repo_name as repo_name',
       sql<string | undefined>`(select group_concat(distinct intr.chart_name) 
@@ -215,6 +224,7 @@ export function releasesByValue(chartname: string, value: string) {
       'fhr.release_name as release_name'
     ])
     .where('fhr.chart_name', '=', chartname)
+    .whereRef('fhrv.url', '=', 'fhr.url')
     .where('val.key', '=', value);
   return a.execute();
 }
