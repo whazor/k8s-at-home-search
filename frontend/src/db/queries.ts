@@ -232,13 +232,13 @@ export async function releasesByValue(chartname: string, value: string) {
 export function wordcloud(atLeast = 1, onlyWithIcon = false) {
   console.log("working")
   let st = db.selectFrom('flux_helm_release')
-    .groupBy('chart_name')
+    .groupBy('release_name')
     .select([
-      'chart_name',
+      'release_name',
       sql<number>`count(*)`.as('count'),
       sql<string | undefined>`
         (select ci.hajimari_icon from flux_helm_release ci
-        where ci.chart_name = flux_helm_release.chart_name and 
+        where ci.release_name = flux_helm_release.release_name and 
           ci.hajimari_icon is not null and
           ci.hajimari_icon != ''
         group by ci.hajimari_icon
