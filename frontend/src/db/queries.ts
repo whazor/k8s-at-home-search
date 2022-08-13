@@ -187,31 +187,50 @@ interface SqliteJsonTreeWalk {
   path: string,
 }
 
-export async function releasesByChartname(chartName: string) {
+export async function valuesByChartname(chartName: string, value?: string) {
   await copyTables();
-  const a = db
+
+  let valSelect = 'fhrv.val';
+  if (value) {
+    valSelect = `fhrv.val -> '$.${value}'`
+  }
+
+  let baseQuery = db
     .selectFrom([
       'flux_helm_release as fhr',
       'flux_helm_release_values as fhrv',
-      sql<SqliteJsonTreeWalk>`json_each(fhrv.val)`.as('val')
+      sql<SqliteJsonTreeWalk>`json_each(${sql.raw(valSelect)})`.as('val')
     ]).select([
       sql<string>`val.key`.as('key'),
       sql<number>`count(val.key)`.as('amount'),
     ])
     .where('fhr.chart_name', '=', chartName)
-    .whereRef('fhrv.url', '=', 'fhr.url')
-    .groupBy('val.key')
-    .orderBy('amount', 'desc');
-  return a.execute();
+    .whereRef('fhrv.url', '=', 'fhr.url');
+  if (value) {
+    console.log(value)
+    baseQuery = baseQuery.groupBy('val.fullkey');//.where("val.fullkey", 'like', '%' + value);//.groupBy('val.fullkey');
+  } else {
+    baseQuery = baseQuery.groupBy('val.key')
+  }
+  return baseQuery
+    .orderBy('amount', 'desc').execute();
 }
 
-export async function releasesByValue(chartname: string, value: string) {
+export async function releasesByValue(chartname: string, path: string | undefined, key: string) {
   await copyTables();
+
+  let valSelect = 'fhrv.val';
+  if (path) {
+    valSelect = `fhrv.val -> '$.${path}'`
+  }
+
+  console.log('path:', path, 'key:', key);
+  console.log('selector:', valSelect)
   const a = db
     .selectFrom([
       'flux_helm_release as fhr',
       'flux_helm_release_values as fhrv',
-      sql<SqliteJsonTreeWalk>`json_each(fhrv.val)`.as('val')
+      sql<SqliteJsonTreeWalk>`json_each(${sql.raw(valSelect)})`.as('val')
     ]).select([
       'fhr.repo_name as repo_name',
       sql<string | undefined>`(select group_concat(distinct intr.chart_name) 
@@ -224,8 +243,8 @@ export async function releasesByValue(chartname: string, value: string) {
       'fhr.release_name as release_name'
     ])
     .where('fhr.chart_name', '=', chartname)
-    .whereRef('fhrv.url', '=', 'fhr.url')
-    .where('val.key', '=', value);
+    .where('val.key', '=', key)
+    .whereRef('fhrv.url', '=', 'fhr.url');
   return a.execute();
 }
 

@@ -49,7 +49,7 @@ python3 search.py
 
 ```
 mkdir -p frontend/public/
-wget https://github.com/sql-js/sql.js/releases/download/v1.6.2/sqljs-worker-wasm.zip
+wget https://github.com/sql-js/sql.js/releases/download/v1.7.0/sqljs-worker-wasm.zip
 unzip sqljs-worker-wasm.zip -d frontend/public/
 
 wget https://github.com/Whazor/k8s-at-home-search/releases/latest/download/repos.db
