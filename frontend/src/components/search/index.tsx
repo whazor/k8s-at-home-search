@@ -41,7 +41,7 @@ export function SearchView(props: SearchProps) {
   type Item = typeof results[0]
 
 
-  const repoLink = (rel: Item) => !!rel.helm_repo_url && <span>(<a href={rel.helm_repo_url} className='a' target="_blank">repo</a>)</span>
+  const repoLink = (rel: Item) => !!rel.helm_repo_url && <span>(<a href={rel.helm_repo_url} className='link' target="_blank">repo</a>)</span>
   return <Table items={results} defaultSort="timestamp" tableProps={{ id: 'search-results' }} headers={
     {
       ...(hasIcon ? {
@@ -87,7 +87,7 @@ export function SearchView(props: SearchProps) {
       {hasIcon &&
         <td className="cell icon">{!!release.hajimari_icon && <MDIIcon icon={release.hajimari_icon} />}</td>}
       <td className="cell release-name">
-        <a href={release.url} title="Link to Github" className="a" target="_blank">
+        <a href={release.url} title="Link to Github" className="link" target="_blank">
           {release.release_name}
         </a>
       </td>
@@ -101,7 +101,7 @@ export function SearchView(props: SearchProps) {
       </td>
       <td className='cell chart-version'>{release.chart_version}</td>
       <td className='cell repo-name'>
-        <a href={release.repo_url} className="a" target="_blank">{release.repo_name}</a>
+        <a href={release.repo_url} className="link" target="_blank">{release.repo_name}</a>
         {/* search icon: */}
         <Link href={`/repo:${release.repo_name}`} className="btn">
           {' '}

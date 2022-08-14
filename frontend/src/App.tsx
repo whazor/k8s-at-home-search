@@ -38,8 +38,8 @@ function Body(props: { children: React.ReactNode, }) {
     <Link href="/"><h1
       className="cursor-pointer text-4xl pb-5"
     >k8s at home search</h1></Link>
-    <p className="mb-3">We index Flux HelmReleases from Github repositories with the <a href="https://github.com/topics/k8s-at-home" className="a" target="_blank">k8s-at-home topic</a>.
-      To include your repository in this search it must be public and then add the topic <code>k8s-at-home</code> to your GitHub Repository topics. To learn more visit <a href="https://k8s-at-home.com/" className="a" target={'_blank'}>the website from k8s@home</a>.
+    <p className="mb-3">We index Flux HelmReleases from Github repositories with the <a href="https://github.com/topics/k8s-at-home" className="link" target="_blank">k8s-at-home topic</a>.
+      To include your repository in this search it must be public and then add the topic <code>k8s-at-home</code> to your GitHub Repository topics. To learn more visit <a href="https://k8s-at-home.com/" className="link" target={'_blank'}>the website from k8s@home</a>.
     </p>
     <div className="relative">
       <span

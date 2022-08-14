@@ -16,7 +16,7 @@ export default defineConfig({
     serif: ['Roboto slab', 'serif'],
   },
   shortcuts: {
-    "a": "blue underline",
+    "link": "blue underline",
     "btn": "cursor-pointer border p-0 px-0.5 mx-1 rounded inline-block bg-gray-100 align-middle",
     "table-outside": "overflow-hidden overflow-x-auto border border-gray-100 rounded",
     "table-inside": "min-w-full text-sm divide-y divide-gray-200",

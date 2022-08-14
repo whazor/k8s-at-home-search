@@ -100,7 +100,7 @@ export function GrafanaDashboardsView() {
           <div className="overflow-x-scroll max-w-lg">
             <pre>{JSONStringToYaml(repo.source)}</pre>
           </div>
-          {!!repo.url && <a href={repo.url} target='_blank'>Link</a>}
+          {!!repo.url && <a className='link' href={repo.url} target='_blank'>Link</a>}
         </td>
       </tr>}
     />
