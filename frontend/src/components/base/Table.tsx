@@ -1,19 +1,4 @@
-import { styled } from "@twind/react";
 import React, { useState } from "react";
-
-const TableOutside = styled("div", {
-  base: "overflow-hidden overflow-x-auto border border-gray-100 rounded"
-})
-
-const TableInside = styled("table", {
-  base: "min-w-full text-sm divide-y divide-gray-200"
-});
-
-
-
-const TableBodyInside = styled("tbody", {
-  base: "divide-y divide-gray-100"
-});
 
 type HeadersType = readonly string[]
 
@@ -24,40 +9,34 @@ enum SortState {
   Descending,
 }
 
-export const THStyled = styled("th", {
-  base: "px-4 py-2 font-medium text-left text-gray-900 whitespace-nowrap",
-  variants: {
-    sortable: {
-      true: "cursor-pointer",
-    }
-  }
-});
-
-export function TH(props: React.HTMLAttributes<HTMLTableCellElement>& {
-  sortable?: boolean, sortState?: SortState}) {
+export function TH(props: React.HTMLAttributes<HTMLTableCellElement> & {
+  sortable?: boolean, sortState?: SortState
+}) {
   const sortIcon = props.sortState === SortState.Ascending ? "↓" : props.sortState === SortState.Descending ? "↑" : "";
-  return <THStyled {...props}>
+  const { sortable, sortState: _2, ...thProps } = props;
+  return <th className={`th ${sortable ? 'th-sortable' : ''}`} {...thProps}>
     {sortIcon}
     {props.children}
-  </THStyled>;
+  </th >;
 }
 
 export function Table<
-  Item, 
+  Item,
   Headers extends Record<string, {
     label: string,
     sort?: (a: Item, b: Item) => number;
   }>
->(props: React.HTMLAttributes<HTMLTableElement>& {
+>(props: {
   items: Item[];
   defaultSort?: keyof Headers;
   headers: Headers;
+  tableProps?: React.HTMLAttributes<HTMLTableElement>,
   renderRow: (item: Item) => React.ReactNode;
 }) {
   const [reverse, setReverseState] = useState(false);
-  const [sort, setSortState] = useState<keyof Headers>(props.defaultSort ?? props.headers[0].key);
+  const [sort, setSortState] = useState<keyof Headers>(props.defaultSort ?? props.headers[0].label);
   const setSort = (next: keyof Headers) => {
-    if(sort === next) {
+    if (sort === next) {
       setReverseState(!reverse);
     } else {
       setSortState(next);
@@ -66,42 +45,28 @@ export function Table<
   }
   const sorted = props.items.sort(props.headers[sort].sort ?? (() => 0));
   const reverseSorted = reverse ? sorted.reverse() : sorted;
-  return <TableOutside>
-    <TableInside {...props}>
-    <THead>
-        <TRHead>
-          {Object.entries(props.headers).map(([key, {label}]) => 
-            <TH 
-              sortable={!!props.headers[key].sort} 
+  return <div className="table-outside">
+    <table {...props.tableProps} className={"table-inside " + props.tableProps?.className} >
+      <thead>
+        <tr className="tr-head">
+          {Object.entries(props.headers).map(([key, { label }]) =>
+            <TH
+              sortable={!!props.headers[key].sort}
               key={key} sortState={sort === key ? !reverse ? SortState.Ascending : SortState.Descending : undefined}
               onClick={() => !!props.headers[key].sort && setSort(key)}>{label}</TH>)}
-        </TRHead>
-      </THead>
-      <TableBodyInside>
+        </tr>
+      </thead>
+      <tbody className="table-inside">
         {reverseSorted.map(item => props.renderRow(item))}
-      </TableBodyInside>
-    </TableInside>
-  </TableOutside>;
+      </tbody>
+    </table>
+  </div>;
 }
 
 export function TableBody<Item>(props: React.HTMLAttributes<HTMLTableSectionElement> & {
   row: (item: Item) => React.ReactElement;
 }) {
-  return <TableBodyInside {...props}>
-
-    </TableBodyInside>;
+  return <tbody className="table-inside" {...props} />;
 }
 
 
-export const THead = styled("thead", {});
-
-export const TRHead = styled("tr", {
-  base: "bg-gray-50"
-});
-
-
-export const TR = styled("tr", {});
-
-export const TD = styled("td", {
-  base: "px-4 py-2 text-gray-700 whitespace-nowrap"
-});

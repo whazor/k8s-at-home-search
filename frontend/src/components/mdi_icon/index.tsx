@@ -1,9 +1,8 @@
+import React from 'react';
 import { Icon } from '@iconify/react';
 
-import { tw } from 'twind'
-export function MDIIcon(props: {icon: string}) {
-    return (props.icon && 
-      <Icon icon={"mdi:"+props.icon} className={tw`text-base leading-none inline-block`} />
-    ) 
-    || null;
+export function MDIIcon(props: { icon: string }) {
+  return (props.icon &&
+    <Icon icon={"mdi:" + props.icon} className="text-base align-middle leading-none inline-block" />
+  ) || null;
 }

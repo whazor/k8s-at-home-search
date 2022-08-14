@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { pluckFirst, useObservable, useObservableState } from 'observable-hooks'
 import { debounceTime, filter, from, switchMap } from 'rxjs'
 
-import { tw } from 'twind'
 import { valuesByChartname, releasesByValue } from "../../db/queries";
 import { Icon } from "@iconify/react";
 import { JSONStringToYaml } from "../../helpers/jsontoyaml";
-import { Table, TR, TD } from "../base/Table";
+import { Table } from "../base/Table";
 import { localCompareSort } from "../../helpers/sort";
 import { Tag } from "../base/Tag";
 
@@ -15,19 +14,19 @@ function YAMLView(props: ValueResult[0] & { key: string }) {
   const r = props;
   console.log(r)
   const [showCode, setShowCode] = useState(false);
-  return <><TR key={r.key}>
-    <TD>
-      <Icon icon={'mdi:code'} onClick={() => setShowCode(!showCode)} className={tw`inline cursor-pointer border-1 rounded`} />
-      {showCode && <Icon icon={'mdi:arrow-down'} className={tw`inline cursor-pointer`} />}
-    </TD>
-    <TD><a href={r.url} target='_blank'>{r.release_name}</a></TD>
-    <TD>{r.repo_name}</TD>
-    <TD>{r.releases?.split(',').map((x, i) =>
+  return <><tr key={r.key}>
+    <td className="cell">
+      <Icon icon={'mdi:code'} onClick={() => setShowCode(!showCode)} className="inline cursor-pointer border-1 rounded" />
+      {showCode && <Icon icon={'mdi:arrow-down'} className="inline cursor-pointer" />}
+    </td>
+    <td className="cell"><a href={r.url} target='_blank'>{r.release_name}</a></td>
+    <td className="cell">{r.repo_name}</td>
+    <td className="cell">{r.releases?.split(',').map((x, i) =>
       <Tag key={r.repo_name + x + i} text={x} />
     )}
-    </TD>
-  </TR>
-    {showCode && <TR><TD colSpan={4}><pre>{JSONStringToYaml(`{"${r.keyName}":${r.value}}`)}</pre></TD></TR>}
+    </td>
+  </tr>
+    {showCode && <tr><td className="cell" colSpan={4}><pre>{JSONStringToYaml(`{"${r.keyName}":${r.value}}`)}</pre></td></tr>}
   </>;
 }
 
@@ -47,7 +46,6 @@ function WhoHasValueTable(props: WhoHasValueProps) {
   const results = useObservableState(
     value$, []
   );
-  console.log("props:", props);
   return <Table headers={
     {
       "release_name": {
@@ -65,9 +63,8 @@ function WhoHasValueTable(props: WhoHasValueProps) {
         "label": "Also has",
         "sort": localCompareSort("releases")
       }
-    }} defaultSort="release_name" className={tw`pl-5`} items={results}
-    renderRow={r => <YAMLView key={r.repo_name + r.release_name} {...r} />}>
-  </Table>
+    }} defaultSort="release_name" tableProps={{ className: "pl-5" }} items={results}
+    renderRow={r => <YAMLView key={r.repo_name + r.release_name} {...r} />} />
 }
 
 type ChartValueResults = Awaited<ReturnType<typeof valuesByChartname>>;
@@ -84,22 +81,28 @@ export function ValueList(props: ValueListProps) {
       switchMap(props => from(valuesByChartname(props.chartName, props.value))),
     ), [props])
   const values = useObservableState(search$, []);
-  const [opened, setOpened] = useState<string | undefined>(undefined);
+  const [opened, setOpenedInside] = useState<string | undefined>(undefined);
   const [showReleases, setShowReleases] = useState(false);
+  const setOpened = (val: string | undefined) => {
+    setOpenedInside(val);
+    setShowReleases(false);
+  }
   const fullKey = (val: ChartValueResults[0]) => (props.value ? props.value + '.' : '') + val.key;
   return <div>{values.filter(c => c.amount > 0).filter(val => !(val.key?.toString() || "").match(/^\d/)).map(val => <div key={val.key}>
-    <a onClick={() => setOpened(val?.key !== opened ? val?.key : undefined)}>
-      <Icon icon={"mdi:chevron-" + (val.key === opened ? "down" : "right")} className={tw`inline`} />
+    <a title={`Open ${val.key}`} onClick={() => setOpened(val?.key !== opened ? val?.key : undefined)} className='cursor-pointer'>
+      <Icon icon={"mdi:chevron-" + (val.key === opened ? "down" : "right")} className="inline" />
+      <span>{val.key} <span className="text-sm">({val.amount} times)</span></span>
     </a>
-    <span>{val.key} <span className={tw`text-sm`}>({val.amount} times)</span></span>
-    {val.key === opened &&
-      <div className={tw`ml-3`}>
-        <a className={tw`ml-3`} onClick={() => setShowReleases(!showReleases)}>{!showReleases ? 'Show' : 'Hide'} releases</a>
-        {showReleases && <WhoHasValueTable chartName={props.chartName} path={props.value} keyName={val.key} />}
+    {
+      val.key === opened &&
+      <div className="ml-3">
+        <a className="ml-3 btn mb-1" onClick={() => setShowReleases(!showReleases)}>{!showReleases ? 'Show' : 'Hide'} releases</a>
+        <div>{showReleases && <WhoHasValueTable chartName={props.chartName} path={props.value} keyName={val.key} />}</div>
         <ValueList chartName={props.chartName} value={fullKey(val)} />
       </div>
     }
-  </div>)}</div>
+  </div>)
+  }</div >
 
 }
 
@@ -110,7 +113,7 @@ type ChartProps = {
 
 export function ChartView(props: ChartProps) {
   return <div>
-    <h1 className={tw`text-3xl pb-3 font-bold`}>{props.name}</h1>
+    <h1 className="text-3xl pb-3 font-bold">{props.name}</h1>
     <p>Below you find all the different types of values used for this helm chart:</p>
 
     <ValueList chartName={props.name} />
