@@ -32,9 +32,9 @@ jobs:
         run: python3 search.py
       - name: Compress files
         run: |
-          apt update -y && apt install -y pigz
-          pigz -c repos.db
-          pigz -c repos-extended.db
+          apt-get update -y && apt-get install -y pigz
+          pigz -z repos.db
+          pigz -z repos-extended.db
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
