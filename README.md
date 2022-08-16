@@ -48,12 +48,8 @@ python3 search.py
 **Setting up the frontend**
 
 ```
-mkdir -p frontend/public/
-wget https://github.com/sql-js/sql.js/releases/download/v1.7.0/sqljs-worker-wasm.zip
-unzip sqljs-worker-wasm.zip -d frontend/public/
-
-wget https://github.com/Whazor/k8s-at-home-search/releases/latest/download/repos.db
-cp repos.db frontend/public/
+wget https://github.com/Whazor/k8s-at-home-search/releases/latest/download/repos.db.zz -P frontend/public/
+wget https://github.com/Whazor/k8s-at-home-search/releases/latest/download/repos-extended.db.zz -P frontend/public/
 
 cd frontend/
 yarn install

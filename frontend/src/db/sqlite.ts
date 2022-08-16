@@ -71,6 +71,22 @@ export class SQLJSDriver implements Driver {
 
 }
 
+// see: https://stackoverflow.com/posts/62914052
+function getWorkerURL(url: string) {
+  const content = `
+const oldFetch = self.fetch;
+self.fetch = function(...args) { 
+  if(args[0] === "sql-wasm.wasm") {
+    return oldFetch("https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.7.0/sql-wasm.wasm")
+  }
+  oldFetch(...args)
+};
+importScripts("${url}");
+self.fetch = oldFetch;
+`;
+  return URL.createObjectURL(new Blob([content], { type: "text/javascript" }));
+}
+
 class SQLJSConnection implements DatabaseConnection {
   // db: Database;
   worker: Worker;
@@ -81,7 +97,7 @@ class SQLJSConnection implements DatabaseConnection {
   id: number = 1;
 
   constructor(buf: Promise<ArrayBuffer>) {
-    this.worker = new Worker(import.meta.env.BASE_URL + 'worker.sql-wasm.js');
+    this.worker = new Worker(getWorkerURL('https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.7.0/worker.sql-wasm.min.js')); 
     const _this = this;
     this.worker.onmessage = (e) => {
       if (!('data' in e) || !('id' in e.data)) {

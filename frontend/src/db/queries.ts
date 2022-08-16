@@ -66,34 +66,37 @@ export interface Progress {
 
 export const dataProgressSubject = new Subject<Progress>();
 
-export async function dataProgress(dbFile: string) {
-  const response = await fetch(dbFile);
+import pako from "pako";
+import { TableExpression, TableReference } from 'kysely/dist/cjs/parser/table-parser';
+
+export async function dataProgress(dbFile: string): Promise<Uint8Array> {
+  const response = await fetch(dbFile + ".zz");
+
   const reader = response.body?.getReader();
   if (!reader) throw new Error('No db found');
   const contentLength = Number(response.headers.get('content-length'));
   let received = 0;
   let lastSend = 0;
-  let chunks: Uint8Array[] = [];
+  const inflator = new pako.Inflate();
   while (true) {
     const { done, value } = await reader.read();
     if (done) {
       break;
     }
-    chunks.push(value);
+    inflator.push(value);
+
     received += value.length;
     if (received - lastSend > 1000) {
       dataProgressSubject.next({ received, contentLength: Math.max(received, contentLength) });
       lastSend = received;
     }
   }
-  let chunksAll = new Uint8Array(received);
-  let position = 0;
-  for (let chunk of chunks) {
-    chunksAll.set(chunk, position); // (4.2)
-    position += chunk.length;
-  }
   dataProgressSubject.complete();
-  return chunksAll;
+  if (inflator.err) {
+    console.error(inflator.msg);
+    throw new Error(inflator.msg);
+  }
+  return inflator.result as Uint8Array;
 }
 
 const dataPromise = dataProgress('repos.db');
@@ -102,21 +105,20 @@ const db = new Kysely<Database1>({
   dialect: new SQLLiteDialect(dataPromise),
 });
 
-async function copyTables() {
-  const data2Promise = dataProgress('repos-extended.db');
+const copyTableHelmValues = () => copyTables<Database2>("repos-extended.db", "flux_helm_release_values", "flux_helm_release_values");
 
-  const count = await db.selectFrom('flux_helm_release_values').selectAll().limit(1).execute();
-  console.log("checking...");
+async function copyTables<DB>(dbFile: string, from: keyof DB & string, into: keyof Database1 & string) {
+  const count = await db.selectFrom(into).selectAll().limit(1).execute();
   if (count.length > 0) return;
-  console.log("error");
 
-  const db2 = new Kysely<Database2>({
-    dialect: new SQLLiteDialect(data2Promise),
+  const newData = dataProgress(dbFile);
+  const db2 = new Kysely<DB>({
+    dialect: new SQLLiteDialect(newData),
   });
-  const rows = await db2.selectFrom('flux_helm_release_values')
+  const rows = await db2.selectFrom(from)
     .selectAll().execute();
-  await db.insertInto('flux_helm_release_values')
-    .values(rows).execute();
+  await db.insertInto(into)
+    .values(rows as any).execute();
 }
 
 export function searchQuery(query: {
@@ -188,7 +190,7 @@ interface SqliteJsonTreeWalk {
 }
 
 export async function valuesByChartname(chartName: string, value?: string) {
-  await copyTables();
+  await copyTableHelmValues();
 
   let valSelect = 'fhrv.val';
   if (value) {
@@ -217,7 +219,7 @@ export async function valuesByChartname(chartName: string, value?: string) {
 }
 
 export async function releasesByValue(chartname: string, path: string | undefined, key: string) {
-  await copyTables();
+  await copyTableHelmValues();
 
   let valSelect = 'fhrv.val';
   if (path) {
@@ -249,7 +251,6 @@ export async function releasesByValue(chartname: string, path: string | undefine
 }
 
 export function wordcloud(atLeast = 1, onlyWithIcon = false) {
-  console.log("working")
   let st = db.selectFrom('flux_helm_release')
     .groupBy('release_name')
     .select([
