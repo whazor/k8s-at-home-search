@@ -25,9 +25,9 @@ export function WordCloudView() {
       </span><a href="https://hajimari.io/" className='link' target="_blank">haijmari icons</a>
     </div>
     {words.map(word => (
-      <Link key={word.release_name} href={`/${word.release_name ?? ""}`} title={`${word.count} times`}
+      <Link key={word.name} href={`/${word.name ?? ""}`} title={`${word.count} times`}
         className="word-cloud-word cursor-pointer text-lg rounded pb-0 pt-0 px-1 m-1 mb-0 inline-block ml-0 border-1 dark:bg-gray-300">
-        {!!word.icon && <MDIIcon icon={word.icon} />}{' '}{word.release_name}
+        {!!word.icon && <MDIIcon icon={word.icon} />}{' '}{word.name}
       </Link>
     ))}
     {words.length === 0 && <span>Loading...</span>}

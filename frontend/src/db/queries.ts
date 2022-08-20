@@ -251,26 +251,46 @@ export async function releasesByValue(chartname: string, path: string | undefine
 }
 
 export function wordcloud(atLeast = 1, onlyWithIcon = false) {
-  let st = db.selectFrom('flux_helm_release')
-    .groupBy('release_name')
-    .select([
+   const exceptions = {
+     "chart_name": '(' + ["app-template", "kah-common-chart"].map(n => `'${n}'`).join(",") + ')'
+  };
+
+  const stmt = db.selectFrom('flux_helm_release').select(
+    [
+      'chart_name',
       'release_name',
+      'hajimari_icon'
+    ]
+  )
+
+
+  return db.with(
+    "releases", db => stmt.select([
+        sql`chart_name`.as('name'),
+      ]).where(
+        'chart_name', 'not in', sql.raw(exceptions['chart_name'])
+      ).unionAll(
+        stmt.select([
+          sql`release_name`.as('name'),
+        ]).where(
+          'chart_name', 'in', sql.raw(exceptions['chart_name'])
+        )
+      )
+  ).selectFrom("releases").select([
+      'name',
       sql<number>`count(*)`.as('count'),
       sql<string | undefined>`
         (select ci.hajimari_icon from flux_helm_release ci
-        where ci.release_name = flux_helm_release.release_name and 
+        where ci.release_name = releases.release_name and 
           ci.hajimari_icon is not null and
           ci.hajimari_icon != ''
         group by ci.hajimari_icon
         order by count(ci.hajimari_icon) desc)`.as('icon'),
-    ])
-    .orderBy('count', 'desc');
-  if (!onlyWithIcon) {
-    st = st.having(sql<number>`count(*)`, '>', atLeast);
-  } else {
-    st = st.having(sql<string | undefined>`icon`, '!=', 'null');
-  }
-  return st.execute();
+  ]).groupBy('name')
+  .if(!onlyWithIcon, qb => qb.having(sql<number>`count(*)`, '>', atLeast))
+  .if(onlyWithIcon, qb => qb.having(sql<string | undefined>`icon`, '!=', 'null'))
+  .orderBy('count', 'desc')
+  .execute();
 }
 export function topReposQuery() {
   const st = db.selectFrom('repo')
