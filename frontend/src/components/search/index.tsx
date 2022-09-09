@@ -6,8 +6,8 @@ import { switchMap, filter, debounceTime } from 'rxjs/operators'
 
 import moment from "moment";
 import { searchQuery } from "../../db/queries";
-import { MDIIcon } from "../mdi_icon";
-import { Icon } from "@iconify/react";
+import { Icon } from "../icon";
+import { Icon as IconifyIcon } from "@iconify/react";
 import { Table } from "../base/Table";
 import { localCompareSort, intSort, versionSort } from "../../helpers/sort";
 import { Tag } from "../base/Tag";
@@ -85,7 +85,7 @@ export function SearchView(props: SearchProps) {
     }}
     renderRow={(release: Item) => <tr key={release.url}>
       {hasIcon &&
-        <td className="cell icon">{!!release.hajimari_icon && <MDIIcon icon={release.hajimari_icon} />}</td>}
+        <td className="cell icon">{!!release.hajimari_icon && <Icon icon={release.hajimari_icon} />}</td>}
       <td className="cell release-name">
         <a href={release.url} title="Link to Github" className="link" target="_blank">
           {release.release_name}
@@ -95,7 +95,7 @@ export function SearchView(props: SearchProps) {
         {release.chart_name}
         <Link title="Value tree" href={`/chart:${release.chart_name}`} className="btn">
           {''}
-          <Icon icon='mdi:file-tree-outline' className="inline h-3" />
+          <IconifyIcon icon='mdi:file-tree-outline' className="inline h-3" />
         </Link>
         {repoLink(release)}
       </td>
@@ -105,7 +105,7 @@ export function SearchView(props: SearchProps) {
         {/* search icon: */}
         <Link href={`/repo:${release.repo_name}`} className="btn">
           {' '}
-          <Icon icon={'mdi:search'} className="inline" />
+          <IconifyIcon icon={'mdi:search'} className="inline" />
         </Link>
       </td>
       <td className='cell amount-lines'>{release.lines}</td>

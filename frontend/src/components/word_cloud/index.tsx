@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useObservable, useObservableState } from 'observable-hooks'
 import { from, switchMap } from 'rxjs'
 import { wordcloud } from "../../db/queries";
-import { MDIIcon } from "../mdi_icon";
+import { Icon } from "../icon";
 import { Link } from "wouter";
 
 const AT_LEAST = 2;
@@ -27,7 +27,7 @@ export function WordCloudView() {
     {words.map(word => (
       <Link key={word.name} href={`/${word.name ?? ""}`} title={`${word.count} times`}
         className="word-cloud-word cursor-pointer text-lg rounded pb-0 pt-0 px-1 m-1 mb-0 inline-block ml-0 border-1 dark:bg-gray-300">
-        {!!word.icon && <MDIIcon icon={word.icon} />}{' '}{word.name}
+        {!!word.icon && <Icon icon={word.icon} />}{' '}{word.name}
       </Link>
     ))}
     {words.length === 0 && <span>Loading...</span>}
