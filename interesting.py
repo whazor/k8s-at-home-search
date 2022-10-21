@@ -22,6 +22,9 @@ while len(items) > 0 or page == 1:
             headers=github_header).json()['items']
     print(page, len(items))
     for repo_info in items:
+        if "true_charts" in repo_name:
+            # Skip true_charts, only charts no helm_release
+            continue
         repo_name = repo_info['full_name']
         stars = repo_info['stargazers_count']
         url = repo_info['html_url']
