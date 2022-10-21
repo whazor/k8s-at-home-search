@@ -12,7 +12,7 @@ results = []
 
 items = []
 page = 1
-while len(items) == 100 or page == 1:
+while len(items) > 0 or page == 1:
     items = requests.get("https://api.github.com/search/repositories",
             params={
                 'q': 'topic:k8s-at-home',
@@ -20,6 +20,7 @@ while len(items) == 100 or page == 1:
                 'page': page
             },
             headers=github_header).json()['items']
+    print(page, len(items))
     for repo_info in items:
         repo_name = repo_info['full_name']
         stars = repo_info['stargazers_count']
