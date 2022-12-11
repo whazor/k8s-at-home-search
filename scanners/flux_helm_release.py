@@ -37,7 +37,7 @@ class FluxHelmReleaseScanner:
     return walk('apiVersion', lambda x: x.startswith(self.api_version)) and \
       walk('kind', lambda x: x == self.kind) and \
       walk('spec.chart.spec.chart', lambda x: x is not None) and \
-      walk('spec.chart.spec.sourceRef.kind', lambda x: x == "HelmRepository")
+      walk('spec.chart.spec.sourceRef.kind', lambda x: x == "HelmRepository" or x == "GitRepository")
 
   def parse(self, walk, rest: InfoModel) -> FluxHelmRelease:
     chart_name = walk('spec.chart.spec.chart')
