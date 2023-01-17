@@ -11,3 +11,8 @@ sqljs-worker-wasm.zip
 .DS_Store
 frontend/cypress/videos/
 frontend/cypress/screenshots/
+.devenv*
+devenv.local.nix
+.pre-commit-config.yaml
+result
+yarn-error.log
