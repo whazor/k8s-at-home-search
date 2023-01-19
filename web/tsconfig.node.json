@@ -1,9 +1,13 @@
 {
-  "compilerOptions": {
-    "composite": true,
-    "module": "ESNext",
+    "compilerOptions": {
+        "emitDeclarationOnly": true,
+        "declaration": true,
+        "outDir": "dist/server",
+        "esModuleInterop": true,
+        "jsx": "react-jsx",
+        "module": "CommonJS",
+
     "moduleResolution": "Node",
-    "allowSyntheticDefaultImports": true
-  },
-  "include": ["vite.config.ts"]
-}
+    },
+    "include": ["src/entry-server.tsx"]
+  }

@@ -4,10 +4,12 @@ import App, { AppData } from './App'
 
 
 
-export function render(url: string, appData: AppData) {
+export function render(url: string, appData: AppData, pageData: any) {
   return ReactDOMServer.renderToString(
     <StaticRouter location={url} /*context={context}*/>
-      <App {...appData} />
+      <App {...appData} pageData={pageData} />
     </StaticRouter>,
   )
 }
+
+export type RenderFunction = typeof render;
