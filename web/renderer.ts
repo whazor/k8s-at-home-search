@@ -11,11 +11,13 @@ import {
 
 // use class, to avoid variables going back and forth
 export class Renderer {
-    public db: Database<sqlite3.Database, sqlite3.Statement>;
+    public db?: Database<sqlite3.Database, sqlite3.Statement>;
+    public dbExtended?: Database<sqlite3.Database, sqlite3.Statement>;
     private appData: any;
     private pageData: {
         [key: string]: any
     } = {};
+    
     
     // methods
     async prepareData() {
@@ -23,7 +25,11 @@ export class Renderer {
             filename: 'repos.db',
             driver: sqlite3.Database
         });
-        const hrPageData = await hrCollector(this.db);
+        this.dbExtended = await open({
+            filename: 'repos-extended.db',
+            driver: sqlite3.Database
+        });
+        const hrPageData = await hrCollector(this.db, this.dbExtended);
         this.appData = {
             ...hrAppDataGenerator(hrPageData),
         }

@@ -23,20 +23,20 @@ export interface AppData {
     key: string,
     chart: string,
     release: string,
-    count: number
+    count: number,
+    icon?: string,
   }[]
 }
 
 export default function App({ releases, pageData }: AppData & { pageData: any }) {
 
   return (
-    <div className='p-4'>
+    <div className='p-4 dark:bg-black'>
       <nav>
-        
         <a
         href={'/'} 
-        ><h1 className="text-3xl">k8s at home search</h1></a>
-        <p className="text-lg">Search for a helm release</p>
+        ><h1 className="text-3xl dark:text-white">k8s at home search</h1></a>
+        <p className="text-lg dark:text-white">Search for a helm release</p>
         <ul>
           {/* <li><Link to="/">Home</Link></li> */}
           {/* {routes.map(({ name, path }) => {
@@ -49,7 +49,9 @@ export default function App({ releases, pageData }: AppData & { pageData: any })
         </ul>
       </nav>
       <div className='pt-2'>
-        <SearchBar releases={releases} />
+        <div className='mb-4'>
+          <SearchBar releases={releases} />
+        </div>
         <Routes>
           <Route key={"/"} path={"/"} element={<Home releases={releases} />}></Route>
           {/* {routes.map(({ path, component: Component }) => {
