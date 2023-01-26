@@ -43,6 +43,12 @@ export interface CollectorData {
     values: Record<string, ValueTree>;
 }
 
+export interface ValuesData {
+    list: ValueList,
+    urlMap: Record<number, string>,
+    valueMap: Record<string, Record<number, any[]>>
+}
+
 export interface PageData {
     key: string;
     name: string;
@@ -50,7 +56,7 @@ export interface PageData {
     icon?: string;
     helmRepoName?: string,
     helmRepoURL?: string,
-    values: ValueList,
+    values: ValuesData,
     repos: RepoInfo[];
 }
 
@@ -193,22 +199,28 @@ export function appDataGenerator(data: CollectorData) {
     }
 };
 
+const range = (start: number, end: number) => Array.from({ length: end - start }, (_, i) => i + start);
+
 type ValueList = {
     name: string,
     count: number,
-    types: string[]
+    types: string[],
+    urls: number[]
 }[];
 
 const isObject = (k: any) => typeof k === 'object' && !Array.isArray(k) && k !== null;
 
-function* visitValues(input: any): Generator<{
+function* visitValues(values: [string, any]): Generator<{
     name: string,
-    type: string
+    type: string,
+    url: string,
+    value?: any
 }> {
+    const [url, input] = values;
     if (isObject(input)) {
         for (const [key, value] of Object.entries(input)) {
-            for (const val of visitValues(value)) {
-                let name = key;
+            for (const val of visitValues([url, value])) {
+                let name = key.replaceAll('.', '#');
                 if(val.name.startsWith('[')) {
                     name = key + val.name;
                 } else if(val.name !== "") {
@@ -216,31 +228,41 @@ function* visitValues(input: any): Generator<{
                 }
                 yield {
                     name,
-                    type: val.type
+                    type: val.type,
+                    url,
+                    value: val.value
                 }
             }
         }
     } else if (Array.isArray(input)) {
         for (const cur of input) {
-            for (const val of visitValues(cur)) {
-
+            for (const val of visitValues([url, cur])) {
                 yield {
                     name: val.name !== "" ? '[]' + '.' + val.name : '[]',
-                    type: val.type
+                    type: val.type,
+                    url,
+                    value: val.value
                 }
             }
         }
     } else {
         yield {
             name: "",
-            type: typeof input
+            type: typeof input,
+            url,
+            value: input !== null ? input.toString() : input
         };
     }
 }
 
-export function calculateValues(input: ValueTree[]): ValueList {
-    const names = input.map(x => [...visitValues(x)]).flat();
-    const types = names.reduce(
+export function calculateValues(input: [string, ValueTree][]): ValuesData {
+    const list = 
+        input.map(x => [...visitValues(x)]).flat()
+            .filter(x => x.name !== "")
+            .filter(x => x.type !== "object");
+    const names = [...new Set(list.map(x => x.name))]        
+
+    const types = list.reduce(
         (map, val) => {
             if (!(val.name in map)) {
                 map[val.name] = new Set()
@@ -249,37 +271,96 @@ export function calculateValues(input: ValueTree[]): ValueList {
             return map;
         }, {} as Record<string, Set<string>>
     )
-    const counts = names.map(x => x.name).reduce((p, nms) => {
-        const names = nms.split('.');
-        for (let i = 0; i <= names.length; i++) {
-            const n = names.slice(0, i).join('.');
-            if (n !== "") {
-                if (!(n in p)) {
-                    p[n] = 0;
-                }
-                p[n]++;
+    const urlToIdMap: Record<string, number> = list
+        .reduce((map, val) => {
+            if (!(val.url in map)) {
+                map[val.url] = Object.keys(map).length;
             }
+            return map;
+        }, {} as Record<string, number>);
+    const idToUrlMap: Record<number, string> = Object.fromEntries(Object.entries(urlToIdMap).map(([k, v]) => [v, k]));
+
+    const valueMap = list.map(item => {
+        const {  name, url, value } = item;
+        return {
+            name,
+            url: urlToIdMap[url],
+            value,
         }
-        return p;
-    }, {} as Record<string, number>)
-    return Object.entries(counts).sort((a, b) => {
-        const an = a[0].split('.');
-        const bn = b[0].split('.');
-        const l = Math.min(an.length, bn.length);
-        return [...Array(l).keys()].slice(1)
-            .map(function (o) {
-                const av = counts[an.slice(0, o).join(".")];
-                const bv = counts[bn.slice(0, o).join(".")];
-                return bv - av;
-            })
-            .reduce(function firstNonZeroValue(p, n) {
-                return p !== 0 ? p : n;
-            }, 0);
-    }).map(([name, count]) => ({
-        name,
-        count,
-        types: [...(name in types ? types[name] : [])]
+    }).reduce((map, val) => {
+        if (!(val.name in map)) {
+            map[val.name] = {};
+        }
+        if (!(val.url in map[val.name])) {
+            map[val.name][val.url] = [];
+        }
+        map[val.name][val.url].push(val.value);
+        return map;
+    }, {} as Record<string, Record<number, any[]>>);
+
+    const nameUrlMap: Record<string, Set<number>> = list.
+        reduce((map, val) => {
+            if (!(val.name in map)) {
+                map[val.name] = new Set()
+            }
+            map[val.name].add(urlToIdMap[val.url]);
+            return map;
+        }, {} as Record<string, Set<number>>);
+    
+        
+    // use nameUrlMap for count 
+    const counts = 
+        Object.fromEntries(names
+              .map(x => [x, nameUrlMap[x].size]));
+
+    // we want the max count for each prefix
+    const countSplitted: [string, number][] = Object.entries(counts).map(([name, count]) => {
+        const splitted = name.split('.');
+        return range(1, splitted.length + 1)
+            .map(o => splitted.slice(0, o).join("."))
+            .map(o => [o, count]) as [string, number][];
+    }).flat();
+    const countMap = countSplitted.reduce((map, [name, count]) => {
+        if (!(name in map)) {
+            map[name] = 0;
+        }
+        map[name] = Math.max(map[name], count);
+        return map;
+    }, {} as Record<string, number>);
+    // check if one of the count > 50
+    const isDebug = Object.values(countMap).find(c => c > 50) !== undefined;
+    if (isDebug) {
+        console.log(countMap);
+    }
+
+    const valuesList = names.sort((a, b) => {
+        const an = a.split('.');
+        const bn = b.split('.');
+        let c = 0;
+        while (c < an.length && c < bn.length) {
+            if (an[c] !== bn[c]) {
+                break;
+            }
+            c++;
+        }
+        
+        const caMax = range(1, an.length + 1).map(o => an.slice(0, o).join(".")).map(o => countMap[o]).slice(c).reduce((a, b) => Math.max(a, b), 0);
+        const cbMax = range(1, bn.length + 1).map(o => bn.slice(0, o).join(".")).map(o => countMap[o]).slice(c).reduce((a, b) => Math.max(a, b), 0);
+        if(caMax === cbMax) {
+            return a.localeCompare(b);
+        }
+        return cbMax - caMax;
+    }).map((name) => ({
+        name: name.replaceAll('#', '.'),
+        count: counts[name],
+        types: [...(name in types ? types[name] : [])],
+        urls: [...(name in nameUrlMap ? nameUrlMap[name] : [])]
     })).filter(n => n.types.length > 0);
+    return {
+        list: valuesList,
+        urlMap: idToUrlMap,
+        valueMap
+    }
 }
 
 export function pageGenerator({ releases, repos, values, count }: CollectorData): Record<string, PageData> {
@@ -310,7 +391,8 @@ export function pageGenerator({ releases, repos, values, count }: CollectorData)
             name,
             key,
             repos: repos[key],
-            values: calculateValues(repos[key].map(r => r.url).map(url => values[url])),
+            values: calculateValues(
+                repos[key].map(r => r.url).map(url => [url, values[url]])),
             doc,
             icon,
             helmRepoName,

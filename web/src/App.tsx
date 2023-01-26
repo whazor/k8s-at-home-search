@@ -31,7 +31,7 @@ export interface AppData {
 export default function App({ releases, pageData }: AppData & { pageData: any }) {
 
   return (
-    <div className='p-4 dark:bg-black'>
+    <div className='p-4 dark:bg-gray-900'>
       <nav>
         <a
         href={'/'} 

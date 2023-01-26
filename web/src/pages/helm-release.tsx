@@ -22,9 +22,54 @@ interface HRProps {
 const STAR_THRESHOLD = 30;
 const MAX_REPOS = 5;
 
-export default function HR(props: HRProps) {
-  const { name, doc, repos, icon, values, helmRepoName, helmRepoURL } = props.pageData;
+function ValueRow(props: { name: string, count: number, types: string[], urls: string[], 
+  values?: [string, any][] }) {
+  const { name, count, types, urls, values } = props;
+  const [show, setShow] = useState(false);
+  const urlNames = 
+    Object.fromEntries(urls.map(u => [u, u.split("/").slice(3, 5).join("/")]));
+  const shouldDrawArray = name.endsWith("[]");
+  return (
+          <div className='max-w-md break-words'>
+            <a className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer'
+              onClick={() => setShow(!show)}
+            >{name} ({count})</a>
+            {show && values && 
+              <Table headers={['Value', 'Repo']}
+                rows={values.map(([url, value]) => [
+                  <div className='max-w-md break-words'>{
+                    value.map((v: any) => [
+                      shouldDrawArray ? "- "+ v : v
+                      , <br />]
+                      )
+                    
+                  }</div>,
+                  <div>
+                    <a href={url} target="_blank"
+                    className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer'
+                    >
+                      {urlNames[url]}
+                    </a>
+                  </div>
+                ])} />
+            }
+            
+          </div>
+          );
+}
 
+
+
+
+export default function HR(props: HRProps) {
+  const { name, doc, repos, icon, values: valueResult, helmRepoName, helmRepoURL } = props.pageData;
+  const urlMap = valueResult.urlMap;
+  const valueList = valueResult.list.map(v => ({
+    ...v,
+    urls: v.urls.map(u => urlMap[u])
+  }));
+  const valueMap = valueResult.valueMap;
+  
   const [showAll, setShowAll] = useState(false);
   const docUrl = `https://github.com/whazor/k8s-at-home-search/new/main/?filename=web/src/info/${name}.md`;
 
@@ -56,11 +101,15 @@ helm install ${name} ${helmRepoName}/${name} -f values.yaml`}
       <Text>See examples from other people:</Text>
       <Table headers={['Name', 'Repo', 'Stars', 'Version', 'Timestamp']}
         rows={(!showAll ? top : repos).map(repo => [
-          <a href={repo.url} target={'_blank'}>
+          <a href={repo.url} target={'_blank'}
+            className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer'
+          >
            {repo.icon && <Icon icon={repo.icon} />}
            {repo.name}
          </a>,
-          <a href={repo.repo_url} target={'_blank'}>{repo.repo}</a>,
+          <a href={repo.repo_url} target={'_blank'}
+            className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer'
+          >{repo.repo}</a>,
           repo.stars,
           repo.chart_version,
           dayjs.unix(repo.timestamp).fromNow()
@@ -70,13 +119,15 @@ helm install ${name} ${helmRepoName}/${name} -f values.yaml`}
       >See all {repos.length} releases</button>}
       <Heading type='h2'>Values</Heading>
       <Text>See the most popular values for this chart:</Text>
-      <Table headers={['Key', 'Types', "Repo's"]}
-        rows={values.map(({ name, count, types }) => [
-          <div className='max-w-md break-words'>
-            {name} ({count})
-          </div>,
+      <Table headers={['Key', 'Types']}
+        rows={valueList.map(({ name, count, types, urls }) => [
+          <ValueRow {...{name, count, types, urls}}
+            values={name in valueMap ? 
+                Object.entries(valueMap[name]).map(([k, v]) => [urlMap[k], v])
+              : []
+            }
+           />,
           types.join(", "),
-          <button className='bg-blue-300 text-white px-2 rounded dark:bg-blue-500 dark:hover:bg-blue-700'>List</button>
         ])} />
     </>
   )
