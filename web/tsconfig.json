@@ -21,6 +21,7 @@
     "target": "ES2017"
   },
   "include": ["src/**/*", "types/*", "server.ts", "node_modules/vite/types/*"],
+  "exclude": ["dist/**/*"],
   "ts-node": {
     "transpileOnly": true,
     "files": true,

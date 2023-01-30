@@ -7,58 +7,11 @@ import { marked } from 'marked';
 // const { JSDOM } = require('jsdom');
 import createDOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
+import { CollectorData, ReleaseInfo, RepoInfo, ValuesData, PageData, MINIMUM_COUNT, ValueTree, ReleaseInfoCompressed, AppData } from './models';
 
 const window = new JSDOM('<!DOCTYPE html>').window;
 // @ts-expect-error
 const DOMPurify = createDOMPurify(window);
-
-
-export interface ReleaseInfo {
-    release: string;
-    chart: string;
-    name: string;
-    key: string;
-    chartsUrl: string;
-}
-
-
-interface RepoInfo {
-    name: string,
-    repo: string,
-    helm_repo_name: string,
-    helm_repo_url: string,
-    url: string,
-    repo_url: string,
-    chart_version: string,
-    stars: number,
-    icon: string,
-    timestamp: number,
-}
-
-export interface CollectorData {
-    releases: ReleaseInfo[];
-    keys: string[];
-    count: Record<string, number>;
-    repos: Record<string, RepoInfo[]>;
-    values: Record<string, ValueTree>;
-}
-
-export interface ValuesData {
-    list: ValueList,
-    urlMap: Record<number, string>,
-    valueMap: Record<string, Record<number, any[]>>
-}
-
-export interface PageData {
-    key: string;
-    name: string;
-    doc?: string;
-    icon?: string;
-    helmRepoName?: string,
-    helmRepoURL?: string,
-    values: ValuesData,
-    repos: RepoInfo[];
-}
 
 
 function mode<K extends string | number | symbol>(array: K[]) {
@@ -80,9 +33,6 @@ function mode<K extends string | number | symbol>(array: K[]) {
     return maxEl;
 }
 
-interface ValueTree {
-    [key: string]: ValueTree | string;
-}
 
 export async function collector(
     db: Database<sqlite3.Database, sqlite3.Statement>,
@@ -187,26 +137,39 @@ export async function collector(
     }
 }
 
-export function appDataGenerator(data: CollectorData) {
-    const { releases, keys, count, repos } = data;
+function normalizeData(data: string[]): [string[], Record<string, number>] {
+    const set = new Set(data);
+    const map: Record<string, number> = {};
+    let i = 0;
+    for (const s of set) {
+        map[s] = i++;
+    }
+    return [
+        Array.from(set),
+        map,
+    ]
+}
 
+export function appDataGenerator(data: CollectorData): 
+    Pick<AppData, 'chartURLs' | 'releases'> 
+{
+    const { releases, keys, count, repos } = data;
+    const [chartURLs, chartURLMap] = normalizeData(releases.map(r => r.chartsUrl));
     return {
-        releases: releases.map(r => ({
-            ...r,
-            count: count[r.key],
-            icon: mode(repos[r.key].filter(r => r.icon).map(r => r.icon)),
-        })),
+        chartURLs,
+        releases: releases.map(r => ([
+            r.release,
+            r.chart,
+            r.name,
+            r.key,
+            chartURLMap[r.chartsUrl],
+            count[r.key],
+            mode(repos[r.key].filter(r => r.icon).map(r => r.icon)),
+        ]))
     }
 };
 
 const range = (start: number, end: number) => Array.from({ length: end - start }, (_, i) => i + start);
-
-type ValueList = {
-    name: string,
-    count: number,
-    types: string[],
-    urls: number[]
-}[];
 
 const isObject = (k: any) => typeof k === 'object' && !Array.isArray(k) && k !== null;
 
@@ -221,9 +184,9 @@ function* visitValues(values: [string, any]): Generator<{
         for (const [key, value] of Object.entries(input)) {
             for (const val of visitValues([url, value])) {
                 let name = key.replaceAll('.', '#');
-                if(val.name.startsWith('[')) {
+                if (val.name.startsWith('[')) {
                     name = key + val.name;
-                } else if(val.name !== "") {
+                } else if (val.name !== "") {
                     name = key + '.' + val.name
                 }
                 yield {
@@ -256,11 +219,11 @@ function* visitValues(values: [string, any]): Generator<{
 }
 
 export function calculateValues(input: [string, ValueTree][]): ValuesData {
-    const list = 
+    const list =
         input.map(x => [...visitValues(x)]).flat()
             .filter(x => x.name !== "")
             .filter(x => x.type !== "object");
-    const names = [...new Set(list.map(x => x.name))]        
+    const names = [...new Set(list.map(x => x.name))]
 
     const types = list.reduce(
         (map, val) => {
@@ -281,7 +244,7 @@ export function calculateValues(input: [string, ValueTree][]): ValuesData {
     const idToUrlMap: Record<number, string> = Object.fromEntries(Object.entries(urlToIdMap).map(([k, v]) => [v, k]));
 
     const valueMap = list.map(item => {
-        const {  name, url, value } = item;
+        const { name, url, value } = item;
         return {
             name,
             url: urlToIdMap[url],
@@ -306,12 +269,12 @@ export function calculateValues(input: [string, ValueTree][]): ValuesData {
             map[val.name].add(urlToIdMap[val.url]);
             return map;
         }, {} as Record<string, Set<number>>);
-    
-        
+
+
     // use nameUrlMap for count 
-    const counts = 
+    const counts =
         Object.fromEntries(names
-              .map(x => [x, nameUrlMap[x].size]));
+            .map(x => [x, nameUrlMap[x].size]));
 
     // we want the max count for each prefix
     const countSplitted: [string, number][] = Object.entries(counts).map(([name, count]) => {
@@ -328,11 +291,6 @@ export function calculateValues(input: [string, ValueTree][]): ValuesData {
         return map;
     }, {} as Record<string, number>);
     // check if one of the count > 50
-    const isDebug = Object.values(countMap).find(c => c > 50) !== undefined;
-    if (isDebug) {
-        console.log(countMap);
-    }
-
     const valuesList = names.sort((a, b) => {
         const an = a.split('.');
         const bn = b.split('.');
@@ -343,10 +301,10 @@ export function calculateValues(input: [string, ValueTree][]): ValuesData {
             }
             c++;
         }
-        
+
         const caMax = range(1, an.length + 1).map(o => an.slice(0, o).join(".")).map(o => countMap[o]).slice(c).reduce((a, b) => Math.max(a, b), 0);
         const cbMax = range(1, bn.length + 1).map(o => bn.slice(0, o).join(".")).map(o => countMap[o]).slice(c).reduce((a, b) => Math.max(a, b), 0);
-        if(caMax === cbMax) {
+        if (caMax === cbMax) {
             return a.localeCompare(b);
         }
         return cbMax - caMax;
@@ -363,7 +321,10 @@ export function calculateValues(input: [string, ValueTree][]): ValuesData {
     }
 }
 
-export function pageGenerator({ releases, repos, values, count }: CollectorData): Record<string, PageData> {
+export function pageGenerator(
+    { releases, repos, values, count }: CollectorData,
+    filterRelevant: boolean = true
+): Record<string, PageData> {
     const releaseMap = releases.reduce((acc, cur) => {
         acc[cur.key] = cur;
         return acc;
@@ -371,11 +332,16 @@ export function pageGenerator({ releases, repos, values, count }: CollectorData)
     const pages: Record<string, PageData> = {};
     const relevant = Object.entries(count)
         .sort((a, b) => b[1] - a[1])
-        .filter(([k, v]) => v > 3);
+        .filter(([k, v]) =>
+            filterRelevant ?
+                v >= MINIMUM_COUNT
+                : v < MINIMUM_COUNT
+        );
     for (const [key, value] of relevant) {
         const { name } = releaseMap[key];
         let doc = undefined;
-        const docPath = path.join(__dirname, '../info/', `${name}.md`);
+        const docPath = path.join(__dirname, '../../info/', `${name}.md`);
+        console.log(docPath);
         const icon = mode(repos[key].filter(r => r.icon).map(r => r.icon));
         const helmRepoName = mode(repos[key].map(r => r.helm_repo_name));
         const helmRepoURL = mode(repos[key].map(r => r.helm_repo_url));
@@ -388,6 +354,7 @@ export function pageGenerator({ releases, repos, values, count }: CollectorData)
             console.log("No doc for", name);
         }
         pages["/hr/" + key] = {
+            title: name + ' helm release',
             name,
             key,
             repos: repos[key],

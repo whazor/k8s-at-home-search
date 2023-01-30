@@ -14,7 +14,7 @@ const pageData = window.__PAGE_DATA__;
 
 ReactDOM.hydrateRoot(
   document.getElementById('app')!,
-  <BrowserRouter>
+  <BrowserRouter basename='/k8s-at-home-search/'>
     <App {...appData} pageData={pageData} />
   </BrowserRouter>,
 )

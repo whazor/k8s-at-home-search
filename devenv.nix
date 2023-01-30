@@ -8,8 +8,11 @@
   packages = [
     pkgs.pigz
     pkgs.sqlite
+    pkgs.playwright.browsers
   ];
 
+  env.PLAYWRIGHT_BROWSERS_PATH="${pkgs.playwright.browsers}";
+  env.PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS="true";
   # https://devenv.sh/processes/
   # processes.ping.exec = "ping example.com";
 }

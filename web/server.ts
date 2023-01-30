@@ -28,7 +28,21 @@ async function createServer() {
     // if you use your own express router (express.Router()), you should use router.use
     app.use(vite.middlewares)
 
-    app.use('*', async (req, res, next) => {
+    // /k8s-at-home-search/hr/data-*.json => dist/static/hr/data-*.json
+    app.use("/k8s-at-home-search/hr/data-:id.json", (req, res) => {
+        const id = req.params.id;
+        // if not number
+        if (id.match(/[^0-9]/)) {
+            res.status(404).end();
+            return;
+        }
+        const file = path.join(__dirname, "dist", "static", "hr", `data-${id}.json`);
+        console.log(file);
+        const data = fs.readFileSync(file, "utf-8");
+        res.status(200).set({ 'Content-Type': 'application/json' }).end(data);
+    });
+
+    app.use(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
         const url = req.originalUrl
 
         try {
@@ -39,7 +53,7 @@ async function createServer() {
         } catch (e) {
             // If an error is caught, let Vite fix the stack trace so it maps back to
             // your actual source code.
-            vite.ssrFixStacktrace(e)
+            vite.ssrFixStacktrace(e as Error)
             next(e)
         }
     })
