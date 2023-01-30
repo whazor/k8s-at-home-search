@@ -1,4 +1,7 @@
 {
+  "node_modules/github-buttons/dist/buttons.esm.js": [
+    "/k8s-at-home-search/assets/buttons.esm-1047f35f.js"
+  ],
   "\u0000vite/modulepreload-polyfill": [],
   "\u0000commonjsHelpers.js": [],
   "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react/jsx-runtime.js?commonjs-module": [],
@@ -37,6 +40,8 @@
   "src/index.css?used&inline": [],
   "src/generators/helm-release/models.ts": [],
   "src/components/search/index.tsx": [],
+  "\u0000vite/preload-helper": [],
+  "node_modules/react-github-btn/index.js": [],
   "src/App.tsx": [],
   "src/entry-client.tsx": [],
   "index.html": []
