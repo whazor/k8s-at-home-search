@@ -1553,6 +1553,11 @@ get-intrinsic@^1.0.2:
     has "^1.0.3"
     has-symbols "^1.0.3"
 
+github-buttons@^2.22.0:
+  version "2.22.3"
+  resolved "https://registry.yarnpkg.com/github-buttons/-/github-buttons-2.22.3.tgz#ad0766618dadfbb46c12c5dca1f8c14c1e7d90f3"
+  integrity sha512-09/pJ7X6D1whEeFz+fKSjOBEEDnY/nxbPN7zduxAU5zGwo4RkXjL86AiOVHgIYDothbHAS43eaVk76a8Lp4YYw==
+
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
@@ -3102,6 +3107,13 @@ react-dom@^18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-github-btn@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-github-btn/-/react-github-btn-1.4.0.tgz#92654107e92658e60dd977c7a92b212f806da78d"
+  integrity sha512-lV4FYClAfjWnBfv0iNlJUGhamDgIq6TayD0kPZED6VzHWdpcHmPfsYOZ/CFwLfPv4Zp+F4m8QKTj0oy2HjiGXg==
+  dependencies:
+    github-buttons "^2.22.0"
 
 react-router-dom@^6.6.2:
   version "6.8.0"
