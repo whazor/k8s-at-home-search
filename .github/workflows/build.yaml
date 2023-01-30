@@ -26,12 +26,12 @@ jobs:
           repository: "Whazor/k8s-at-home-search"
           latest: true
           fileName: "repos*.db.zz"
-          out-file-path: "./web/public/"
+          out-file-path: "./web/"
       - name: Decompress files
         run: |
           apt-get update -y && apt-get install -y pigz
-          pigz -d web/public/repos.db.zz
-          pigz -d web/public/repos-extended.db.zz
+          pigz -d web/repos.db.zz
+          pigz -d web/repos-extended.db.zz
       - name: Build web 🚧
         run: yarn run generate
         working-directory: web/
