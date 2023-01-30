@@ -65,7 +65,8 @@ const config: PlaywrightTestConfig = {
       use: {
         ...devices['Desktop Chrome'],
         launchOptions: {
-          executablePath: process.env["PLAYWRIGHT_BROWSERS_PATH"] + "/chromium-1028/chrome-linux/chrome",
+
+          executablePath: "PLAYWRIGHT_BROWSERS_PATH" in process.env ? process.env["PLAYWRIGHT_BROWSERS_PATH"] + "/chromium-1028/chrome-linux/chrome" : undefined,
       
         },
       },
