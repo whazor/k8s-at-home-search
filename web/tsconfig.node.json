@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "emitDeclarationOnly": true,
+        "declaration": true,
+        "outDir": "dist/server",
+        "esModuleInterop": true,
+        "jsx": "react-jsx",
+        "module": "CommonJS",
+
+    "moduleResolution": "Node",
+    },
+    "include": ["src/entry-server.tsx"]
+  }

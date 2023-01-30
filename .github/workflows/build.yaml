@@ -16,34 +16,39 @@ jobs:
       - name: NPM or Yarn install with caching 📦
         uses: bahmutov/npm-install@v1
         with:
-          working-directory: frontend/
+          working-directory: web/
       - name: Install dependencies 📦
-        run: yarn install --frozen-lockfile
-        working-directory: frontend/
+        run: yarn install --web-lockfile
+        working-directory: web/
       - name: Download DB 📙
         uses: robinraju/release-downloader@v1.4
         with:
           repository: "Whazor/k8s-at-home-search"
           latest: true
           fileName: "repos*.db.zz"
-          out-file-path: "./frontend/public/"
-      - name: Build frontend 🚧
-        run: yarn run build
-        working-directory: frontend/
+          out-file-path: "./web/public/"
+      - name: Decompress files
+        run: |
+          apt-get update -y && apt-get install -y pigz
+          pigz -d web/public/repos.db.zz
+          pigz -d web/public/repos-extended.db.zz
+      - name: Build web 🚧
+        run: yarn run generate
+        working-directory: web/
       - name: Install Playwright Browsers
         run: yarn playwright install --with-deps
-        working-directory: frontend/
+        working-directory: web/
       - name: Run Playwright tests
         run: yarn playwright test
-        working-directory: frontend/
+        working-directory: web/
       - uses: actions/upload-artifact@v2
         if: always()
         with:
           name: playwright-report
-          path: frontend/playwright-report/
+          path: web/playwright-report/
           retention-days: 30
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:
           branch: gh-pages
-          folder: frontend/dist
+          folder: web/dist
