@@ -24,6 +24,8 @@ export function SearchBar(props: { releases: ReleaseInfo[] }) {
         .filter(({ chart, release, chartsUrl }) => {
         return chart.toLowerCase().includes(search.toLowerCase()) || release.toLowerCase().includes(search.toLowerCase()) || simplifyURL(chartsUrl).toLowerCase().includes(search.toLowerCase())
     });
+    const availableSearches = searches.filter(({ count }) => count >= MINIMUM_COUNT);
+    const unavailableSearches = searches.filter(({ count }) => count < MINIMUM_COUNT);
     return <label>
         <span className='sr-only dark:text-white'>Search for a chart:</span>
         <input
@@ -46,8 +48,7 @@ export function SearchBar(props: { releases: ReleaseInfo[] }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* {JSON.stringify(props.releases)} */}
-                    {searches.map(({ key, chart, release, chartsUrl, count }) => {
+                    {availableSearches.map(({ key, chart, release, chartsUrl, count }) => {
                         return <tr key={'hr-release'+key}>
                             <td><a href={`/k8s-at-home-search/hr/${key}`}>{release}</a></td>
                             <td><a href={`/k8s-at-home-search/hr/${key}`}>
@@ -56,7 +57,15 @@ export function SearchBar(props: { releases: ReleaseInfo[] }) {
                             <td><a href={`/k8s-at-home-search/hr/${key}`}>{count}</a></td>
                         </tr>
                     })}
-
+                    {unavailableSearches.map(({ key, chart, release, chartsUrl, count }) => {
+                        return <tr key={'hr-release'+key}>
+                            <td><Link to={`/hr/${key}`}>{release}</Link></td>
+                            <td><Link to={`/hr/${key}`}>
+                                {simplifyURL(chartsUrl) + '/' + chart}
+                            </Link></td>
+                            <td><Link to={`/hr/${key}`}>{count}</Link></td>
+                        </tr>
+                    })}
                 </tbody>
             </table>
         }
