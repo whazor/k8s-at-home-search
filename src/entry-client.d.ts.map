@@ -1,0 +1,1 @@
+{"version":3,"file":"entry-client.d.ts","sourceRoot":"","sources":["../../src/entry-client.tsx"],"names":[],"mappings":"AAEA,OAAY,EAAE,OAAO,EAAE,MAAM,OAAO,CAAA;AAGpC,OAAO,CAAC,MAAM,CAAC;IACb,UAAU,MAAM;QACd,YAAY,EAAE,OAAO,CAAC;QACtB,aAAa,EAAE,GAAG,CAAC;KACpB;CACF"}
