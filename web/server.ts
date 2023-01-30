@@ -37,7 +37,6 @@ async function createServer() {
             return;
         }
         const file = path.join(__dirname, "dist", "static", "hr", `data-${id}.json`);
-        console.log(file);
         const data = fs.readFileSync(file, "utf-8");
         res.status(200).set({ 'Content-Type': 'application/json' }).end(data);
     });

@@ -36,5 +36,9 @@ const renderer = new Renderer()
   for (const url of routesToPrerender) {
     pageGenerators.push(generatePage(url));
   }
+
+  const sitemap = await renderer.generateSitemap();
+  await fs.promises.writeFile(toAbsolute(`dist/static/sitemap.xml`), sitemap);
+
   await Promise.all(pageGenerators);
 })()
