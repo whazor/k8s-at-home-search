@@ -35,8 +35,8 @@
   "src/pages/helm-release.tsx": [],
   "src/pages/index.tsx": [],
   "src/index.css?used&inline": [],
-  "src/components/search/index.tsx": [],
   "src/generators/helm-release/models.ts": [],
+  "src/components/search/index.tsx": [],
   "src/App.tsx": [],
   "src/entry-client.tsx": [],
   "index.html": []
