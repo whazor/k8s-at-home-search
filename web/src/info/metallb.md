@@ -1,0 +1,1 @@
+[metallb](https://metallb.universe.tf/) is a load-balancer implementation for Kubernetes, allowing you to create services with `type: LoadBalancer`. With BGP, you can setup IP ranges in your network that get assigned to k8s services. You can use IP addresses that are assigned to you, and share them amongst services.
