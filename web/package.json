@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "nodemon -e ts,md,json ./server.ts",
+    "dev": "nodemon -e ts,md,json,html ./server.ts",
     "build": "tsc && npm run build:client && npm run build:server",
     "build:client": "vite build --outDir dist/client  --ssrManifest  --base=/k8s-at-home-search/",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server  --base=/k8s-at-home-search/",
