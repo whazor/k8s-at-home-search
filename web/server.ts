@@ -30,15 +30,14 @@ async function createServer() {
 
     // /k8s-at-home-search/hr/data-*.json => dist/static/hr/data-*.json
     app.use("/k8s-at-home-search/hr/data-:id.json", (req, res) => {
-        const id = req.params.id;
-        // if not number
-        if (id.match(/[^0-9]/)) {
+        const id = parseInt(req.params.id);
+        if (id in renderer.jsonFilesData) {
+            // input is already json stringified
+            // res.json(renderer.jsonFilesData[id]);
+            res.status(200).header('Content-Type', 'application/json').send(renderer.jsonFilesData[id]);
+        } else {
             res.status(404).end();
-            return;
         }
-        const file = path.join(__dirname, "dist", "static", "hr", `data-${id}.json`);
-        const data = fs.readFileSync(file, "utf-8");
-        res.status(200).set({ 'Content-Type': 'application/json' }).end(data);
     });
 
     app.use(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -46,7 +45,8 @@ async function createServer() {
 
         try {
             const transformed = await vite.transformIndexHtml(url, template);
-            const html = await renderer.generatePage(url, transformed);
+            const { render } = await vite.ssrLoadModule('/src/entry-server.tsx');
+            const html = await renderer.generatePage(render, url, transformed);
 
             res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
         } catch (e) {

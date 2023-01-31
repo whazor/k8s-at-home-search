@@ -1,4 +1,4 @@
-export default function(props: {
+export default function (props: {
     headers: any[],
     rows: {
         key: string,
@@ -19,11 +19,11 @@ export default function(props: {
         <tbody>
             {props.rows.map((row) => {
                 return <tr key={row.key}>
-                    {row.data.map((cell) => {
-                        return <td className="border-t dark:border-gray-800 px-4 py-2 text-sm dark:text-white"
+                    {row.data.map((cell, i) => {
+                        return <td key={row.key + '-' + i}
+                            className="border-t dark:border-gray-800 px-4 py-2 text-sm dark:text-white"
                         >{cell}</td>
-                    }
-                    )}
+                    })}
                 </tr>
             }
             )}

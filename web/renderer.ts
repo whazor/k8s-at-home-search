@@ -1,6 +1,3 @@
-import fs from 'node:fs'
-import path from 'node:path'
-
 import sqlite3 from 'sqlite3';
 import { Database, open } from 'sqlite';
 import {
@@ -8,6 +5,7 @@ import {
     appDataGenerator as hrAppDataGenerator,
     pageGenerator as hrPageGenerator,
 } from './src/generators/helm-release/generator';
+import type { RenderFunction } from './src/entry-server';
 
 // use class, to avoid variables going back and forth
 export class Renderer {
@@ -91,9 +89,7 @@ export class Renderer {
         return Object.keys(this.htmlPageData);
     }
 
-    async generatePage(url: string, template: string) {
-        // @ts-ignore
-        const { render } = await import('./dist/server/entry-server.mjs')
+    async generatePage(render: RenderFunction,  url: string, template: string) {
         const pageData = (
             () => {
                 let strippedUrl = url;

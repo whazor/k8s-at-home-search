@@ -2,6 +2,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { Renderer } from './renderer'
+import type { RenderFunction } from './src/entry-server'
 
 const toAbsolute = (p: string) => path.resolve(__dirname, p)
 
@@ -15,8 +16,10 @@ const renderer = new Renderer()
   // mkdir
   await fs.promises.mkdir(toAbsolute('dist/static/hr/'), { recursive: true });
 
+  const { render }: { render: RenderFunction } = await import('./dist/server/entry-server.mjs');
+
   async function generatePage(url: string) {
-    const html = await renderer.generatePage("/k8s-at-home-search"+url, template);
+    const html = await renderer.generatePage(render, "/k8s-at-home-search"+url, template);
     await fs.promises.writeFile(toAbsolute(`dist/static${url + (url.endsWith('/') ? 'index' : '')}.html`), html);
   }
   

@@ -73,8 +73,7 @@ export default function HR(props: HRProps) {
       const file = props.keyFileMap[props.url];
       fetch(`./data-${file}.json`)
         .then(res => res.json())
-        .then((data: any) => data[props.url] as PageData)
-        .then(setPageData);
+        .then((data: any) => { setPageData(data[props.url] as PageData); });
     }
   }, [pageData, props.url]);
 
@@ -150,7 +149,7 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
         rows={valueList.map(({ name, count, types, urls }) => ({
           key: 'popular-repos-values' + name,
           data: [
-            <ValueRow {...{ name, count, types, urls }}
+            <ValueRow {...{ name, count, types, urls }} key={'value-row'+name}
               values={name in valueMap ?
                 (Object.entries(valueMap[name]) as unknown as [number, any][]
                 ).map(([k, v]) => [urlMap[k], v])

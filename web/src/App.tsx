@@ -13,7 +13,7 @@ export default function App(props: AppData & { pageData: any }) {
   const releases = denormalize(props).releases;
   return (
     <div className='p-4 dark:bg-gray-900'>
-      <style>{styles}</style>
+      <style suppressHydrationWarning={true}>{styles}</style>
       <nav>
       <div className="float-right p-4 pt-0">
         <GitHubButton href="https://github.com/whazor/k8s-at-home-search" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star whazor/k8s-at-home on GitHub">Star</GitHubButton>
@@ -35,11 +35,12 @@ export default function App(props: AppData & { pageData: any }) {
                 key={'hr-'+key}
                 path={`/hr/${key}`}
                 element={<HelmRelease {...{ chart, release }} 
+                    key={'hr-el'+key}
                       url={'/hr/'+key}
                       pageData={pageData}
                       keyFileMap={props.keyFileMap}
                        />}
-              />
+                ></Route>
             )
           })}
         </Routes>

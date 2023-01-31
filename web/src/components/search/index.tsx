@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MINIMUM_COUNT, ReleaseInfo } from "../../generators/helm-release/models";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export function SearchBar(props: { releases: ReleaseInfo[] }) {
     const [search, setSearch] = useState('')
+    let location = useLocation();
+    useEffect(() => {
+        setSearch('');
+    }, [location.pathname])
+    
     const simplifyURL = (url: string) => {
         // get domain
         let domain = url.replace(/https?:\/\//, '').split('/')[0];
