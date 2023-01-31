@@ -87,6 +87,7 @@ export interface PageData {
     key: string;
     title: string;
     name: string;
+    chartName: string;
     doc?: string;
     icon?: string;
     helmRepoName?: string,

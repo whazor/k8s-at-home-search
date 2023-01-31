@@ -83,7 +83,7 @@ export default function HR(props: HRProps) {
 
   if(!pageData) return (<div>Loading...</div>);
 
-  const { name, doc, repos, icon, values: valueResult, helmRepoName, helmRepoURL } = pageData;
+  const { name, doc, repos, icon, values: valueResult, chartName, helmRepoName, helmRepoURL } = pageData;
 
   const urlMap = valueResult.urlMap;
   const valueList = valueResult.list.map(v => ({
@@ -116,7 +116,7 @@ export default function HR(props: HRProps) {
       <Text>Install with:</Text>
       <Code>
         {`helm repo add ${helmRepoName} ${helmRepoURL}
-helm install ${name} ${helmRepoName}/${name} -f values.yaml`}
+helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
       </Code>
       <Heading type='h2'>
         {showAll ? 'All' : 'Top'} Repositories ({repoCount} out of {repos.length})

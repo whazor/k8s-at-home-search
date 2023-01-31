@@ -338,7 +338,7 @@ export function pageGenerator(
                 : v < MINIMUM_COUNT
         );
     for (const [key, value] of relevant) {
-        const { name } = releaseMap[key];
+        const { name, chart } = releaseMap[key];
         let doc = undefined;
         const docPath = path.join(__dirname, '../../info/', `${name}.md`);
         console.log(docPath);
@@ -362,6 +362,7 @@ export function pageGenerator(
                 repos[key].map(r => r.url).map(url => [url, values[url]])),
             doc,
             icon,
+            chartName: chart,
             helmRepoName,
             helmRepoURL,
         }
