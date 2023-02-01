@@ -56,19 +56,15 @@ export function SearchBar(props: { releases: ReleaseInfo[] }) {
                     {availableSearches.map(({ key, chart, release, chartsUrl, count }) => {
                         return <tr key={'hr-release'+key}>
                             <td><a href={`/k8s-at-home-search/hr/${key}`}>{release}</a></td>
-                            <td><a href={`/k8s-at-home-search/hr/${key}`}>
-                                {simplifyURL(chartsUrl) + '/' + chart}
-                            </a></td>
-                            <td><a href={`/k8s-at-home-search/hr/${key}`}>{count}</a></td>
+                            <td>{simplifyURL(chartsUrl) + '/' + chart}</td>
+                            <td>{count}</td>
                         </tr>
                     })}
                     {unavailableSearches.map(({ key, chart, release, chartsUrl, count }) => {
                         return <tr key={'hr-release'+key}>
                             <td><Link to={`/hr/${key}`}>{release}</Link></td>
-                            <td><Link to={`/hr/${key}`}>
-                                {simplifyURL(chartsUrl) + '/' + chart}
-                            </Link></td>
-                            <td><Link to={`/hr/${key}`}>{count}</Link></td>
+                            <td>{simplifyURL(chartsUrl) + '/' + chart}</td>
+                            <td>{count}</td>
                         </tr>
                     })}
                 </tbody>

@@ -106,10 +106,10 @@ export default function HR(props: HRProps) {
   return (
     <>
       <Heading type='h1'>{icon && <Icon icon={icon} />} {name} helm</Heading>
-      <div className='mb-4 dark:text-slate-200'
+      <div className='mb-4 dark:text-slate-200 prose'
         dangerouslySetInnerHTML={{
           __html: doc ||
-            `No introduction found. <a href="${docUrl}" target="_blank" class="text-blue-500 hover:text-blue-700 hover:underline">Create it?</a>`
+            `No introduction found. <a href="${docUrl}" target="_blank">Create it?</a>`
         }} />
       <Heading type='h2'>Install</Heading>
       <Text>Install with:</Text>
@@ -126,15 +126,11 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
           key: 'examples' + repo.url,
           data:
             [
-              <a href={repo.url} target={'_blank'}
-                className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer'
-              >
+                <a href={repo.url} target={'_blank'}>
                 {repo.icon && <Icon icon={repo.icon} />}
                 {repo.name}
               </a>,
-              <a href={repo.repo_url} target={'_blank'}
-                className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer'
-              >{repo.repo}</a>,
+              <a href={repo.repo_url} target={'_blank'}>{repo.repo}</a>,
               repo.stars,
               repo.chart_version,
               dayjs.unix(repo.timestamp).fromNow()

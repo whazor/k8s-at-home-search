@@ -15,7 +15,7 @@ export default function App(props: AppData & { pageData: any }) {
     <div className='p-4 dark:bg-gray-900'>
       <style suppressHydrationWarning={true}>{styles}</style>
       <nav>
-      <div className="float-right p-4 pt-0">
+      <div className="float-right m-4 w-32 h-7 place-content-end">
         <GitHubButton href="https://github.com/whazor/k8s-at-home-search" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star whazor/k8s-at-home on GitHub">Star</GitHubButton>
       </div>
         <a
