@@ -5,7 +5,7 @@ test('test helm release page', async ({ page }) => {
     await expect(page.$$('text="is a certificate management controller for Kubernetes."')).toBeTruthy();
 
     // Top Repositories (5 out of N), find out N
-    const topRepositories = await page.$$('h1:has-text("Top Repositories")');
+    const topRepositories = await page.$$('h3:has-text("Top Repositories")');
     await expect(topRepositories.length).toBe(1);
     const topRepositoriesText = await topRepositories[0].innerText();
     // use regex
