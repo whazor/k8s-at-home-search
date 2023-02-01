@@ -2,7 +2,6 @@ import Icon from '../components/icon';
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useEffect, useState } from 'react';
-import Heading from '../components/heading';
 import Text from '../components/text';
 import Code from '../components/code';
 import Table from '../components/table';
@@ -34,9 +33,7 @@ function ValueRow(props: {
   const shouldDrawArray = name.endsWith("[]");
   return (
     <div className='max-w-md break-words'>
-      <a className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer'
-        onClick={() => setShow(!show)}
-      >{name} ({count})</a>
+      <a onClick={() => setShow(!show)}>{name} ({count})</a>
       {show && values &&
         <Table headers={['Value', 'Repo']}
           rows={values.map(([url, value]) => ({
@@ -44,15 +41,12 @@ function ValueRow(props: {
             data: [
               <div className='max-w-md break-words'>{
                 value.map((v: any) => [
-                  shouldDrawArray ? "- " + v : v
-                  , <br />]
+                  shouldDrawArray ? "- " + v : v, <br />]
                 )
 
               }</div>,
               <div>
-                <a href={url} target="_blank"
-                  className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer'
-                >
+                <a href={url} target="_blank">
                   {urlNames[url]}
                 </a>
               </div>
@@ -67,7 +61,7 @@ function ValueRow(props: {
 export default function HR(props: HRProps) {
   const [pageData, setPageData] = useState(props.pageData);
   const [showAll, setShowAll] = useState(false);
-  
+
   useEffect(() => {
     if (!pageData) {
       const file = props.keyFileMap[props.url];
@@ -77,12 +71,12 @@ export default function HR(props: HRProps) {
     }
   }, [pageData, props.url]);
 
-  if(!pageData && !(props.url in props.keyFileMap)) 
+  if (!pageData && !(props.url in props.keyFileMap))
     return (<div>Not found: {props.url}</div>);
 
-  if(!pageData) return (<div>Loading...</div>);
+  if (!pageData) return (<div>Loading...</div>);
 
-  const { name, doc, repos, icon, values: valueResult, chartName, helmRepoName, helmRepoURL } = pageData;
+  const { name, repos, icon, values: valueResult, chartName, helmRepoName, helmRepoURL } = pageData;
 
   const urlMap = valueResult.urlMap;
   const valueList = valueResult.list.map(v => ({
@@ -91,9 +85,10 @@ export default function HR(props: HRProps) {
   }));
   const valueMap = valueResult.valueMap;
 
-  
-  const docUrl = `https://github.com/whazor/k8s-at-home-search/new/main/?filename=web/src/info/${name}.md`;
 
+  const docUrl = `https://github.com/whazor/k8s-at-home-search/new/main/?filename=web/src/info/${name}.md`;
+  const doc = pageData.doc || `No introduction found. <a href="${docUrl}" target="_blank">Create it?</a>`;
+  console.log("doc:", doc);
   const needsFilter = repos.filter(rel => rel.stars > STAR_THRESHOLD).length > MAX_REPOS;
 
   // sort by timestamp
@@ -105,28 +100,29 @@ export default function HR(props: HRProps) {
   const repoCount = Math.min(showAll ? repos.length : MAX_REPOS, repos.length);
   return (
     <>
-      <Heading type='h1'>{icon && <Icon icon={icon} />} {name} helm</Heading>
-      <div className='mb-4 dark:text-slate-200 prose'
-        dangerouslySetInnerHTML={{
-          __html: doc ||
-            `No introduction found. <a href="${docUrl}" target="_blank">Create it?</a>`
-        }} />
-      <Heading type='h2'>Install</Heading>
+      <h2>{icon && <Icon icon={icon} />} {name} helm</h2>
+      <div className='prose dark:prose-invert'>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: doc
+          }} />
+      </div>
+      <h3>Install</h3>
       <Text>Install with:</Text>
       <Code>
         {`helm repo add ${helmRepoName} ${helmRepoURL}
 helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
       </Code>
-      <Heading type='h2'>
+      <h3>
         {showAll ? 'All' : 'Top'} Repositories ({repoCount} out of {repos.length})
-      </Heading>
+      </h3>
       <Text>See examples from other people:</Text>
       <Table headers={['Name', 'Repo', 'Stars', 'Version', 'Timestamp']}
         rows={(!showAll ? top : repos).map(repo => ({
           key: 'examples' + repo.url,
           data:
             [
-                <a href={repo.url} target={'_blank'}>
+              <a href={repo.url} target={'_blank'}>
                 {repo.icon && <Icon icon={repo.icon} />}
                 {repo.name}
               </a>,
@@ -139,13 +135,13 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
       {!showAll && <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mb-6'
         onClick={() => setShowAll(!showAll)}
       >See all {repos.length} releases</button>}
-      <Heading type='h2'>Values</Heading>
+      <h3>Values</h3>
       <Text>See the most popular values for this chart:</Text>
       <Table headers={['Key', 'Types']}
         rows={valueList.map(({ name, count, types, urls }) => ({
           key: 'popular-repos-values' + name,
           data: [
-            <ValueRow {...{ name, count, types, urls }} key={'value-row'+name}
+            <ValueRow {...{ name, count, types, urls }} key={'value-row' + name}
               values={name in valueMap ?
                 (Object.entries(valueMap[name]) as unknown as [number, any][]
                 ).map(([k, v]) => [urlMap[k], v])

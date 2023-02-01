@@ -1,10 +1,9 @@
 import Icon from "../components/icon"
-import Heading from "../components/heading";
 
 export default function Home(props: {releases: {key: string, chart: string, release: string, count: number, icon?: string}[]}) {
     return (
       <>
-        <Heading type="h2">Popular releases</Heading>
+        <h2>Popular releases</h2>
         {props.releases.sort((a, b) => b.count - a.count).filter(a => a.count > 5).map(({key, chart, icon, release}) => {
           return (
             <a href={`/k8s-at-home-search/hr/${key}`} key={'wordcloud-' + key} className="

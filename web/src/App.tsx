@@ -12,8 +12,8 @@ export default function App(props: AppData & { pageData: any }) {
   const { pageData, } = props;
   const releases = denormalize(props).releases;
   return (
-    <div className='p-4 dark:bg-gray-900'>
-      <style suppressHydrationWarning={true}>{styles}</style>
+    <div className='p-4'>
+      <style dangerouslySetInnerHTML={{ __html: styles }} />
       <nav>
       <div className="float-right m-4 w-32 h-7 place-content-end">
         <GitHubButton href="https://github.com/whazor/k8s-at-home-search" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star whazor/k8s-at-home on GitHub">Star</GitHubButton>
