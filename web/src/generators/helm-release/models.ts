@@ -9,10 +9,15 @@ export type ReleaseInfoCompressed = [
     string|undefined, // icon
 ]
 
+export interface RepoAlsoHas {
+    interestingIdToName: Record<number, string>
+    repoAlsoHasMap: Record<string, number[]>
+}
 export interface AppData {
     chartURLs: string[];
     releases: ReleaseInfoCompressed[],
     keyFileMap: Record<string, number>,
+    repoAlsoHas: RepoAlsoHas
 }
 export interface ReleaseInfo {
     release: string;

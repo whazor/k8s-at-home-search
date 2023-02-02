@@ -9,7 +9,7 @@ import GitHubButton from 'react-github-btn';
 export type AppData = HRAppData;
 
 export default function App(props: AppData & { pageData: any }) {
-  const { pageData, } = props;
+  const { pageData, repoAlsoHas, } = props;
   const releases = denormalize(props).releases;
   return (
     <div className='p-4'>
@@ -38,6 +38,7 @@ export default function App(props: AppData & { pageData: any }) {
                     key={'hr-el'+key}
                       url={'/hr/'+key}
                       pageData={pageData}
+                      repoAlsoHas={repoAlsoHas}
                       keyFileMap={props.keyFileMap}
                        />}
                 ></Route>

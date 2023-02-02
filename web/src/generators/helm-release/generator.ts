@@ -14,6 +14,26 @@ const window = new JSDOM('<!DOCTYPE html>').window;
 const DOMPurify = createDOMPurify(window);
 
 
+// When looking at a certain release,
+// we want to offer users the ability to filter
+// repos that also have the following releases.
+//
+// Add more if you want via PR. The idea is to have releases
+// that divide the community into groups, such as nginx vs traefik.
+const INTERESTING = [
+    'authelia',
+    'authentik',
+    'nfs-subdir-external-provisioner',
+    'csi-driver-nfs', 
+    'external-dns', 
+    'ingress-nginx', 
+    'longhorn',
+    'rook-ceph-cluster',
+    'traefik', 
+    'velero',
+    'volsync',
+];
+
 function mode<K extends string | number | symbol>(array: K[]) {
     if (array.length == 0)
         return undefined;
@@ -150,13 +170,39 @@ function normalizeData(data: string[]): [string[], Record<string, number>] {
     ]
 }
 
+function repoAlsoHas(data: CollectorData) {
+    const interestingIdToName = Object.fromEntries(INTERESTING.map((x, i) => [i, x]));
+    const interestingNameToId = Object.fromEntries(INTERESTING.map((x, i) => [x, i]));
+
+    const { repos } = data;
+    const set = new Set(INTERESTING);
+    const repoAlsoHasMap: Record<string, number[]> = {};
+    for (const { repo, name } of Object.values(repos).flat()) {
+        if (set.has(name)) {
+            if (!repoAlsoHasMap[repo]) {
+                repoAlsoHasMap[repo] = [];
+            }
+            repoAlsoHasMap[repo].push(interestingNameToId[name]);
+        }
+    }
+    return {
+        interestingIdToName,
+        repoAlsoHasMap
+    }
+}
+
 export function appDataGenerator(data: CollectorData): 
-    Pick<AppData, 'chartURLs' | 'releases'> 
+    Pick<AppData, 'chartURLs' | 'releases' | 'repoAlsoHas'> 
 {
     const { releases, keys, count, repos } = data;
     const [chartURLs, chartURLMap] = normalizeData(releases.map(r => r.chartsUrl));
+
+
+
+
     return {
         chartURLs,
+        repoAlsoHas: repoAlsoHas(data),
         releases: releases.map(r => ([
             r.release,
             r.chart,
