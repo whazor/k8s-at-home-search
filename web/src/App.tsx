@@ -20,8 +20,8 @@ export default function App(props: AppData & { pageData: any }) {
       </div>
         <a
         href={'/k8s-at-home-search/'} 
-        ><h1 className="text-3xl dark:text-white">k8s at home search</h1></a>
-        <p className="text-lg dark:text-white">Search for a helm release</p>
+        ><h1 className="text-3xl dark:text-gray-300">k8s at home search</h1></a>
+        <p className="text-lg dark:text-gray-300">Search for a helm release</p>
       </nav>
       <div className='pt-2'>
         <div className='mb-4'>

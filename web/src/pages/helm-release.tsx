@@ -126,7 +126,7 @@ function FilterRepos(props: {
       ))}
       {Object.keys(alsoHas).filter((n) => !filters.has(n)).length > 0 && (
         <select
-          className="border"
+          className="border bg-gray-100 dark:bg-gray-800 dark:border-gray-700"
           onChange={(e) => {
             const name = e.target.value;
             const newSet = new Set(filters);
@@ -266,7 +266,9 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
       />
       {!showAll && filters.size === 0 && (
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3 mb-6"
+          className="bg-blue-500 hover:bg-blue-700 text-white
+          dark:bg-blue-700 dark:hover:bg-blue-500 dark:text-gray-300
+           font-bold py-2 px-4 rounded mt-3 mb-6"
           onClick={() => setShowAll(!showAll)}
         >
           See all {repos.length} releases

@@ -32,9 +32,9 @@ export function SearchBar(props: { releases: ReleaseInfo[] }) {
     const availableSearches = searches.filter(({ count }) => count >= MINIMUM_COUNT);
     const unavailableSearches = searches.filter(({ count }) => count < MINIMUM_COUNT);
     return <label>
-        <span className='sr-only dark:text-white'>Search for a chart:</span>
+        <span className='sr-only dark:text-gray-300'>Search for a chart:</span>
         <input
-            className='peer bg-slate-50 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 dark:bg-black dark:text-white dark:border-gray-700 dark:focus:bg-gray-800 dark:focus:border-blue-500'
+            className='peer bg-slate-50 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 dark:bg-black dark:text-gray-300 dark:border-gray-700 dark:focus:bg-gray-800 dark:focus:border-blue-500'
             type="text"
             placeholder="Search for a chart..."
             value={search}
@@ -44,7 +44,7 @@ export function SearchBar(props: { releases: ReleaseInfo[] }) {
         />
         <div className={`${search === "" ? "max-h-0" : fullHeight} overflow-hidden ease-in-out duration-300 transition-[max-height] ${peerFullHeight}`}>
             {search !== "" &&
-                <table className="w-full m-2 dark:text-white">
+                <table className="w-full m-2 dark:text-gray-300">
                 <thead>
                     <tr>
                         <th className="text-left">Release</th>

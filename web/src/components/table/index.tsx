@@ -10,7 +10,7 @@ export default function (props: {
             <tr>
                 {props.headers.map((header) => {
                     return <th key={header}
-                        className="text-left px-4 py-2 text-sm font-medium text-gray-500 uppercase tracking-wider dark:text-white"
+                        className="text-left px-4 py-2 text-sm font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300"
                     >{header}</th>
                 }
                 )}
@@ -21,7 +21,7 @@ export default function (props: {
                 return <tr key={row.key}>
                     {row.data.map((cell, i) => {
                         return <td key={row.key + '-' + i}
-                            className="border-t dark:border-gray-800 px-4 py-2 text-sm dark:text-white"
+                            className="border-t dark:border-gray-800 px-4 py-2 text-sm dark:text-gray-300"
                         >{cell}</td>
                     })}
                 </tr>
