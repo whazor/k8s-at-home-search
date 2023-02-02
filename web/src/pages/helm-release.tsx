@@ -107,9 +107,10 @@ function FilterRepos(props: {
 
   return (
     <div>
-      <label className="text-sm mr-1">Filter repos who also have:</label>
+      <label className="text-sm mr-1 dark:text-gray-300
+      ">Filter repos who also have:</label>
       {[...filters].map((name) => (
-        <label key={name} className="mr-1">
+        <label key={name} className="mr-1 dark:text-gray-300">
           <input
             type="checkbox"
             onChange={(e) => {
@@ -118,6 +119,7 @@ function FilterRepos(props: {
               setFilters(newSet, selectRepos(newSet));
             }}
             checked={filters.has(name)}
+            className="mr-1"
           />
           {name}
         </label>
