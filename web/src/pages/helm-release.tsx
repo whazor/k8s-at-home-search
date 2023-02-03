@@ -6,6 +6,7 @@ import Text from "../components/text";
 import Code from "../components/code";
 import Table from "../components/table";
 import type { PageData, RepoAlsoHas } from "../generators/helm-release/models";
+import { mode, modeCount } from "../utils";
 
 dayjs.extend(relativeTime);
 
@@ -24,33 +25,39 @@ const MAX_REPOS = 5;
 
 function ValueRow(props: {
   name: string;
-  count: number;
-  types: string[];
+  showMin: boolean;
   urls: string[];
   values?: [string, any][];
 }) {
-  const { name, count, types, urls, values } = props;
+  const { name, urls, values } = props;
   const [show, setShow] = useState(false);
   const urlNames = Object.fromEntries(
     urls.map((u) => [u, u.split("/").slice(3, 5).join("/")])
   );
   const shouldDrawArray = name.endsWith("[]");
+  const valueToText = (value: string[]) => {
+    return value.map((v: any) => [
+      shouldDrawArray ? "- " + v : v,
+      <br />,
+    ])
+  }
+  const [valueMode, valueCount] = modeCount(values?.map(v => v[1]) || [])
   return (
-    <div className="max-w-md break-words">
-      <a onClick={() => setShow(!show)}>
-        {name} ({count})
+    <div className="w-96 lg:w-full break-words">
+      <a onClick={() => setShow(!show)} title={`List all values from ${name}`}>
+        {name} ({values?.length || 0})
       </a>
+      {(valueCount >= 3 || props.showMin) && <div>
+        <code className="text-xs">{valueToText(valueMode)}</code>
+      </div>}
       {show && values && (
         <Table
           headers={["Value", "Repo"]}
           rows={values.map(([url, value]) => ({
             key: "show-values" + props.name + url,
             data: [
-              <div className="max-w-md break-words">
-                {value.map((v: any) => [
-                  shouldDrawArray ? "- " + v : v,
-                  <br />,
-                ])}
+              <div className="w-96 md:w-9/12 break-words">
+                <code className="text-sm">{valueToText(value)}</code>
               </div>,
               <div>
                 <a href={url} target="_blank">
@@ -192,6 +199,10 @@ export default function HR(props: HRProps) {
   const urlMap = valueResult.urlMap;
   const valueList = valueResult.list.map((v) => ({
     ...v,
+    key: v.name,
+    name: v.name.replaceAll(/(([a-zA-Z0-9_\-\/]*#)+[a-zA-Z0-9_\-\/]*)/g, x => {
+      return '"' + x.replaceAll('#', '.') +'"';
+    }),
     urls: v.urls.map((u) => urlMap[u]),
   }));
   const valueMap = valueResult.valueMap;
@@ -210,7 +221,7 @@ export default function HR(props: HRProps) {
     .slice(0, MAX_REPOS);
 
   const filtered = !showAll && filters.size == 0 ? top : filteredRepos;
-
+  const filteredUrls = new Set(filteredRepos.map((r) => r.url));;
   const repoCount = filtered.length;
   return (
     <>
@@ -231,7 +242,7 @@ export default function HR(props: HRProps) {
 helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
       </Code>
       <h3>
-        {showAll ? (filters.size > 0 ? "Filtered" : "All") : "Top"} Repositories
+        {(showAll || !needsFilter) ? (filters.size > 0 ? "Filtered" : "All") : "Top"} Repositories
         ({repoCount} out of {repos.length})
       </h3>
       <Text>See examples from other people.</Text>
@@ -274,24 +285,26 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
           See all {repos.length} releases
         </button>
       )}
-      <h3>Values</h3>
+      <h3>{ filters.size > 0 && "Filtered "}Values</h3>
       <Text>See the most popular values for this chart:</Text>
       <Table
         headers={["Key", "Types"]}
-        rows={valueList.map(({ name, count, types, urls }) => ({
-          key: "popular-repos-values" + name,
+        rows={valueList.filter(v => v.urls.some(u => filteredUrls.has(u))).map(({ key, name, types, urls }) => ({
+          key: "popular-repos-values" + key,
           data: [
             <ValueRow
-              {...{ name, count, types, urls }}
-              key={"value-row" + name}
+              {...{ name, types, urls}}
+              key={"value-row" + key}
+              showMin={repoCount <= 3}
               values={
-                name in valueMap
-                  ? (
-                      Object.entries(valueMap[name]) as unknown as [
+                key in valueMap
+                  ? ((
+                      Object.entries(valueMap[key]) as unknown as [
                         number,
                         any
                       ][]
-                    ).map(([k, v]) => [urlMap[k], v])
+                  ).filter(([u,]) => filteredUrls.has(urlMap[u])).map(([k, v]) => [urlMap[k], v]))
+                  
                   : []
               }
             />,

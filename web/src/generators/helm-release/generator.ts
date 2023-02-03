@@ -8,6 +8,7 @@ import { marked } from 'marked';
 import createDOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
 import { CollectorData, ReleaseInfo, RepoInfo, ValuesData, PageData, MINIMUM_COUNT, ValueTree, ReleaseInfoCompressed, AppData } from './models';
+import { mode } from '../../utils';
 
 const window = new JSDOM('<!DOCTYPE html>').window;
 // @ts-expect-error
@@ -34,24 +35,6 @@ const INTERESTING = [
     'volsync',
 ];
 
-function mode<K extends string | number | symbol>(array: K[]) {
-    if (array.length == 0)
-        return undefined;
-    let modeMap: Record<K, number> = {} as Record<K, number>;
-    let maxEl = array[0], maxCount = 1;
-    for (let i = 0; i < array.length; i++) {
-        let el = array[i];
-        if (modeMap[el] == null)
-            modeMap[el] = 1;
-        else
-            modeMap[el]++;
-        if (modeMap[el] > maxCount) {
-            maxEl = el;
-            maxCount = modeMap[el];
-        }
-    }
-    return maxEl;
-}
 
 
 export async function collector(
@@ -355,7 +338,7 @@ export function calculateValues(input: [string, ValueTree][]): ValuesData {
         }
         return cbMax - caMax;
     }).map((name) => ({
-        name: name.replaceAll('#', '.'),
+        name,
         count: counts[name],
         types: [...(name in types ? types[name] : [])],
         urls: [...(name in nameUrlMap ? nameUrlMap[name] : [])]
