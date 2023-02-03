@@ -34,6 +34,7 @@
   "src/components/text/index.tsx": [],
   "src/components/code/index.tsx": [],
   "src/components/table/index.tsx": [],
+  "src/utils.ts": [],
   "src/pages/helm-release.tsx": [],
   "src/pages/index.tsx": [],
   "src/index.css?used&inline": [],
