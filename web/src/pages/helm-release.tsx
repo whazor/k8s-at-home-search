@@ -237,7 +237,7 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
       <Text>See examples from other people.</Text>
       <FilterRepos
         repoAlsoHas={props.repoAlsoHas}
-        repos={props.pageData!.repos || []}
+        repos={props.pageData?.repos || []}
         filteredRepos={filteredRepos}
         filters={filters}
         setFilters={(f, r) => {
