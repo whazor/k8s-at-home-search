@@ -8,7 +8,6 @@ const toAbsolute = (p: string) => path.resolve(__dirname, p)
 
 const template = fs.readFileSync(toAbsolute('dist/static/index.html'), 'utf-8')
 
-
 const renderer = new Renderer()
 ; (async () => {
   await renderer.prepareData();

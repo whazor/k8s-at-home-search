@@ -263,7 +263,7 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
           key: "examples" + repo.url,
           data: [
             <a href={repo.url} target={"_blank"}>
-              {repo.icon && <Icon icon={repo.icon} />}
+              <Icon icon={repo.icon} />
               {repo.name}
             </a>,
             <a href={repo.repo_url} target={"_blank"}>

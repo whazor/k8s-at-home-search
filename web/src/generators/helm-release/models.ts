@@ -16,6 +16,7 @@ export interface RepoAlsoHas {
 export interface AppData {
     chartURLs: string[];
     releases: ReleaseInfoCompressed[],
+    repos: string[],
     keyFileMap: Record<string, number>,
     repoAlsoHas: RepoAlsoHas
 }
@@ -27,6 +28,21 @@ export interface ReleaseInfo {
     chartsUrl: string;
     count: number;
     icon?: string;
+}
+
+export interface RepoReleaseInfo {
+    name: string,
+    chart: string,
+    url: string,
+    icon?: string,
+    version: string,
+    timestamp: number,
+}
+
+export interface RepoPageData {
+    name: string,
+    url: string,
+    releases: RepoReleaseInfo[],
 }
 
 export function denormalize(

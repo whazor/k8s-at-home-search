@@ -7,8 +7,8 @@ import { marked } from 'marked';
 // const { JSDOM } = require('jsdom');
 import createDOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
-import { CollectorData, ReleaseInfo, RepoInfo, ValuesData, PageData, MINIMUM_COUNT, ValueTree, ReleaseInfoCompressed, AppData } from './models';
-import { mode } from '../../utils';
+import { CollectorData, ReleaseInfo, RepoInfo, ValuesData, PageData, MINIMUM_COUNT, ValueTree, ReleaseInfoCompressed, AppData, RepoPageData, RepoReleaseInfo, denormalize } from './models';
+import { mode, simplifyURL } from '../../utils';
 
 const window = new JSDOM('<!DOCTYPE html>').window;
 // @ts-expect-error
@@ -165,7 +165,9 @@ function repoAlsoHas(data: CollectorData) {
             if (!repoAlsoHasMap[repo]) {
                 repoAlsoHasMap[repo] = [];
             }
-            repoAlsoHasMap[repo].push(interestingNameToId[name]);
+            if(!repoAlsoHasMap[repo].includes(interestingNameToId[name])){
+                repoAlsoHasMap[repo].push(interestingNameToId[name]);
+            }
         }
     }
     return {
@@ -175,7 +177,7 @@ function repoAlsoHas(data: CollectorData) {
 }
 
 export function appDataGenerator(data: CollectorData): 
-    Pick<AppData, 'chartURLs' | 'releases' | 'repoAlsoHas'> 
+    Pick<AppData, 'chartURLs' | 'releases' | 'repoAlsoHas' | 'repos'> 
 {
     const { releases, keys, count, repos } = data;
     const [chartURLs, chartURLMap] = normalizeData(releases.map(r => r.chartsUrl));
@@ -186,6 +188,7 @@ export function appDataGenerator(data: CollectorData):
     return {
         chartURLs,
         repoAlsoHas: repoAlsoHas(data),
+        repos: [...new Set(Object.values(repos).flatMap((arr) => arr.map(r => r.repo)))],
         releases: releases.map(r => ([
             r.release,
             r.chart,
@@ -397,4 +400,63 @@ export function pageGenerator(
         }
     }
     return pages;
+}
+
+export interface TopRepoInfo {
+    count: number,
+    name: string,
+    url: string,
+    stars: number,
+}
+
+export function generateTopReposPageData(
+    { releases, repos, values, count }: CollectorData,
+): TopRepoInfo[] {
+    return Object.values(Object.entries(repos).reduce((acc, [key, repo]) => {
+        for (const r of repo) {
+            if (!(r.repo in acc)) {
+                acc[r.repo] = {
+                    count: 0,
+                    name: r.repo,
+                    url: r.repo_url,
+                    stars: r.stars,
+                }
+            }
+            acc[r.repo].count += 1;
+        }
+        return acc;
+    }, {} as Record<string, TopRepoInfo>)).sort((a, b) => b.stars - a.stars);
+}
+
+export function generateRepoPagesData(data: CollectorData,): Record<string, RepoPageData> {
+    const {releases, repos} = data;
+    const charts = Object.fromEntries(releases.map(r => [r.key, simplifyURL(r.chartsUrl) + '/' + r.chart]));
+    const releaseMap = Object.entries(repos).reduce((acc, [key, repo]) => {
+        for (const r of repo) {
+            if (!(r.repo in acc)) {
+                acc[r.repo] = []
+            }
+            acc[r.repo].push(
+                {
+                    name: r.name,
+                    chart: charts[key],
+                    url: r.url,
+                    icon: r.icon,
+                    version: r.chart_version,
+                    timestamp: r.timestamp,
+                }
+            );
+        }
+        return acc;
+    }, {} as Record<string, RepoReleaseInfo[]>);
+    return Object.entries(releaseMap).reduce((acc, [key, repos]) => {
+        acc[key] = {
+            name: key,
+            url: "https://github.com/" + key,
+            releases: repos,
+        }
+        return acc;
+    }, {} as Record<string, RepoPageData>);
+
+            
 }

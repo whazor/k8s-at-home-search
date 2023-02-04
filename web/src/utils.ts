@@ -37,3 +37,18 @@ export function modeCount<K extends keyof any>(array: K[]) {
     return [maxEl, maxCount];
 }
 
+
+
+export function simplifyURL(url: string) {
+    // get domain
+    let domain = url.replace(/https?:\/\//, '').split('/')[0];
+    // remove tld
+    domain = domain.split('.').slice(0, -1).join('.');
+    // remove charts.
+    domain = domain.replace(/^charts\./, '');
+    // remove www
+    domain = domain.replace(/^www\./, '');
+    // remove github
+    domain = domain.replace(/\.github$/, '');
+    return domain;
+};

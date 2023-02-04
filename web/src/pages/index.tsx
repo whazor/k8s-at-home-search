@@ -13,7 +13,7 @@ export default function Home(props: {releases: {key: string, chart: string, rele
               border-slate-200 hover:border-gray-200 hover:bg-gray-200 
               dark:border-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700
               ">
-                {icon && <Icon icon={icon} />}{' '}
+                {icon && <Icon icon={icon} />}
                 {release}
               </a>
             

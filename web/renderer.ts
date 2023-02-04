@@ -4,6 +4,8 @@ import {
     collector as hrCollector,
     appDataGenerator as hrAppDataGenerator,
     pageGenerator as hrPageGenerator,
+    generateTopReposPageData,
+    generateRepoPagesData,
 } from './src/generators/helm-release/generator';
 import type { RenderFunction } from './src/entry-server';
 
@@ -34,10 +36,16 @@ export class Renderer {
         for (const [key, pageData] of Object.entries(hrPageGenerator(hrPageData))) {
             this.htmlPageData[key] = pageData;
         }
+        this.htmlPageData['/top'] = generateTopReposPageData(hrPageData);
+        for (const [key, pageData] of Object.entries(generateRepoPagesData(hrPageData))) {
+            this.htmlPageData['/repo/'+key] = pageData;
+        }
+        
         const jsonPageData: Record<string, any> = {};
         for (const [key, pageData] of Object.entries(hrPageGenerator(hrPageData, false))) {
             jsonPageData[key] = pageData;
         }
+
         const { fileData, keyFileMap } = this.getJsonPageData(jsonPageData);
         this.jsonFilesData = fileData;
         this.jsonFilesKeyMap = keyFileMap;
