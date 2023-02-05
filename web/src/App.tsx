@@ -96,11 +96,12 @@ export default function App(props: AppData & { pageData: any }) {
                 path={`/hr/${key}`}
                 element={<HelmRelease {...{ chart, release }} 
                     key={'hr-el'+key}
-                      url={'/hr/'+key}
-                      pageData={pageData}
-                      repoAlsoHas={repoAlsoHas}
-                      keyFileMap={props.keyFileMap}
-                       />}
+                    url={'/hr/'+key}
+                    pageData={pageData}
+                    repoAlsoHas={repoAlsoHas}
+                    releases={releases}
+                    keyFileMap={props.keyFileMap}
+                      />}
                 ></Route>
             )
           })}

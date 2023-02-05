@@ -1,12 +1,12 @@
 import Icon from "../components/icon";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Text from "../components/text";
 import Code from "../components/code";
 import Table from "../components/table";
-import type { PageData, RepoAlsoHas } from "../generators/helm-release/models";
-import { mode, modeCount } from "../utils";
+import type { PageData, ReleaseInfo, RepoAlsoHas } from "../generators/helm-release/models";
+import { modeCount, simplifyURL } from "../utils";
 
 dayjs.extend(relativeTime);
 
@@ -18,6 +18,7 @@ interface HRProps {
   pageData?: PageData;
   keyFileMap: Record<string, number>;
   repoAlsoHas: RepoAlsoHas;
+  releases: ReleaseInfo[]
 }
 
 const STAR_THRESHOLD = 30;
@@ -181,10 +182,28 @@ export default function HR(props: HRProps) {
     setFilteredRepos(props.pageData?.repos || []);
   }, [props.pageData]);
 
+  const morePopular = useMemo(
+    () => {
+      if(!pageData) return undefined;
+      const p = props.releases.reduce((acc, r) => {
+        console.log(r.name);
+        if(r.name != pageData.name) return acc;
+        if(r.count > acc[2]) {
+          return [r.key, r.chartsUrl, r.count] as [string, string, number];
+        }
+        return acc;
+      }, [pageData.key, pageData.helmRepoURL, pageData.repos.length] as [string,string, number]) ;
+      if(p[0] !== pageData.key) {
+        return p;
+      } else return undefined;
+    }, [props.releases, pageData]
+  )
+
   if (!pageData && !(props.url in props.keyFileMap))
     return <div>Not found: {props.url}</div>;
 
   if (!pageData) return <div>Loading...</div>;
+
 
   const {
     name,
@@ -235,6 +254,18 @@ export default function HR(props: HRProps) {
           }}
         />
       </div>
+      {morePopular && (
+        // make warning/alert
+        <div className="my-3 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4
+        dark:bg-yellow-900 dark:border-yellow-700 dark:text-yellow-300
+        ">
+          <h3>More popular helm chart found</h3>
+          <p>
+            <a href={`/k8s-at-home-search/hr/${morePopular[0]}`}>{name}</a> from {simplifyURL(morePopular[1])} is more popular with {morePopular[2]} repositories.
+          </p>
+        </div>
+      )}
+
       <h3>Install</h3>
       <Text>Install with:</Text>
       <Code>
