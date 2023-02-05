@@ -12,8 +12,6 @@ const renderer = new Renderer()
 ; (async () => {
   await renderer.prepareData();
 
-  // mkdir
-  await fs.promises.mkdir(toAbsolute('dist/static/hr/'), { recursive: true });
 
   const { render }: { render: RenderFunction } = await import('./dist/server/entry-server.mjs');
 
@@ -24,14 +22,26 @@ const renderer = new Renderer()
   
   const fileData = renderer.jsonFilesData;
 
-  for(const [i, jsonPageDataString] of Object.entries(fileData)) {
-    await fs.promises.writeFile(toAbsolute(`dist/static/hr/data-${i}.json`), jsonPageDataString);
-  }
-  
   let pageGenerators: Array<Promise<void>> = [];
 
+  const folders = new Set();
   for(const key of renderer.getPages()) {
+    const folder = key.split('/').slice(0, -1).join('/');
+    if(!folders.has(folder)) {
+      const folderPath = path.join(__dirname, 'dist/static/', folder);
+      if(!path.isAbsolute(folderPath)) {
+          throw new Error('Folder path is not absolute: ' + folderPath);
+      }
+
+      await fs.promises.mkdir(path.resolve(folderPath), { recursive: true });
+      folders.add(folder);
+    }
+
     pageGenerators.push(generatePage(key));
+  }
+
+  for(const [i, jsonPageDataString] of Object.entries(fileData)) {
+    await fs.promises.writeFile(toAbsolute(`dist/static/hr/data-${i}.json`), jsonPageDataString);
   }
 
   const routesToPrerender = ["/"];
