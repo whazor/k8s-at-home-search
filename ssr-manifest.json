@@ -42,6 +42,8 @@
   "src/components/search/index.tsx": [],
   "\u0000vite/preload-helper": [],
   "node_modules/react-github-btn/index.js": [],
+  "src/pages/top.tsx": [],
+  "src/pages/repo.tsx": [],
   "src/App.tsx": [],
   "src/entry-client.tsx": [],
   "index.html": []
