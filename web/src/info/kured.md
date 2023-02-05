@@ -1,0 +1,1 @@
+Kured (Kubernetes REboot Daemon) is a Kubernetes add-on that automates the process of rebooting nodes in your cluster. It integrates with the underlying operating system's package management system to identify when a reboot is necessary, and performs the reboot in a safe and controlled manner to minimize disruption to your applications. 
