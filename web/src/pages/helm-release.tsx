@@ -38,7 +38,9 @@ function ValueRow(props: {
   const shouldDrawArray = name.endsWith("[]");
   const valueToText = (value: string[]) => {
     return value.map((v: any) => [
-      shouldDrawArray ? "- " + v : v,
+      shouldDrawArray ? "- " + (
+        v.match(/^[0-9]/) ? '"' + v + '"' : v
+        ) : v,
       <br />,
     ])
   }
