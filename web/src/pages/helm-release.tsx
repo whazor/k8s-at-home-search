@@ -111,7 +111,8 @@ function FilterRepos(props: {
     ])
   );
 
-  if (Object.keys(alsoHas).length == 0) return null;
+  if (Object.values(alsoHas).every(l => l.length == 0)) 
+    return null;
 
   return (
     <div>
@@ -175,18 +176,15 @@ export default function HR(props: HRProps) {
         .then((res) => res.json())
         .then((data: any) => {
           setPageData(data[props.url] as PageData);
+          setFilteredRepos(data[props.url].repos || []);
         });
     }
   }, [pageData, props.url]);
-  useEffect(() => {
-    setFilteredRepos(props.pageData?.repos || []);
-  }, [props.pageData]);
 
   const morePopular = useMemo(
     () => {
       if(!pageData) return undefined;
       const p = props.releases.reduce((acc, r) => {
-        console.log(r.name);
         if(r.name != pageData.name) return acc;
         if(r.count > acc[2]) {
           return [r.key, r.chartsUrl, r.count] as [string, string, number];
@@ -240,7 +238,7 @@ export default function HR(props: HRProps) {
     .slice(0, MAX_REPOS);
 
   const filtered = !showAll && filters.size == 0 ? top : filteredRepos;
-  const filteredUrls = new Set(filteredRepos.map((r) => r.url));;
+  const filteredUrls = new Set(filteredRepos.map((r) => r.url));
   const repoCount = filtered.length;
   return (
     <>
@@ -306,7 +304,7 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
           ],
         }))}
       />
-      {!showAll && filters.size === 0 && (
+      {needsFilter && !showAll && filters.size === 0 && (
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white
           dark:bg-blue-700 dark:hover:bg-blue-500 dark:text-gray-300
@@ -320,28 +318,31 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
       <Text>See the most popular values for this chart:</Text>
       <Table
         headers={["Key", "Types"]}
-        rows={valueList.filter(v => v.urls.some(u => filteredUrls.has(u))).map(({ key, name, types, urls }) => ({
-          key: "popular-repos-values" + key,
-          data: [
-            <ValueRow
-              {...{ name, types, urls}}
-              key={"value-row" + key}
-              showMin={repoCount <= 3}
-              values={
-                key in valueMap
-                  ? ((
-                      Object.entries(valueMap[key]) as unknown as [
-                        number,
-                        any
-                      ][]
-                  ).filter(([u,]) => filteredUrls.has(urlMap[u])).map(([k, v]) => [urlMap[k], v]))
-                  
-                  : []
-              }
-            />,
-            types.join(", "),
-          ],
-        }))}
+        rows={
+        valueList
+          .filter(v => v.urls.some(u => filteredUrls.has(u)))
+          .map(({ key, name, types, urls }) => ({
+            key: "popular-repos-values" + key,
+            data: [
+              <ValueRow
+                {...{ name, types, urls}}
+                key={"value-row" + key}
+                showMin={repoCount <= 3}
+                values={
+                  key in valueMap
+                    ? ((
+                        Object.entries(valueMap[key]) as unknown as [
+                          number,
+                          any
+                        ][]
+                    ).filter(([u,]) => filteredUrls.has(urlMap[u])).map(([k, v]) => [urlMap[k], v]))
+                    
+                    : []
+                }
+              />,
+              types.join(", "),
+            ],
+          }))}
       />
     </>
   );

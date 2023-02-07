@@ -9,6 +9,7 @@
     pkgs.pigz
     pkgs.sqlite
     pkgs.playwright.browsers
+    pkgs.nodePackages.zx
   ];
 
   env.PLAYWRIGHT_BROWSERS_PATH="${pkgs.playwright.browsers}";
