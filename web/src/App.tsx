@@ -50,9 +50,9 @@ export default function App(props: AppData & { pageData: any }) {
         if(window.location.hash !== search){
           handler = setTimeout(() => {
             if(search) {
-              window.location.hash = search;
+              history.replaceState(undefined, "", "#"+search)
             } else if(!search && window.location.hash) {
-              window.location.hash = "";
+              history.replaceState(undefined, "", "#")
             }
           }, 100);
         }
@@ -67,7 +67,7 @@ export default function App(props: AppData & { pageData: any }) {
     }, []);
   }
   const setSearch = (s: string) => {
-    window.location.hash = s;
+    history.replaceState(undefined, "", "#"+s)
     setSearch2(s);
   };
     
