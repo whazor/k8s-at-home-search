@@ -8,8 +8,7 @@ export function SearchBar(props: { releases: ReleaseInfo[], search: string, setS
     const {search, setSearch} = props;
     let location = useLocation();
     useEffect(() => {
-        console.log(location.pathname);
-        if(location.pathname !== "/k8s-at-home-search/" && location.pathname !== "/") {
+        if(location.pathname !== "/k8s-at-home-search/" && location.pathname !== "/" && search.length > 0) {
             setSearch('');
         }
     }, [location.pathname])
