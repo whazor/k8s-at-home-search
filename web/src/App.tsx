@@ -50,9 +50,9 @@ export default function App(props: AppData & { pageData: any }) {
         if(window.location.hash !== search){
           handler = setTimeout(() => {
             if(search) {
-              history.replaceState(undefined, "", "#"+search)
+              history.replaceState(undefined, "", "#"+search);
             } else if(!search && window.location.hash) {
-              history.replaceState(undefined, "", "")
+              history.replaceState(undefined, "", window.location.pathname + window.location.search);
             }
           }, 100);
         }
@@ -68,7 +68,7 @@ export default function App(props: AppData & { pageData: any }) {
   }
   const setSearch = (s: string) => {
     if(s.length === 0) {
-      history.replaceState(undefined, "", "")
+      history.replaceState(undefined, "", window.location.pathname + window.location.search);
     } else {
       history.replaceState(undefined, "", "#"+s)
     }
