@@ -52,7 +52,7 @@ export default function App(props: AppData & { pageData: any }) {
             if(search) {
               history.replaceState(undefined, "", "#"+search)
             } else if(!search && window.location.hash) {
-              history.replaceState(undefined, "", "#")
+              history.replaceState(undefined, "", "")
             }
           }, 100);
         }
@@ -67,7 +67,11 @@ export default function App(props: AppData & { pageData: any }) {
     }, []);
   }
   const setSearch = (s: string) => {
-    history.replaceState(undefined, "", "#"+s)
+    if(s.length === 0) {
+      history.replaceState(undefined, "", "")
+    } else {
+      history.replaceState(undefined, "", "#"+s)
+    }
     setSearch2(s);
   };
     
