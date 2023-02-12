@@ -16,9 +16,7 @@ declare global {
     __PAGE_DATA__: string,
   }
 }
-console.log(b64DecodeUnicode(window.__APP_DATA__));
 const appData = JSON.parse(b64DecodeUnicode(window.__APP_DATA__)) as AppData; 
-console.log(b64DecodeUnicode(window.__PAGE_DATA__));
 const pageData = JSON.parse(b64DecodeUnicode(window.__PAGE_DATA__));
 
 ReactDOM.hydrateRoot(
