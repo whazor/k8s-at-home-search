@@ -115,14 +115,17 @@ export class Renderer {
             }
         )();
 
+        function b64EncodeUnicode(data: string|undefined) {
+           return Buffer.from(data || "null", 'utf8').toString('base64');
+        }
         console.log("rendering", url);
 
         const appHtml = await render(url, this.appData, pageData)
 
 
         const title = pageData && "title" in pageData ? pageData.title + ' - ' : "";
-        const pageDataJS = `window.__PAGE_DATA__ = ${JSON.stringify(pageData)};`
-        const appDataJS = `window.__APP_DATA__ = ${JSON.stringify(this.appData)};`
+        const pageDataJS = `window.__PAGE_DATA__ = "${b64EncodeUnicode(JSON.stringify(pageData))}";`
+        const appDataJS = `window.__APP_DATA__ = "${b64EncodeUnicode(JSON.stringify(this.appData))}";`
 
         const html = template
             .replace(`<!--title-->`, title)
