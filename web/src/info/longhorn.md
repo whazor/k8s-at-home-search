@@ -1,0 +1,1 @@
+[Longhorn](https://longhorn.io/) is an open-source, distributed block storage system for Kubernetes. It provides a fast and reliable solution for persistent storage, making it an ideal choice for a wide range of use cases, including stateful applications, databases, and more.

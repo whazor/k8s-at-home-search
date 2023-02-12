@@ -1,0 +1,5 @@
+[Rook Ceph](https://rook.io/docs/rook/) is a Kubernetes operator that can be used to manage [Ceph](https://docs.ceph.com/) storage clusters on Kubernetes. Ceph is a distributed storage system that provides block, object, and file storage for your home lab, and Rook makes it easy to deploy and manage Ceph storage clusters on top of Kubernetes. This allows you to store and access your data from anywhere in the cluster, such pods are not stuck to a single node, like with local-path storage.
+
+With [Ceph Block devices](https://docs.ceph.com/en/latest/rbd/rbd-kubernetes/) you can use Ceph as a persistent storage solution for your Kubernetes cluster. You can create a storage class that will automatically provision a Ceph block device for your pods.
+
+After deploying the operator, you can deploy Rook Ceph clusters via the [Rook Ceph Cluster](./charts.rook.io-release-rook-ceph-cluster) chart.
