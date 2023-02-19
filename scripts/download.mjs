@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
 
-console.log("hello world");
+$.verbose = false;
 
 // download latest releases from github
 const repo = 'whazor/k8s-at-home-search';
