@@ -21,12 +21,9 @@ jobs:
         run: yarn install --web-lockfile
         working-directory: web/
       - name: Download DB 📙
-        uses: robinraju/release-downloader@v1.4
-        with:
-          repository: "Whazor/k8s-at-home-search"
-          latest: true
-          fileName: "repos*.db.zz"
-          out-file-path: "./web/"
+        run: |
+          yarn global add zx
+          ./scripts/download-db.js
       - name: Decompress files
         run: |
           apt-get update -y && apt-get install -y pigz

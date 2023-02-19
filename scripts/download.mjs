@@ -5,9 +5,17 @@ console.log("hello world");
 // download latest releases from github
 const repo = 'whazor/k8s-at-home-search';
 // use $`curl` for download
-const { stdout } = await $`curl -s https://api.github.com/repos/${repo}/releases/latest`;
+const { stdout } = await $`curl -s https://api.github.com/repos/${repo}/releases`;
+
+const releases = JSON.parse(stdout);
+
+// get latest release
+const latestName = releases.map(({ name }) => name).sort().reverse()[0];
+const latest = releases.find(({ name }) => name === latestName);
+console.log(`latest release: ${latest.name}`);
+
 // parse json
-const { assets } = JSON.parse(stdout);
+const { assets } = latest;
 
 const repos = assets.find(({ name }) => name === 'repos.db.zz')["browser_download_url"];
 const reposExtended = assets.find(({ name }) => name === 'repos-extended.db.zz')["browser_download_url"];
