@@ -22,13 +22,9 @@ jobs:
         working-directory: web/
       - name: Download DB 📙
         run: |
-          yarn global add zx
-          ./scripts/download-db.js
-      - name: Decompress files
-        run: |
           apt-get update -y && apt-get install -y pigz
-          pigz -d web/repos.db.zz
-          pigz -d web/repos-extended.db.zz
+          yarn global add zx
+          ./scripts/download.mjs
       - name: Build web 🚧
         run: yarn run generate
         working-directory: web/

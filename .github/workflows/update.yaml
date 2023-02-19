@@ -44,7 +44,7 @@ jobs:
           tag_name: ${{ steps.date.outputs.date }}
           release_name: Release ${{ steps.date.outputs.date }}
           draft: false
-          prerelease: false
+          prerelease: true
       - name: Upload Release Asset 1/2
         id: upload-release-asset-1
         uses: actions/upload-release-asset@v1
