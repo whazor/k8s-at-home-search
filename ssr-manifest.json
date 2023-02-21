@@ -44,7 +44,9 @@
   "node_modules/react-github-btn/index.js": [],
   "src/pages/top.tsx": [],
   "src/pages/repo.tsx": [],
+  "src/pages/grep.tsx": [],
   "src/App.tsx": [],
+  "node_modules/pako/dist/pako.esm.mjs": [],
   "src/entry-client.tsx": [],
   "index.html": []
 }
