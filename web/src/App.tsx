@@ -7,6 +7,7 @@ import { AppData as HRAppData, denormalize } from './generators/helm-release/mod
 import GitHubButton from 'react-github-btn';
 import { Top } from './pages/top';
 import { Repo } from './pages/repo';
+import Grep from './pages/grep';
 import { useEffect, useState } from 'react';
 
 export type AppData = HRAppData;
@@ -110,6 +111,7 @@ export default function App(props: AppData & { pageData: any }) {
             )
           })}
           <Route key="top" path="/top" element={<Top repos={pageData} repoAlsoHas={repoAlsoHas} />} />
+          <Route key="grep" path="/grep" element={<Grep {...pageData} />} />
           {props.repos.map((repo) => {
             return (
               <Route

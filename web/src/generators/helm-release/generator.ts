@@ -3,11 +3,12 @@ import path from 'node:path'
 import { Database } from "sqlite";
 import sqlite3 from "sqlite3";
 import { marked } from 'marked';
+
 // const createDOMPurify = require('dompurify');
 // const { JSDOM } = require('jsdom');
 import createDOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
-import { CollectorData, ReleaseInfo, RepoInfo, ValuesData, PageData, MINIMUM_COUNT, ValueTree, ReleaseInfoCompressed, AppData, RepoPageData, RepoReleaseInfo, denormalize } from './models';
+import { CollectorData, ReleaseInfo, RepoInfo, ValuesData, PageData, MINIMUM_COUNT, ValueTree, ReleaseInfoCompressed, AppData, RepoPageData, RepoReleaseInfo, denormalize, GrepData } from './models';
 import { mode, simplifyURL } from '../../utils';
 
 const window = new JSDOM('<!DOCTYPE html>').window;
@@ -459,4 +460,13 @@ export function generateRepoPagesData(data: CollectorData,): Record<string, Repo
     }, {} as Record<string, RepoPageData>);
 
             
+}
+
+export function generateGrepPageData(data: CollectorData): GrepData {
+    // const {values} = data;
+    const values = calculateValues(Object.entries(data.values))
+
+    return {
+        values
+    };
 }

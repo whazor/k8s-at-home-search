@@ -6,7 +6,8 @@ export default function Home(props: {releases: {key: string, chart: string, rele
         <h2>Popular releases</h2>
         {props.releases.sort((a, b) => b.count - a.count).filter(a => a.count > 5).map(({key, chart, icon, release}) => {
           return (
-            <a href={`/k8s-at-home-search/hr/${key}`} key={'wordcloud-' + key} className="
+            <a href={`/k8s-at-home-search/hr/${key}`} tabIndex={-1}
+              key={'wordcloud-' + key} className="
               text-slate-900 hover:text-slate-900 no-underline
               dark:text-gray-300 dark:hover:text-white
               cursor-pointer text-lg rounded pb-0 pt-0 px-1 m-1 mb-0 inline-block ml-0 border

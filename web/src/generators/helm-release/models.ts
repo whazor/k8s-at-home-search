@@ -117,4 +117,8 @@ export interface PageData {
     repos: RepoInfo[];
 }
 
+export interface GrepData {
+    values: ValuesData
+}
+
 export const MINIMUM_COUNT = 3;

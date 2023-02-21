@@ -36,8 +36,8 @@ export function SearchBar(props: { releases: ReleaseInfo[], search: string, setS
             }
         }
     }, [availableSearches, unavailableSearches, setSearch]);
-    return <label>
-        <span className='sr-only dark:text-gray-300'>Search for a chart:</span>
+    return <div><label>
+        <span className='sr-only'>Search for a chart:</span>
         <input
             autoFocus
             className='peer bg-slate-50 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 dark:bg-black dark:text-gray-300 dark:border-gray-700 dark:focus:bg-gray-800 dark:focus:border-blue-500'
@@ -49,6 +49,7 @@ export function SearchBar(props: { releases: ReleaseInfo[], search: string, setS
                 setSearch(e.target.value)
             }}
         />
+        </label>
         <div className={`${search === "" ? "max-h-0" : fullHeight} overflow-hidden ease-in-out duration-300 transition-[max-height] ${peerFullHeight}`}>
             {search !== "" && search.length > 1 &&
                 <table className="w-full m-2 dark:text-gray-300">
@@ -78,6 +79,6 @@ export function SearchBar(props: { releases: ReleaseInfo[], search: string, setS
             </table>
         }
         </div>
-    </label>
+        </div>
         ;
 }

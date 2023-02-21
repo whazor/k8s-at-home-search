@@ -1,12 +1,18 @@
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App, { AppData } from './App'
+import pako from 'pako';
 
+function b64DecodeUnicode(str: string) { 
+  // const raw = decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+  //     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+  // }).join(''))
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder('utf-8')
 
-function b64DecodeUnicode(str: string) {
-  return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-  }).join(''))
+  const input = Uint8Array.from(atob(str), c => c.charCodeAt(0));
+  
+  return decoder.decode(pako.ungzip(input));
 }
 
 // app data is passed from server to client via window.__APP_DATA__

@@ -1,0 +1,10 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
+                       xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+  <ShortName>k8s-at-home-search</ShortName>
+  <Description>k8s at home search</Description>
+  <InputEncoding>[UTF-8]</InputEncoding>
+  <Image width="16" height="16" type="image/x-icon">https://nanne.dev/k8s-at-home-search/k8s-search.svg</Image>
+  <Url type="text/html" template="https://nanne.dev/k8s-at-home-search/#{searchTerms}"/>
+  <!-- <Url type="application/x-suggestions+json" template="[suggestionURL]"/> -->
+  <moz:SearchForm>[https://nanne.dev/k8s-at-home-search/]</moz:SearchForm>
+</OpenSearchDescription>

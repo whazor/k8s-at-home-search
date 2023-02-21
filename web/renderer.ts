@@ -6,8 +6,10 @@ import {
     pageGenerator as hrPageGenerator,
     generateTopReposPageData,
     generateRepoPagesData,
+    generateGrepPageData,
 } from './src/generators/helm-release/generator';
 import type { RenderFunction } from './src/entry-server';
+import pako from 'pako';
 
 // use class, to avoid variables going back and forth
 export class Renderer {
@@ -40,6 +42,8 @@ export class Renderer {
         for (const [key, pageData] of Object.entries(generateRepoPagesData(hrPageData))) {
             this.htmlPageData['/repo/'+key] = pageData;
         }
+
+        this.htmlPageData['/grep'] = generateGrepPageData(hrPageData);
         
         const jsonPageData: Record<string, any> = {};
         for (const [key, pageData] of Object.entries(hrPageGenerator(hrPageData, false))) {
@@ -115,8 +119,8 @@ export class Renderer {
             }
         )();
 
-        function b64EncodeUnicode(data: string|undefined) {
-           return Buffer.from(data || "null", 'utf8').toString('base64');
+        function b64EncodeUnicode(data: string | undefined) {
+            return Buffer.from(pako.gzip(Buffer.from(data || "null", 'utf8'))).toString('base64');
         }
         console.log("rendering", url);
 
