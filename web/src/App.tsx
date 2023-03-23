@@ -87,6 +87,10 @@ export default function App(props: AppData & { pageData: any }) {
         window.location.href = "/k8s-at-home-search/grep" + window.location.hash;
       }
     }
+    // if not grep mode, but on grep page, redirect to / and keep location hash
+    else if(window.location.pathname === "/k8s-at-home-search/grep") {
+      window.location.href = "/k8s-at-home-search/" + window.location.hash;
+    }
   }, [mode]);
   return (
     <div className='p-4'>
@@ -107,7 +111,7 @@ export default function App(props: AppData & { pageData: any }) {
             setSearch={setSearch} onEnter={() => childRef.current!.onEnter()}
             mode={mode} setMode={setMode}  
           />
-          <HRSearchResults releases={releases} search={search} ref={childRef} />
+          {mode === "hr" && <HRSearchResults releases={releases} search={search} ref={childRef} />}
 
         </div>
         <Routes>
