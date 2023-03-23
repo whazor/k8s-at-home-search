@@ -17,10 +17,9 @@ function Highlight(props: {text: string, keyword: string}) {
 }
 
 
-export default function (props : GrepData) {
-    const [search, setSearch] = useState("")
+export default function (props : GrepData & { search : string }) {
     const { valueMap, list, urlMap } = props.values;
-    
+    const search = props.search.replace(/^grep /, "")
     const results = search.length > 0 ? list.filter((item) => 
         item.name.toLowerCase().includes(search.toLowerCase()) ||
         Object.entries(valueMap[item.name]).some(([url, values]) =>
@@ -40,18 +39,6 @@ export default function (props : GrepData) {
     }
 
     return <div>
-        Sorry for the double input field:
-        <input
-            autoFocus
-            className='peer bg-slate-50 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 dark:bg-black dark:text-gray-300 dark:border-gray-700 dark:focus:bg-gray-800 dark:focus:border-blue-500'
-            type="text"
-            placeholder="Grep through values..."
-            value={search}
-            onChange={(e) => {
-                setSearch(e.target.value)
-            }}
-        />
-
         {search.length > 0 && <div className="mt-4">
             <h2 className="text-2xl font-bold">Results</h2>
             <ul className="mt-4">

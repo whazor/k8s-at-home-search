@@ -2,13 +2,14 @@ import { BrowserRouter, HashRouter, Route, RouterProvider, Routes, createHashRou
 import HelmRelease from './pages/helm-release';
 import Home from './pages/index';
 import styles from "./index.css?inline"
-import { SearchBar } from './components/search';
+import { SearchBar, SearchMode } from './components/search';
 import { AppData as HRAppData, denormalize } from './generators/helm-release/models';
 import GitHubButton from 'react-github-btn';
 import { Top } from './pages/top';
 import { Repo } from './pages/repo';
 import Grep from './pages/grep';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import HRSearchResults, { SearchInterface } from './components/search/hr';
 
 export type AppData = HRAppData;
 
@@ -17,6 +18,9 @@ export default function App(props: AppData & { pageData: any }) {
   const { pageData, repoAlsoHas, } = props;
   const releases = denormalize(props).releases;
   const [search, setSearch2] = useState("");
+  const childRef = useRef<SearchInterface>(null);
+  
+  const [mode, setMode] = useState<SearchMode>("hr");
   if (!import.meta.env.SSR) {
     useEffect(() => {
       let handler: any;
@@ -75,7 +79,15 @@ export default function App(props: AppData & { pageData: any }) {
     }
     setSearch2(s);
   };
-    
+  useEffect(() => {
+    // on grep mode, redirect to /grep and keep location hash
+    if(mode === "grep") {
+      if(window.location.pathname !== "/k8s-at-home-search/grep") {
+        // history.replaceState(undefined, "", "/k8s-at-home-search/grep" + window.location.hash);
+        window.location.href = "/k8s-at-home-search/grep" + window.location.hash;
+      }
+    }
+  }, [mode]);
   return (
     <div className='p-4'>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
@@ -90,7 +102,13 @@ export default function App(props: AppData & { pageData: any }) {
       </nav>
       <div className='pt-2'>
         <div className='mb-4'>
-          <SearchBar releases={releases} search={search} setSearch={setSearch} />
+          <SearchBar 
+            search={search} 
+            setSearch={setSearch} onEnter={() => childRef.current!.onEnter()}
+            mode={mode} setMode={setMode}  
+          />
+          <HRSearchResults releases={releases} search={search} ref={childRef} />
+
         </div>
         <Routes>
           <Route key={"/"} path={"/"} element={<Home releases={releases} />} />
@@ -111,7 +129,9 @@ export default function App(props: AppData & { pageData: any }) {
             )
           })}
           <Route key="top" path="/top" element={<Top repos={pageData} repoAlsoHas={repoAlsoHas} />} />
-          <Route key="grep" path="/grep" element={<Grep {...pageData} />} />
+          <Route key="grep" path="/grep" element={
+            <Grep {...pageData} search={search} />
+          } />
           {props.repos.map((repo) => {
             return (
               <Route

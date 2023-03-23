@@ -1,84 +1,81 @@
 import { useCallback, useEffect, useState } from "react";
-import { MINIMUM_COUNT, ReleaseInfo } from "../../generators/helm-release/models";
-import { Link, redirect, useLocation } from "react-router-dom";
-import { simplifyURL } from "../../utils";
-import Icon from "../icon";
 
-export function SearchBar(props: { releases: ReleaseInfo[], search: string, setSearch: (s: string) => void}) {
-    const {search, setSearch} = props;
+import { useLocation } from "react-router-dom";
+
+export const searchModes = ["hr", "image", "grep"] as const;
+
+export const names : Record<SearchMode, string> = {
+    hr: "Helm Release",
+    image: "Image",
+    grep: "Grep"
+}
+
+export type SearchMode = typeof searchModes[number];
+
+interface P  {
+    search: string, 
+    setSearch: (s: string) => void,
+    mode: SearchMode
+    setMode: (m: SearchMode) => void,
+    onEnter: () => void
+}
+
+export function SearchBar(props: P ) {
+    const {search, setSearch, mode, setMode} = props;
+
     let location = useLocation();
     useEffect(() => {
         if(location.pathname !== "/k8s-at-home-search/" && location.pathname !== "/" && search.length > 0) {
-            setSearch('');
+            setSearch(mode + ' ');
         }
     }, [location.pathname])
-    
-    const fullHeight = "max-h-128";
-    const peerFullHeight = "peer-focus:max-h-128";
-    const searches = props.releases
-        .filter(_ => search.length > 1)
-        .filter(({ chart, release, chartsUrl }) => {
-        return chart.toLowerCase().includes(search.toLowerCase()) || release.toLowerCase().includes(search.toLowerCase()) || simplifyURL(chartsUrl).toLowerCase().includes(search.toLowerCase())
-    });
-    const availableSearches = searches.filter(({ count }) => count >= MINIMUM_COUNT);
-    const unavailableSearches = searches.filter(({ count }) => count < MINIMUM_COUNT);
+    useEffect(() => {
+        for (const m of searchModes) {
+            if ((search.startsWith(m+' ') 
+            ) && mode !== m) {
+                setMode(m);
+            } else if (search.startsWith(mode + ' ' + m + ' ') && mode !== m) {
+                setMode(m);
+                setSearch(m + ' ' + search.slice((mode + ' ' + m + ' ').length));
+            }
+        }
+    }, [search]);
+
     const keyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
         if(e.key === "Escape") {
             setSearch("");
         }
         if(e.key === "Enter") {
-            console.log(availableSearches, unavailableSearches)
-            if(availableSearches.length >= 1) {
-                window.location.href = `/k8s-at-home-search/hr/${availableSearches[0].key}`;
-            } else if(unavailableSearches.length >= 1) {
-                // react router go to link
-                redirect(`/hr/${unavailableSearches[0].key}`);
-            }
+            props.onEnter()
         }
-    }, [availableSearches, unavailableSearches, setSearch]);
+    }, [setSearch]);
     return <div><label>
         <span className='sr-only'>Search for a chart:</span>
+        {/* draw mode 'inside' input, with border */}
+        {mode && <span title={names[mode]} className='absolute z-50 m-3 mt-3 p-1 border-2 border-blue-500 rounded text-sm bg-blue-200'>
+            {mode}
+        </span>}
         <input
             autoFocus
-            className='peer bg-slate-50 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 dark:bg-black dark:text-gray-300 dark:border-gray-700 dark:focus:bg-gray-800 dark:focus:border-blue-500'
+            className={`peer bg-slate-50 appearance-none border-2 border-gray-200 rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none 
+                    focus:bg-white focus:border-blue-500 dark:bg-black dark:text-gray-300 dark:border-gray-700 dark:focus:bg-gray-800 dark:focus:border-blue-500
+            `}
+            style={{
+                paddingLeft: mode.length > 0 ?34 + mode.length * 8 : undefined
+            }}
             type="text"
             placeholder="Search for a chart..."
-            value={search}
+            value={search.replace(new RegExp(`^${mode} `), "")}
             onKeyDown={keyDown}
             onChange={(e) => {
-                setSearch(e.target.value)
+                const val = mode === "hr" ? e.target.value : mode+" "+e.target.value;
+                setSearch(val)
             }}
         />
+        <span className="text-sm text-slate-500">
+            Switch modes by typing <span className="line-through"><code>image</code>[space] for image search</span> (TODO) or <code>grep</code>[space] for grep mode.</span>
         </label>
-        <div className={`${search === "" ? "max-h-0" : fullHeight} overflow-hidden ease-in-out duration-300 transition-[max-height] ${peerFullHeight}`}>
-            {search !== "" && search.length > 1 &&
-                <table className="w-full m-2 dark:text-gray-300">
-                <thead>
-                    <tr>
-                        <th className="text-left">Release</th>
-                        <th className="text-left">Chart</th>
-                        <th className="text-left">Count</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {availableSearches.map(({ key, icon, chart, release, chartsUrl, count }) => {
-                        return <tr key={'hr-release'+key}>
-                            <td><a href={`/k8s-at-home-search/hr/${key}`}><Icon icon={icon} />{release}</a></td>
-                            <td>{simplifyURL(chartsUrl) + '/' + chart}</td>
-                            <td>{count}</td>
-                        </tr>
-                    })}
-                    {unavailableSearches.map(({ key, icon, chart, release, chartsUrl, count }) => {
-                        return <tr key={'hr-release'+key}>
-                            <td><Link to={`/hr/${key}`}><Icon icon={icon} />{release}</Link></td>
-                            <td>{simplifyURL(chartsUrl) + '/' + chart}</td>
-                            <td>{count}</td>
-                        </tr>
-                    })}
-                </tbody>
-            </table>
-        }
-        </div>
+        
         </div>
         ;
 }
