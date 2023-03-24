@@ -1,53 +1,101 @@
 {
-  "node_modules/github-buttons/dist/buttons.esm.js": [
-    "/k8s-at-home-search/assets/buttons.esm-1047f35f.js"
+  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/dayjs/dayjs.min.js?commonjs-module": [
   ],
-  "\u0000vite/modulepreload-polyfill": [],
-  "\u0000commonjsHelpers.js": [],
-  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react/jsx-runtime.js?commonjs-module": [],
-  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react/cjs/react-jsx-runtime.production.min.js?commonjs-exports": [],
-  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react/index.js?commonjs-module": [],
-  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react/cjs/react.production.min.js?commonjs-exports": [],
-  "node_modules/react/cjs/react.production.min.js": [],
-  "node_modules/react/index.js": [],
-  "node_modules/react/cjs/react-jsx-runtime.production.min.js": [],
-  "node_modules/react/jsx-runtime.js": [],
-  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react-dom/client.js?commonjs-exports": [],
-  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react-dom/index.js?commonjs-module": [],
-  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react-dom/cjs/react-dom.production.min.js?commonjs-exports": [],
-  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/scheduler/index.js?commonjs-module": [],
-  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/scheduler/cjs/scheduler.production.min.js?commonjs-exports": [],
-  "node_modules/scheduler/cjs/scheduler.production.min.js": [],
-  "node_modules/scheduler/index.js": [],
-  "node_modules/react-dom/cjs/react-dom.production.min.js": [],
-  "node_modules/react-dom/index.js": [],
-  "node_modules/react-dom/client.js": [],
-  "node_modules/@remix-run/router/dist/router.js": [],
-  "node_modules/react-router/dist/index.js": [],
-  "node_modules/react-router-dom/dist/index.js": [],
-  "node_modules/@iconify/react/dist/iconify.mjs": [],
-  "src/components/icon/index.tsx": [],
-  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/dayjs/dayjs.min.js?commonjs-module": [],
-  "node_modules/dayjs/dayjs.min.js": [],
-  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/dayjs/plugin/relativeTime.js?commonjs-module": [],
-  "node_modules/dayjs/plugin/relativeTime.js": [],
-  "src/components/text/index.tsx": [],
-  "src/components/code/index.tsx": [],
-  "src/components/table/index.tsx": [],
-  "src/utils.ts": [],
-  "src/pages/helm-release.tsx": [],
-  "src/pages/index.tsx": [],
-  "src/index.css?used&inline": [],
-  "src/components/search/index.tsx": [],
-  "src/generators/helm-release/models.ts": [],
-  "\u0000vite/preload-helper": [],
-  "node_modules/react-github-btn/index.js": [],
-  "src/pages/top.tsx": [],
-  "src/pages/repo.tsx": [],
-  "src/pages/grep.tsx": [],
-  "src/components/search/hr.tsx": [],
-  "src/App.tsx": [],
-  "node_modules/pako/dist/pako.esm.mjs": [],
-  "src/entry-client.tsx": [],
-  "index.html": []
+  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/dayjs/plugin/relativeTime.js?commonjs-module": [
+  ],
+  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react-dom/cjs/react-dom.production.min.js?commonjs-exports": [
+  ],
+  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react-dom/client.js?commonjs-exports": [
+  ],
+  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react-dom/index.js?commonjs-module": [
+  ],
+  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react/cjs/react-jsx-runtime.production.min.js?commonjs-exports": [
+  ],
+  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react/cjs/react.production.min.js?commonjs-exports": [
+  ],
+  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react/index.js?commonjs-module": [
+  ],
+  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/react/jsx-runtime.js?commonjs-module": [
+  ],
+  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/scheduler/cjs/scheduler.production.min.js?commonjs-exports": [
+  ],
+  "\u0000/home/runner/work/k8s-at-home-search/k8s-at-home-search/web/node_modules/scheduler/index.js?commonjs-module": [
+  ],
+  "\u0000commonjsHelpers.js": [
+  ],
+  "\u0000vite/modulepreload-polyfill": [
+  ],
+  "\u0000vite/preload-helper": [
+  ],
+  "index.html": [
+  ],
+  "node_modules/@iconify/react/dist/iconify.mjs": [
+  ],
+  "node_modules/@remix-run/router/dist/router.js": [
+  ],
+  "node_modules/dayjs/dayjs.min.js": [
+  ],
+  "node_modules/dayjs/plugin/relativeTime.js": [
+  ],
+  "node_modules/github-buttons/dist/buttons.esm.js": [
+    "/k8s-at-home-search/assets/buttons.esm-67fcdf1d.js"
+  ],
+  "node_modules/pako/dist/pako.esm.mjs": [
+  ],
+  "node_modules/react-dom/cjs/react-dom.production.min.js": [
+  ],
+  "node_modules/react-dom/client.js": [
+  ],
+  "node_modules/react-dom/index.js": [
+  ],
+  "node_modules/react-github-btn/index.js": [
+  ],
+  "node_modules/react-router-dom/dist/index.js": [
+  ],
+  "node_modules/react-router/dist/index.js": [
+  ],
+  "node_modules/react/cjs/react-jsx-runtime.production.min.js": [
+  ],
+  "node_modules/react/cjs/react.production.min.js": [
+  ],
+  "node_modules/react/index.js": [
+  ],
+  "node_modules/react/jsx-runtime.js": [
+  ],
+  "node_modules/scheduler/cjs/scheduler.production.min.js": [
+  ],
+  "node_modules/scheduler/index.js": [
+  ],
+  "src/App.tsx": [
+  ],
+  "src/components/code/index.tsx": [
+  ],
+  "src/components/icon/index.tsx": [
+  ],
+  "src/components/search/hr.tsx": [
+  ],
+  "src/components/search/index.tsx": [
+  ],
+  "src/components/table/index.tsx": [
+  ],
+  "src/components/text/index.tsx": [
+  ],
+  "src/entry-client.tsx": [
+  ],
+  "src/generators/helm-release/models.ts": [
+  ],
+  "src/index.css?used&inline": [
+  ],
+  "src/pages/grep.tsx": [
+  ],
+  "src/pages/helm-release.tsx": [
+  ],
+  "src/pages/index.tsx": [
+  ],
+  "src/pages/repo.tsx": [
+  ],
+  "src/pages/top.tsx": [
+  ],
+  "src/utils.ts": [
+  ]
 }
