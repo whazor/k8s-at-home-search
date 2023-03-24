@@ -32,7 +32,7 @@ test('test dynamic page', async ({ page }) => {
   await lastRow.locator('td:nth-of-type(1) a').click();
 
   // check url, /.*${name}/
-  await expect(page).toHaveURL(new RegExp(`.*${name}$`));
+  await expect(page).toHaveURL(new RegExp(`.*${name}(#hr)?$`));
 
   await expect(page.getByText(/All\s*Repositories/)).toBeVisible()
 
