@@ -20,7 +20,7 @@ export default function App(props: AppData & { pageData: any }) {
   const [search, setSearch2] = useState("");
   const childRef = useRef<SearchInterface>(null);
   
-  const [mode, setMode] = useState<SearchMode>("hr");
+  const [mode, setMode] = useState<SearchMode|undefined>(undefined);
   if (!import.meta.env.SSR) {
     useEffect(() => {
       let handler: any;
@@ -81,17 +81,23 @@ export default function App(props: AppData & { pageData: any }) {
   };
   useEffect(() => {
     // on grep mode, redirect to /grep and keep location hash
-    if(mode === "grep") {
-      if(window.location.pathname !== "/k8s-at-home-search/grep") {
+    const isOnGrepPage = window.location.pathname === "/k8s-at-home-search/grep";
+    if(mode === "grep" && !isOnGrepPage) {
         // history.replaceState(undefined, "", "/k8s-at-home-search/grep" + window.location.hash);
-        window.location.href = "/k8s-at-home-search/grep" + window.location.hash;
-      }
+        const s = search === "grep" ? "grep " : search;
+        window.location.href = "/k8s-at-home-search/grep#" + encodeURI(s);
     }
     // if not grep mode, but on grep page, redirect to / and keep location hash
-    else if(window.location.pathname === "/k8s-at-home-search/grep") {
-      window.location.href = "/k8s-at-home-search/" + window.location.hash;
+    else if(isOnGrepPage) {
+      if(mode && mode !== "grep") {
+        window.location.href = "/k8s-at-home-search/" + encodeURI(window.location.hash);
+      } else {
+        setMode("grep");
+      }
+    } else if(!mode) {
+      setMode("hr");
     }
-  }, [mode]);
+  }, [mode, search]);
   return (
     <div className='p-4'>
       <style dangerouslySetInnerHTML={{ __html: styles }} />

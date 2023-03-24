@@ -5,9 +5,9 @@ test('test dynamic page', async ({ page }) => {
 
 
   // Click [placeholder="search a chart"]
-  await page.locator('[placeholder="Search for a chart..."]').click();
+  await expect(page.locator('[placeholder="Search for a chart..."]')).toBeFocused();
   // Fill [placeholder="search a chart"]
-  await page.locator('[placeholder="Search for a chart..."]').fill('istio');
+  await page.locator('[placeholder="Search for a chart..."]').type('istio');
   // await expect(page).toHaveURL('#/istio');
 
 

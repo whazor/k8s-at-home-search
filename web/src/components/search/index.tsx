@@ -15,7 +15,7 @@ export type SearchMode = typeof searchModes[number];
 interface P  {
     search: string, 
     setSearch: (s: string) => void,
-    mode: SearchMode
+    mode: SearchMode|undefined
     setMode: (m: SearchMode) => void,
     onEnter: () => void
 }
@@ -61,7 +61,7 @@ export function SearchBar(props: P ) {
                     focus:bg-white focus:border-blue-500 dark:bg-black dark:text-gray-300 dark:border-gray-700 dark:focus:bg-gray-800 dark:focus:border-blue-500
             `}
             style={{
-                paddingLeft: mode.length > 0 ?34 + mode.length * 8 : undefined
+                paddingLeft: mode && mode.length > 0 ? 34 + mode.length * 8 : undefined
             }}
             type="text"
             placeholder="Search for a chart..."
