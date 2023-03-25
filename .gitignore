@@ -16,3 +16,4 @@ devenv.local.nix
 .pre-commit-config.yaml
 result
 yarn-error.log
+web/test-results/**/*
