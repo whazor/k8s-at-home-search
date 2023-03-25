@@ -31,3 +31,6 @@ await $`pigz -d -k repos-extended.db.zz`;
 // move to web/
 await $`mv repos.db ./web/`;
 await $`mv repos-extended.db ./web/`;
+
+await $`rm -f repos.db.zz`;
+await $`rm -f repos-extended.db.zz`;

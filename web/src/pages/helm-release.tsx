@@ -36,13 +36,15 @@ function ValueRow(props: {
     urls.map((u) => [u, u.split("/").slice(3, 5).join("/")])
   );
   const shouldDrawArray = name.endsWith("[]");
-  const valueToText = (value: string[]) => {
-    return value.map((v: any) => [
-      shouldDrawArray ? "- " + (
+  const valueToText = (key: string, value: string[]) => {
+    return <span>{value.map((v: any, i) => 
+      <span key={key + i}>
+      {shouldDrawArray ? "- " + (
         v.match(/^[0-9]/) ? '"' + v + '"' : v
-        ) : v,
-      <br />,
-    ])
+        ) : v}
+      <br />
+      </span>
+    )}</span>
   }
   const [valueMode, valueCount] = modeCount(values?.map(v => v[1]) || [])
   return (
@@ -51,7 +53,7 @@ function ValueRow(props: {
         {name} ({values?.length || 0})
       </a>
       {(valueCount >= 3 || props.showMin) && <div>
-        <code className="text-xs">{valueToText(valueMode)}</code>
+        <code className="text-xs">{valueToText("show-values" + props.name, valueMode)}</code>
       </div>}
       {show && values && (
         <Table
@@ -60,7 +62,7 @@ function ValueRow(props: {
             key: "show-values" + props.name + url,
             data: [
               <div className="w-96 md:w-9/12 break-words">
-                <code className="text-sm">{valueToText(value)}</code>
+                <code className="text-sm">{valueToText("show-values" + props.name + url, value)}</code>
               </div>,
               <div>
                 <a href={url} target="_blank">
@@ -163,9 +165,29 @@ function FilterRepos(props: {
   );
 }
 
+
+
 export default function HR(props: HRProps) {
-  const [pageData, setPageData] = useState(props.pageData);
+  const [repos, setRepos] = useState<PageData["repos"]>(props.pageData?.repos || []);
+    // top repos are filtered by the STAR_THRESHOLD and sorted latest first
+  const top = useMemo(() => {
+    return repos
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .filter((rel) => rel.stars > STAR_THRESHOLD )
+      .slice(0, MAX_REPOS);
+  }, [repos]);
+
   const [showAll, setShowAll] = useState(false);
+    // if there are too little top repos, we show all
+  // or when there are too little repos in total (we don't want to say Top)
+  useEffect(() => {
+    if(top.length < 2 || repos.length <= MAX_REPOS) {
+      setShowAll(true);
+    }
+  }, [top.length, repos.length])
+
+  const [pageData, setPageData] = useState(props.pageData);
+  
   const [filters, setFilters] = useState(new Set<string>());
   const [filteredRepos, setFilteredRepos] = useState(
     props.pageData?.repos || []
@@ -178,6 +200,7 @@ export default function HR(props: HRProps) {
         .then((res) => res.json())
         .then((data: any) => {
           setPageData(data[props.url] as PageData);
+          setRepos(data[props.url].repos || []);
           setFilteredRepos(data[props.url].repos || []);
         });
     }
@@ -207,7 +230,6 @@ export default function HR(props: HRProps) {
 
   const {
     name,
-    repos,
     icon,
     values: valueResult,
     chartName,
@@ -230,18 +252,17 @@ export default function HR(props: HRProps) {
   const doc =
     pageData.doc ||
     `No introduction found. <a href="${docUrl}" target="_blank">Create it?</a>`;
-  const needsFilter =
-    repos.filter((rel) => rel.stars > STAR_THRESHOLD).length > MAX_REPOS;
+  
 
-  // sort by timestamp
-  const top = repos
-    .sort((a, b) => b.timestamp - a.timestamp)
-    .filter((rel) => rel.stars > STAR_THRESHOLD || !needsFilter)
-    .slice(0, MAX_REPOS);
 
+
+  // with filters we always show all
   const filtered = !showAll && filters.size == 0 ? top : filteredRepos;
   const filteredUrls = new Set(filteredRepos.map((r) => r.url));
   const repoCount = filtered.length;
+  
+  const filterName = showAll ? (filters.size > 0 ? "Filtered" : "All") : "Top"
+  const seeAllBtnEnabled = !showAll && filters.size === 0;
   return (
     <>
       <h2>
@@ -273,7 +294,7 @@ export default function HR(props: HRProps) {
 helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
       </Code>
       <h3>
-        {(showAll || !needsFilter) ? (filters.size > 0 ? "Filtered" : "All") : "Top"} Repositories
+        {filterName} Repositories
         ({repoCount} out of {repos.length})
       </h3>
       <Text>See examples from other people.</Text>
@@ -306,16 +327,16 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
           ],
         }))}
       />
-      {needsFilter && !showAll && filters.size === 0 && (
+      {seeAllBtnEnabled ? (
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white
           dark:bg-blue-700 dark:hover:bg-blue-500 dark:text-gray-300
            font-bold py-2 px-4 rounded mt-3 mb-6"
-          onClick={() => setShowAll(!showAll)}
+          onClick={() => setShowAll(true)}
         >
           See all {repos.length} releases
         </button>
-      )}
+      ) : <></>}
       <h3>{ filters.size > 0 && "Filtered "}Values</h3>
       <Text>See the most popular values for this chart:</Text>
       <Table
