@@ -36,6 +36,35 @@ function Copy({id, text}: {id: string, text: string}) {
 >Copy</button>
 }
 
+// we sort by version, but we need to ensure non version parts are sorted correctly
+function TagSorter(a: string, b: string) {
+    const aParts = a.split(".");
+    const bParts = b.split(".");
+
+    // if the first part is not a number, sort by string
+    if (isNaN(parseInt(aParts[0])) || isNaN(parseInt(bParts[0]))) {
+        return a.localeCompare(b);
+    }
+
+    // if the first part is a number, sort by number
+    for (let i = 0; i < aParts.length; i++) {
+        const aPart = parseInt(aParts[i]);
+        const bPart = parseInt(bParts[i]);
+        // check if not number
+        if (isNaN(aPart) || isNaN(bPart)) {
+            return a.localeCompare(b);
+        }
+
+        if (aPart > bPart) {
+            return -1;
+        } else if (aPart < bPart) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 export default function (props : ImagePageData & { search : string }) {
     // repository -> tag -> url[]
     const images: Record<string, Record<string, string[]>> = props.images;
@@ -65,7 +94,8 @@ export default function (props : ImagePageData & { search : string }) {
                         <Highlight text={repo} keyword={search} />  <Copy id={repo+i} text={repo} />
                         <ul className="ml-4">
                             {Object.keys(images[repo]).sort(
-                                (a, b) => images[repo][b].length - images[repo][a].length
+                                // (a, b) => images[repo][b].length - images[repo][a].length
+                                TagSorter
                             ).map((tag, j) => {
                                 return <li key={tag + j} className="mb-1">
                                     <code>{tag}</code> <Copy id={tag+i} text={tag} /> ({images[repo][tag].length})
