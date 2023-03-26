@@ -90,6 +90,8 @@
   ],
   "src/pages/helm-release.tsx": [
   ],
+  "src/pages/image.tsx": [
+  ],
   "src/pages/index.tsx": [
   ],
   "src/pages/repo.tsx": [
