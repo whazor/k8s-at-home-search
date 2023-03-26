@@ -472,24 +472,10 @@ export function generateGrepPageData(data: CollectorData): GrepData {
 }
 
 export function generateImagePageData(data: CollectorData): ImagePageData {
-    // const {images} = data;
-    // const imageMap = Object.entries(images).reduce((acc, [key, image]) => {
-    //     for (const i of image) {
-    //         if (!(i.image in acc)) {
-    //             acc[i.image] = {
-    //                 count: 0,
-    //                 name: i.image,
-    //                 url: i.image_url,
-    //             }
-    //         }
-    //         acc[i.image].count += 1;
-    //     }
-    //     return acc;
-    // }, {} as Record<string, TopRepoInfo>);
-    // return {
-    //     images: Object.values(imageMap).sort((a, b) => b.count - a.count),
-    // };
-    const images: string[] = []
+    // repository -> tag -> url[]
+    const images: Record<string, Record<string, string[]>> = {
+
+    }
 
     for (const [url, values] of Object.entries(data.values)) {
         if(!(typeof values === 'object' && !!values && 'image' in values)) {
@@ -500,7 +486,21 @@ export function generateImagePageData(data: CollectorData): ImagePageData {
         if (!(typeof image === 'object' && 'tag' in image && 'repository' in image)) {
             continue;
         }
-        images.push(`${image.repository}:${image.tag}`);
+        // images.push(`${image.repository}:${image.tag}`);
+        const repo = image.repository;
+        const tag = image.tag;
+        // if repo or tag not string, skip
+        if (!(typeof repo === 'string' && typeof tag === 'string')) {
+            continue;
+        }
+        if (!(repo in images)) {
+            images[repo] = {};
+        }
+        if (!(tag in images[repo])) {
+            images[repo][tag] = [];
+        }
+        images[repo][tag].push(url);
+
     }
 
     return {

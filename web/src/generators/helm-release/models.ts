@@ -122,7 +122,7 @@ export interface GrepData {
 }
 
 export interface ImagePageData {
-    images: string[],
+    images: Record<string, Record<string, string[]>>,
 }
 
 export const MINIMUM_COUNT = 3;
