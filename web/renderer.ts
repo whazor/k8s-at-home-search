@@ -7,6 +7,7 @@ import {
     generateTopReposPageData,
     generateRepoPagesData,
     generateGrepPageData,
+    generateImagePageData,
 } from './src/generators/helm-release/generator';
 import type { RenderFunction } from './src/entry-server';
 import pako from 'pako';
@@ -44,6 +45,8 @@ export class Renderer {
         }
 
         this.htmlPageData['/grep'] = generateGrepPageData(hrPageData);
+
+        this.htmlPageData['/image'] = generateImagePageData(hrPageData);
         
         const jsonPageData: Record<string, any> = {};
         for (const [key, pageData] of Object.entries(hrPageGenerator(hrPageData, false))) {

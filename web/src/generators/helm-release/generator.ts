@@ -8,7 +8,7 @@ import { marked } from 'marked';
 // const { JSDOM } = require('jsdom');
 import createDOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
-import { CollectorData, ReleaseInfo, RepoInfo, ValuesData, PageData, MINIMUM_COUNT, ValueTree, ReleaseInfoCompressed, AppData, RepoPageData, RepoReleaseInfo, denormalize, GrepData } from './models';
+import { CollectorData, ReleaseInfo, RepoInfo, ValuesData, PageData, MINIMUM_COUNT, ValueTree, ReleaseInfoCompressed, AppData, RepoPageData, RepoReleaseInfo, denormalize, GrepData, ImagePageData } from './models';
 import { mode, simplifyURL } from '../../utils';
 
 const window = new JSDOM('<!DOCTYPE html>').window;
@@ -468,5 +468,42 @@ export function generateGrepPageData(data: CollectorData): GrepData {
 
     return {
         values
+    };
+}
+
+export function generateImagePageData(data: CollectorData): ImagePageData {
+    // const {images} = data;
+    // const imageMap = Object.entries(images).reduce((acc, [key, image]) => {
+    //     for (const i of image) {
+    //         if (!(i.image in acc)) {
+    //             acc[i.image] = {
+    //                 count: 0,
+    //                 name: i.image,
+    //                 url: i.image_url,
+    //             }
+    //         }
+    //         acc[i.image].count += 1;
+    //     }
+    //     return acc;
+    // }, {} as Record<string, TopRepoInfo>);
+    // return {
+    //     images: Object.values(imageMap).sort((a, b) => b.count - a.count),
+    // };
+    const images: string[] = []
+
+    for (const [url, values] of Object.entries(data.values)) {
+        if(!(typeof values === 'object' && !!values && 'image' in values)) {
+            continue;
+        }
+        const image = values['image'];
+        // check if object and whether tag and repository are set
+        if (!(typeof image === 'object' && 'tag' in image && 'repository' in image)) {
+            continue;
+        }
+        images.push(`${image.repository}:${image.tag}`);
+    }
+
+    return {
+        images
     };
 }

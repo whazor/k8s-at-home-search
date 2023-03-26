@@ -8,6 +8,7 @@ import GitHubButton from 'react-github-btn';
 import { Top } from './pages/top';
 import { Repo } from './pages/repo';
 import Grep from './pages/grep';
+import Image from './pages/image';
 import { useEffect, useRef, useState } from 'react';
 import HRSearchResults, { SearchInterface } from './components/search/hr';
 
@@ -82,17 +83,27 @@ export default function App(props: AppData & { pageData: any }) {
   useEffect(() => {
     // on grep mode, redirect to /grep and keep location hash
     const isOnGrepPage = window.location.pathname === "/k8s-at-home-search/grep";
+    const isOnImagePage = window.location.pathname === "/k8s-at-home-search/image";
     if(mode === "grep" && !isOnGrepPage) {
         // history.replaceState(undefined, "", "/k8s-at-home-search/grep" + window.location.hash);
         const s = search === "grep" ? "grep " : search;
         window.location.href = "/k8s-at-home-search/grep#" + encodeURI(s);
     }
+    else if(mode === "image" && !isOnImagePage) {
+      window.location.href = "/k8s-at-home-search/image#" + encodeURI(search);
+    }
     // if not grep mode, but on grep page, redirect to / and keep location hash
     else if(isOnGrepPage) {
-      if(mode && mode !== "grep") {
+      if(mode && (mode !== "grep")) {
         window.location.href = "/k8s-at-home-search/" + encodeURI(window.location.hash);
       } else {
         setMode("grep");
+      }
+    } else if(isOnImagePage) {
+      if(mode && (mode !== "image")) {
+        window.location.href = "/k8s-at-home-search/" + encodeURI(window.location.hash);
+      } else {
+        setMode("image");
       }
     } else if(!mode) {
       setMode("hr");
@@ -142,6 +153,7 @@ export default function App(props: AppData & { pageData: any }) {
           <Route key="grep" path="/grep" element={
             <Grep {...pageData} search={search} />
           } />
+          <Route key="image" path="/image" element={<Image {...pageData} search={search} />} />
           {props.repos.map((repo) => {
             return (
               <Route

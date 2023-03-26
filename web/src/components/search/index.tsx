@@ -73,7 +73,7 @@ export function SearchBar(props: P ) {
             }}
         />
         <span className="text-sm text-slate-500">
-            Switch modes by typing <span className="line-through"><code>image</code>[space] for image search</span> (TODO) or <code>grep</code>[space] for grep mode.</span>
+            Switch modes by typing <span><code>image</code>[space] for image search</span> or <code>grep</code>[space] for grep mode.</span>
         </label>
         
         </div>

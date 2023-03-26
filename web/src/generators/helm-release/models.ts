@@ -121,4 +121,8 @@ export interface GrepData {
     values: ValuesData
 }
 
+export interface ImagePageData {
+    images: string[],
+}
+
 export const MINIMUM_COUNT = 3;
