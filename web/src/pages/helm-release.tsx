@@ -48,7 +48,7 @@ function ValueRow(props: {
   }
   const [valueMode, valueCount] = modeCount(values?.map(v => v[1]) || [])
   return (
-    <div className="w-96 lg:w-full break-words">
+    <div className="w-96 lg:w-[900px] m-h-[150px] overflow-auto">
       <a onClick={() => setShow(!show)} title={`List all values from ${name}`}>
         {name} ({values?.length || 0})
       </a>
@@ -61,7 +61,7 @@ function ValueRow(props: {
           rows={values.map(([url, value]) => ({
             key: "show-values" + props.name + url,
             data: [
-              <div className="w-96 md:w-9/12 break-words">
+              <div>
                 <code className="text-sm">{valueToText("show-values" + props.name + url, value)}</code>
               </div>,
               <div>
