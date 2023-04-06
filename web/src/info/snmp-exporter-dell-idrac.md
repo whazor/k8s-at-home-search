@@ -1,0 +1,3 @@
+To monitor Dell iDRAC devices with Prometheus, you can use the [SNMP Exporter](https://github.com/prometheus/snmp_exporter) and use it with the `snmp.yml` configuration file. 
+
+Below you can find other users from our community that have already configured the SNMP Exporter for Dell iDRAC devices. Click on their repository links to see their helm release and in the same directory you should find a config map with the `snmp.yml` configuration file.

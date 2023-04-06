@@ -1,0 +1,1 @@
+[pgadmin](https://www.pgadmin.org/) is a popular administration tool for PostgreSQL. It is a web application that can be run in Kubernetes.
