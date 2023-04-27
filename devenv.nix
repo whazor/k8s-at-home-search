@@ -6,7 +6,7 @@
   languages.typescript.enable = true;
   languages.javascript.enable = true;
   languages.python.enable = true;
-  languages.python.package = pkgs.python3.withPackages (p: with p; [ 
+  languages.python.package = pkgs.python311.withPackages (p: with p; [ 
     requests
     ruamel-yaml
     pydantic
@@ -15,11 +15,12 @@
   packages = [
     pkgs.pigz
     pkgs.sqlite
-    # pkgs.playwright.browsers
+    pkgs.playwright-driver
     pkgs.nodePackages.zx
   ];
 
-  # env.PLAYWRIGHT_BROWSERS_PATH="${pkgs.playwright.browsers}";
+  env.LD_LIBRARY_PATH="";
+  env.PLAYWRIGHT_BROWSERS_PATH="${pkgs.playwright-driver.browsers}";
   env.PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS="true";
   # https://devenv.sh/processes/
   processes.web.exec = "cd $DEVENV_ROOT/web/; yarn run dev";
