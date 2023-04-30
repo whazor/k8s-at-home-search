@@ -1,4 +1,6 @@
 name: Update-search-index
+permissions: read-all
+
 on:
   schedule:
     - cron:  '1 0 * * *'
