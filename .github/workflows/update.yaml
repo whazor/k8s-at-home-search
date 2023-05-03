@@ -26,6 +26,8 @@ jobs:
         run: pip install -r requirements.txt
       - name: Get interesting repositories
         run: python3 interesting.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build DB
         run: python3 init-db.py
       - name: Download repos
