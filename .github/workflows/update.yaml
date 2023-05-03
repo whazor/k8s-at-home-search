@@ -1,5 +1,4 @@
 name: Update-search-index
-permissions: read-all
 
 on:
   schedule:
