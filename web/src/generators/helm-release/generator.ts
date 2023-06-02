@@ -80,6 +80,7 @@ export async function collector(
             (helm_repo_url
                 .replace("https://", "")
                 .replace("http://", "")
+                .replace("oci://", "")
                 .replace(/\/$/, '')
                 .replaceAll("/", "-")
                 + '-' + name).replaceAll(/\s+/g, '-')

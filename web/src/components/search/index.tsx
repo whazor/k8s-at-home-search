@@ -76,6 +76,5 @@ export function SearchBar(props: P ) {
             Switch modes by typing <span><code>image</code>[space] for image search</span> or <code>grep</code>[space] for grep mode.</span>
         </label>
         
-        </div>
-        ;
+        </div>;
 }

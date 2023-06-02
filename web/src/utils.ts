@@ -40,15 +40,31 @@ export function modeCount<K extends keyof any>(array: K[]) {
 
 
 export function simplifyURL(url: string) {
-    // get domain
-    let domain = url.replace(/https?:\/\//, '').split('/')[0];
-    // remove tld
-    domain = domain.split('.').slice(0, -1).join('.');
-    // remove charts.
-    domain = domain.replace(/^charts\./, '');
-    // remove www
-    domain = domain.replace(/^www\./, '');
-    // remove github
-    domain = domain.replace(/\.github$/, '');
-    return domain;
+    if (url.startsWith('http')) {
+        // remove https
+        let name = url.replace(/https?:\/\//, '').split('/')[0];
+        // remove tld
+        name = name.split('.').slice(0, -1).join('.');
+        // remove charts.
+        name = name.replace(/^charts\./, '');
+        // remove www
+        name = name.replace(/^www\./, '');
+        // remove github
+        name = name.replace(/\.github$/, '');
+        return name;
+    }
+    if(url.startsWith('oci://ghcr.io/')) {
+        let name = url.split('oci://ghcr.io/')[1];
+        // split off before first /
+        name = name.split('/')[0];
+        return name;
+    }
+    if (url.startsWith('oci')) {
+        // remove oci://
+        let name = url.split('oci://')[1];
+        // get domain
+        name = name.split('.').slice(0, -1).join('.');
+        return name;
+    }
+    return url;
 };
