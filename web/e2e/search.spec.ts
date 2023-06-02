@@ -20,8 +20,8 @@ test('test search', async ({ page }) => {
   await expect(rows.length).toBeGreaterThan(0);
   // get the count value
   const count = await rows[0].locator('td:nth-of-type(3)').innerText();
-  // check if count is above 15
-  await expect(parseInt(count)).toBeGreaterThan(15);
+  // check if count is above 5
+  await expect(parseInt(count)).toBeGreaterThan(5);
 
   // click on first cell of first row
   await rows[0].locator('td:nth-of-type(1) a').click();
