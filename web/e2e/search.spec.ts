@@ -27,6 +27,6 @@ test('test search', async ({ page }) => {
   await rows[0].locator('td:nth-of-type(1) a').click();
 
   // check url
-  await expect(page).toHaveURL('/k8s-at-home-search/hr/bjw-s.github.io-helm-charts-app-template-plex');
+  await expect(page).toHaveURL('/k8s-at-home-search/hr/ghcr.io-bjw-s-helm-app-template-plex');
 
 });
