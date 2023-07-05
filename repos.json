@@ -96,6 +96,12 @@
     2
   ],
   [
+    "JefeDavis/k8s-HomeOps",
+    "https://github.com/JefeDavis/k8s-HomeOps",
+    "main",
+    0
+  ],
+  [
     "John-Limb/kube-home-ops",
     "https://github.com/John-Limb/kube-home-ops",
     "main",
@@ -118,6 +124,18 @@
     "https://github.com/LilDrunkenSmurf/k3s-home-cluster",
     "main",
     1
+  ],
+  [
+    "MegaShinySnivy/flux-cluster",
+    "https://github.com/MegaShinySnivy/flux-cluster",
+    "main",
+    2
+  ],
+  [
+    "ModestTG/heliod-cluster",
+    "https://github.com/ModestTG/heliod-cluster",
+    "main",
+    0
   ],
   [
     "MrMarble/home-ops",
@@ -210,10 +228,22 @@
     2
   ],
   [
+    "TomCranitch/homelab",
+    "https://github.com/TomCranitch/homelab",
+    "main",
+    0
+  ],
+  [
     "Tyler-Cash/homelab",
     "https://github.com/Tyler-Cash/homelab",
     "master",
     5
+  ],
+  [
+    "Venoox/k8s-cluster",
+    "https://github.com/Venoox/k8s-cluster",
+    "main",
+    0
   ],
   [
     "VoliKoN/k3s-gitops",
@@ -226,6 +256,12 @@
     "https://github.com/Woll0r/k8s-cluster",
     "main",
     3
+  ],
+  [
+    "adampetrovic/k8s-home",
+    "https://github.com/adampetrovic/k8s-home",
+    "main",
+    1
   ],
   [
     "ahgraber/homelab-gitops-k3s",
@@ -300,6 +336,12 @@
     0
   ],
   [
+    "aumer-amr/lab",
+    "https://github.com/aumer-amr/lab",
+    "main",
+    0
+  ],
+  [
     "auricom/home-ops",
     "https://github.com/auricom/home-ops",
     "main",
@@ -334,6 +376,12 @@
     "https://github.com/billimek/k8s-gitops",
     "master",
     508
+  ],
+  [
+    "binaryn3xus/HomeOps",
+    "https://github.com/binaryn3xus/HomeOps",
+    "main",
+    10
   ],
   [
     "bjw-s/home-ops",
@@ -404,6 +452,12 @@
   [
     "cbc02009/k8s-home-ops",
     "https://github.com/cbc02009/k8s-home-ops",
+    "main",
+    3
+  ],
+  [
+    "cbirkenbeul/homelab",
+    "https://github.com/cbirkenbeul/homelab",
     "main",
     3
   ],
@@ -636,6 +690,12 @@
     5
   ],
   [
+    "ionfury/homelab",
+    "https://github.com/ionfury/homelab",
+    "main",
+    1
+  ],
+  [
     "ishioni/homelab-ops",
     "https://github.com/ishioni/homelab-ops",
     "master",
@@ -732,6 +792,12 @@
     5
   ],
   [
+    "madbuda/k3s-home",
+    "https://github.com/madbuda/k3s-home",
+    "main",
+    1
+  ],
+  [
     "mcfio/home-cluster",
     "https://github.com/mcfio/home-cluster",
     "main",
@@ -748,6 +814,12 @@
     "https://github.com/mfin/homelab",
     "main",
     12
+  ],
+  [
+    "mihirsamdarshi/homelab",
+    "https://github.com/mihirsamdarshi/homelab",
+    "main",
+    1
   ],
   [
     "mitchross/k8s-homelab-cluster-v2",
@@ -802,6 +874,12 @@
     "https://github.com/npawelek/k8s-gitops",
     "master",
     17
+  ],
+  [
+    "nrdufour/home-ops",
+    "https://github.com/nrdufour/home-ops",
+    "main",
+    3
   ],
   [
     "nshores/k8s-home-ops",
@@ -870,6 +948,12 @@
     17
   ],
   [
+    "rszamszur/home-k8s",
+    "https://github.com/rszamszur/home-k8s",
+    "master",
+    3
+  ],
+  [
     "rust84/k8s-gitops",
     "https://github.com/rust84/k8s-gitops",
     "main",
@@ -892,6 +976,18 @@
     "https://github.com/rwlove/fleet-infra",
     "main",
     6
+  ],
+  [
+    "ryan-mcd/gitops-home-cluster",
+    "https://github.com/ryan-mcd/gitops-home-cluster",
+    "main",
+    10
+  ],
+  [
+    "ryan-mcd/k8s-ops",
+    "https://github.com/ryan-mcd/k8s-ops",
+    "main",
+    0
   ],
   [
     "s0undy/kube-ops",
@@ -1042,5 +1138,11 @@
     "https://github.com/zbigniewzolnierowicz/cluster",
     "main",
     2
+  ],
+  [
+    "zifamathebula/ansible-role-bootstrap-home-lab",
+    "https://github.com/zifamathebula/ansible-role-bootstrap-home-lab",
+    "main",
+    0
   ]
 ]

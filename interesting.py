@@ -12,6 +12,14 @@ else:
 repos = set()
 results = []
 
+# first read all repos from repos.json
+with open("repos.json", "r") as f:
+    for repo in json.load(f):
+        name = repo[0]
+        if name not in repos:
+            repos.add(name)
+            results.append(repo)
+
 items = []
 page = 1
 while len(items) > 0 or page == 1:
@@ -28,6 +36,8 @@ while len(items) > 0 or page == 1:
         repo_name = repo_info["full_name"]
         if "true_charts" in repo_name:
             # Skip true_charts because they do not have helm_release to parse
+            continue
+        if repo_name in repos:
             continue
         stars = repo_info["stargazers_count"]
         url = repo_info["html_url"]
