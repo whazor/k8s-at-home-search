@@ -10,6 +10,7 @@ import warnings
 
 from ruamel.yaml.error import ReusedAnchorWarning
 from info_model import InfoModel
+from pydantic import ValidationError
 
 from scanners.flux_helm_release import FluxHelmReleaseScanner
 from scanners.flux_helm_repo import FluxHelmRepoScanner
@@ -97,8 +98,11 @@ for root, dirs, files in os.walk("repos/"):
                   amount_lines=amount_lines,
                 )
                 for s in current_scanners:
-                  result = s.parse(prepare_walk(doc), rest)
-                  s.insert(c1, c2, result)
+                  try:
+                    result = s.parse(prepare_walk(doc), rest)
+                    s.insert(c1, c2, result)
+                  except ValidationError as e:
+                    print("validation error", e)
           except YAMLError as exc:
             print("yaml err")
             print(exc)
