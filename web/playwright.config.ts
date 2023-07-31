@@ -1,6 +1,8 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 
+import glob from 'glob';
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -14,12 +16,28 @@ import { devices } from '@playwright/test';
 //   reuseExistingServer: true
 // };
 
-  const webServer = {
-    command: 'yarn run serve',
-    url: 'http://localhost:4173/k8s-at-home-search/',
-    timeout: 10 * 1000,
-    reuseExistingServer: true
-  };
+const webServer = {
+  command: 'yarn run serve',
+  url: 'http://localhost:4173/k8s-at-home-search/',
+  timeout: 10 * 1000,
+  reuseExistingServer: true
+};
+
+function findBrowserPath(browserName: string) {
+  // "PLAYWRIGHT_BROWSERS_PATH" in process.env ? process.env["PLAYWRIGHT_BROWSERS_PATH"] + "/chromium-1028/chrome-linux/chrome" : undefined,
+  if ("PLAYWRIGHT_BROWSERS_PATH" in process.env) {
+    // glob browser
+    if (browserName === "chromium") {
+      const browserPath = glob.sync(process.env["PLAYWRIGHT_BROWSERS_PATH"] + "/chromium-*/chrome-linux/chrome")[0];
+      console.log("browserPath: " + browserPath);
+      return browserPath;
+    }
+    // no other browsers are there
+
+    // return process.env["PLAYWRIGHT_BROWSERS_PATH"] + "/chromium-1028/chrome-linux/chrome";
+  }
+  return undefined;
+}
 
 
 
@@ -65,9 +83,7 @@ const config: PlaywrightTestConfig = {
       use: {
         ...devices['Desktop Chrome'],
         launchOptions: {
-
-          executablePath: "PLAYWRIGHT_BROWSERS_PATH" in process.env ? process.env["PLAYWRIGHT_BROWSERS_PATH"] + "/chromium-1028/chrome-linux/chrome" : undefined,
-      
+          executablePath: findBrowserPath("chromium"),
         },
       },
       
