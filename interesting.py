@@ -9,16 +9,15 @@ if "GITHUB_TOKEN" in os.environ:
 else:
     print("Missing GITHUB_TOKEN")
     exit(1)
-repos = set()
-results = []
+
+results = dict()
 
 # first read all repos from repos.json
 with open("repos.json", "r") as f:
     for repo in json.load(f):
         name = repo[0]
-        if name not in repos:
-            repos.add(name)
-            results.append(repo)
+        if name not in results:
+            results[name] = repo
 
 items = []
 page = 1
@@ -37,13 +36,10 @@ while len(items) > 0 or page == 1:
         if "true_charts" in repo_name:
             # Skip true_charts because they do not have helm_release to parse
             continue
-        if repo_name in repos:
-            continue
         stars = repo_info["stargazers_count"]
         url = repo_info["html_url"]
         branch = repo_info["default_branch"]
-        results.append((repo_name, url, branch, stars))
-        repos.add(repo_name)
+        results[repo_name] = (repo_name, url, branch, stars)
     page += 1
 
 # graphql query to get all repos from github, as their api is unreliable
@@ -92,10 +88,7 @@ while has_next_page:
         stars = repo["stargazerCount"]
         url = repo["url"]
         branch = repo["defaultBranchRef"]["name"]
-        # check if repo is already in results
-        if not repo_name in repos:
-            results.append((repo_name, url, branch, stars))
-            repos.add(repo_name)
+        results[repo_name] = (repo_name, url, branch, stars)
     has_next_page = result["data"]["topic"]["repositories"]["pageInfo"]["endCursor"]
     cursor = result["data"]["topic"]["repositories"]["pageInfo"]["endCursor"]
 
@@ -114,7 +107,7 @@ must_have = {
 }
 
 for repo in must_have:
-    if repo not in repos:
+    if repo not in results:
         print(f"Missing {repo}")
         exit(1)
 
@@ -123,7 +116,7 @@ if len(results) < 50:
     exit(1)
 
 # sort results on repo_name
-results = sorted(results, key=lambda x: x[0])
+results = sorted(results.values(), key=lambda x: x[0])
 
 j = json.dumps(results, indent=2)
 with open("repos.json", "w") as f:
