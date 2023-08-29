@@ -17,20 +17,9 @@ console.log(`latest release: ${latest.name}`);
 // parse json
 const { assets } = latest;
 
-const repos = assets.find(({ name }) => name === 'repos.db.zz')["browser_download_url"];
-const reposExtended = assets.find(({ name }) => name === 'repos-extended.db.zz')["browser_download_url"];
+const repos = assets.find(({ name }) => name === 'repos.db')["browser_download_url"];
+const reposExtended = assets.find(({ name }) => name === 'repos-extended.db')["browser_download_url"];
 
 // download files
-await $`curl -s -L ${repos} -o repos.db.zz`;
-await $`curl -s -L ${reposExtended} -o repos-extended.db.zz`;
-
-// unpack with pigz
-await $`pigz -d -k repos.db.zz`;
-await $`pigz -d -k repos-extended.db.zz`;
-
-// move to web/
-await $`cp repos.db ./web/`;
-await $`cp repos-extended.db ./web/`;
-
-await $`rm -f repos.db.zz`;
-await $`rm -f repos-extended.db.zz`;
+await $`curl -s -L ${repos} -o ./web/repos.db`;
+await $`curl -s -L ${reposExtended} -o ./web/repos-extended.db`;

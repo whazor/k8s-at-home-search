@@ -4,7 +4,7 @@ on:
     branches:
       - main
   schedule:
-    - cron:  '30 0 * * *'
+    - cron: "30 0 * * *"
 jobs:
   build-frontend:
     runs-on: ubuntu-latest
@@ -22,7 +22,6 @@ jobs:
         working-directory: web/
       - name: Download DB 📙
         run: |
-          apt-get update -y && apt-get install -y pigz
           yarn global add zx
           ./scripts/download.mjs
       - name: Build web 🚧

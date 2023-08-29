@@ -13,7 +13,6 @@
   ]);
 
   packages = [
-    pkgs.pigz
     pkgs.sqlite
     pkgs.playwright-driver
     pkgs.nodePackages.zx

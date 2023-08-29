@@ -2,7 +2,7 @@ name: Update-search-index
 
 on:
   schedule:
-    - cron:  '1 0 * * *'
+    - cron: "1 0 * * *"
   workflow_dispatch:
 jobs:
   update-search-index:
@@ -13,7 +13,7 @@ jobs:
           submodules: false
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: "3.x"
       - name: setup git config
         run: |
           git config user.name "GitHub Actions Bot"
@@ -33,11 +33,6 @@ jobs:
         run: python3 download.py
       - name: Update search index
         run: python3 search.py
-      - name: Compress files
-        run: |
-          apt-get update -y && apt-get install -y pigz
-          pigz -z repos.db
-          pigz -z repos-extended.db
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -55,8 +50,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./repos.db.zz
-          asset_name: repos.db.zz
+          asset_path: ./repos.db
+          asset_name: repos.db
           asset_content_type: application/vnd.sqlite3
       - name: Upload Release Asset 2/2
         id: upload-release-asset-2
@@ -65,6 +60,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./repos-extended.db.zz
-          asset_name: repos-extended.db.zz
+          asset_path: ./repos-extended.db
+          asset_name: repos-extended.db
           asset_content_type: application/vnd.sqlite3
