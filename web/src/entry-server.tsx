@@ -6,7 +6,7 @@ import App, { AppData } from './App'
 
 export function render(url: string, appData: AppData, pageData: any) {
   return ReactDOMServer.renderToString(
-    <StaticRouter location={url} basename='/k8s-at-home-search/' /*context={context}*/>
+    <StaticRouter location={url} basename='/' /*context={context}*/>
       <App {...appData} pageData={pageData} />
     </StaticRouter>,
   )

@@ -11,14 +11,14 @@ import glob from 'glob';
 
 // const webServer = {
 //   command: 'yarn run dev',
-//   url: 'http://localhost:5173/k8s-at-home-search/',
+//   url: 'http://localhost:5173/',
 //   timeout: 60 * 1000,
 //   reuseExistingServer: true
 // };
 
 const webServer = {
   command: 'yarn run serve',
-  url: 'http://localhost:4173/k8s-at-home-search/',
+  url: 'http://localhost:4173/',
   timeout: 10 * 1000,
   reuseExistingServer: true
 };

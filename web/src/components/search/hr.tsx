@@ -32,7 +32,7 @@ const HRSearchResults = forwardRef<SearchInterface, P>(function HRSearchResults(
         () => ({
             onEnter() {
                 if(availableSearches.length >= 1) {
-                    window.location.href = `/k8s-at-home-search/hr/${availableSearches[0].key}`;
+                    window.location.href = `/hr/${availableSearches[0].key}`;
                 } else if(unavailableSearches.length >= 1) {
                     // react router go to link
                     redirect(`/hr/${unavailableSearches[0].key}`);
@@ -54,7 +54,7 @@ const HRSearchResults = forwardRef<SearchInterface, P>(function HRSearchResults(
         <tbody>
             {availableSearches.map(({ key, icon, chart, release, chartsUrl, count }) => {
                 return <tr key={'hr-release'+key}>
-                    <td><a href={`/k8s-at-home-search/hr/${key}`}><Icon icon={icon} />{release}</a></td>
+                    <td><a href={`/hr/${key}`}><Icon icon={icon} />{release}</a></td>
                     <td>{simplifyURL(chartsUrl) + '/' + chart}</td>
                     <td>{count}</td>
                 </tr>

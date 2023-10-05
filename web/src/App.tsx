@@ -28,9 +28,9 @@ export default function App(props: AppData & { pageData: any }) {
       function checkHash() {
         let hash = window.location.hash;
         if(hash === "#/top") {
-          window.location.href = "/k8s-at-home-search/top"
+          window.location.href = "/top"
         } else if(hash.startsWith("#/repo:")) {
-          window.location.href = "/k8s-at-home-search/repo/" + hash.slice("#/repo:".length)
+          window.location.href = "/repo/" + hash.slice("#/repo:".length)
         } else if(hash.startsWith("#/")) {
           hash = hash.slice(2);
           if(hash.startsWith("chart:")) {
@@ -82,26 +82,26 @@ export default function App(props: AppData & { pageData: any }) {
   };
   useEffect(() => {
     // on grep mode, redirect to /grep and keep location hash
-    const isOnGrepPage = window.location.pathname === "/k8s-at-home-search/grep";
-    const isOnImagePage = window.location.pathname === "/k8s-at-home-search/image";
+    const isOnGrepPage = window.location.pathname === "/grep";
+    const isOnImagePage = window.location.pathname === "/image";
     if(mode === "grep" && !isOnGrepPage) {
-        // history.replaceState(undefined, "", "/k8s-at-home-search/grep" + window.location.hash);
+        // history.replaceState(undefined, "", "/grep" + window.location.hash);
         const s = search === "grep" ? "grep " : search;
-        window.location.href = "/k8s-at-home-search/grep#" + encodeURI(s);
+        window.location.href = "/grep#" + encodeURI(s);
     }
     else if(mode === "image" && !isOnImagePage) {
-      window.location.href = "/k8s-at-home-search/image#" + encodeURI(search);
+      window.location.href = "/image#" + encodeURI(search);
     }
     // if not grep mode, but on grep page, redirect to / and keep location hash
     else if(isOnGrepPage) {
       if(mode && (mode !== "grep")) {
-        window.location.href = "/k8s-at-home-search/" + encodeURI(window.location.hash);
+        window.location.href = "/" + encodeURI(window.location.hash);
       } else {
         setMode("grep");
       }
     } else if(isOnImagePage) {
       if(mode && (mode !== "image")) {
-        window.location.href = "/k8s-at-home-search/" + encodeURI(window.location.hash);
+        window.location.href = "/" + encodeURI(window.location.hash);
       } else {
         setMode("image");
       }
@@ -117,8 +117,8 @@ export default function App(props: AppData & { pageData: any }) {
         <GitHubButton href="https://github.com/whazor/k8s-at-home-search" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star whazor/k8s-at-home on GitHub">Star</GitHubButton>
       </div>
         <a
-        href={'/k8s-at-home-search/'} 
-        ><h1 className="text-3xl dark:text-gray-300">k8s at home search</h1></a>
+        href={'/'} 
+        ><h1 className="text-3xl dark:text-gray-300">kubesearch</h1></a>
         <p className="text-lg dark:text-gray-300">Search for a helm release</p>
       </nav>
       <div className='pt-2'>

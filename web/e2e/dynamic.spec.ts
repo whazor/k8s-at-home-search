@@ -12,7 +12,7 @@ test('test dynamic page', async ({ page }) => {
 
 
   // code to check if the search results are correct
-  // <td><a href="/k8s-at-home-search/hr/bjw-s.github.io-helm-charts-app-template-plex">plex</a></td><td><a href="/k8s-at-home-search/hr/bjw-s.github.io-helm-charts-app-template-plex">bjw-s/app-template</a></td><td><a href="/k8s-at-home-search/hr/bjw-s.github.io-helm-charts-app-template-plex">35</a></td>
+  // <td><a href="/hr/bjw-s.github.io-helm-charts-app-template-plex">plex</a></td><td><a href="/hr/bjw-s.github.io-helm-charts-app-template-plex">bjw-s/app-template</a></td><td><a href="/hr/bjw-s.github.io-helm-charts-app-template-plex">35</a></td>
   // check if table has plex, parse count value and check if it is above 15
   // first select row with plex
   const rows = await page.locator('table tbody tr:has(a:has-text("istio"))').all();

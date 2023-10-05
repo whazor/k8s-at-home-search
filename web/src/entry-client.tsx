@@ -27,7 +27,7 @@ const pageData = JSON.parse(b64DecodeUnicode(window.__PAGE_DATA__));
 
 ReactDOM.hydrateRoot(
   document.getElementById('app')!,
-  <BrowserRouter basename='/k8s-at-home-search/'>
+  <BrowserRouter basename='/'>
     <App {...appData} pageData={pageData} />
   </BrowserRouter>,
 )

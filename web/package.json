@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "nodemon -e ts,md,json,html ./server.ts",
     "build": "tsc && npm run build:client && npm run build:server",
-    "build:client": "vite build --outDir dist/client  --ssrManifest  --base=/k8s-at-home-search/",
-    "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server  --base=/k8s-at-home-search/",
-    "generate": "rm -rf dist; tsc && vite build --outDir dist/static --ssrManifest  --base=/k8s-at-home-search/ && npm run build:server && ts-node --project tsconfig.json prerender.ts",
-    "serve": "vite preview --outDir dist/static --base=/k8s-at-home-search/",
+    "build:client": "vite build --outDir dist/client  --ssrManifest",
+    "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
+    "generate": "rm -rf dist; tsc && vite build --outDir dist/static --ssrManifest && npm run build:server && ts-node --project tsconfig.json prerender.ts",
+    "serve": "vite preview --outDir dist/static",
     "test": "playwright test"
   },
   "dependencies": {

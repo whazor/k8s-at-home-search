@@ -25,7 +25,7 @@ export function SearchBar(props: P ) {
 
     let location = useLocation();
     useEffect(() => {
-        if(location.pathname !== "/k8s-at-home-search/" && location.pathname !== "/" && search.length > 0) {
+        if(location.pathname !== "/" && location.pathname !== "/" && search.length > 0) {
             setSearch(mode + ' ');
         }
     }, [location.pathname])

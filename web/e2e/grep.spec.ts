@@ -6,7 +6,7 @@ test('test grep', async ({ page }) => {
     await expect(page.locator('[placeholder="Search for a chart..."]')).toBeFocused();
 
     await page.locator('[placeholder="Search for a chart..."]').type('grep ');
-    await expect(page).toHaveURL('/k8s-at-home-search/grep#grep%20');
+    await expect(page).toHaveURL('/grep#grep%20');
 
     await expect(page.locator('[placeholder="Search for a chart..."]')).toBeFocused();
 

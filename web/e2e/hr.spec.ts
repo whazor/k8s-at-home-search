@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('test helm release page', async ({ page }) => {
-    await page.goto('/k8s-at-home-search/hr/charts.jetstack.io-cert-manager');
+    await page.goto('/hr/charts.jetstack.io-cert-manager');
     await expect(page.$$('text="is a certificate management controller for Kubernetes."')).toBeTruthy();
 
     // Top Repositories (5 out of N), find out N

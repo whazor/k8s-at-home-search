@@ -28,13 +28,8 @@ async function createServer() {
     // if you use your own express router (express.Router()), you should use router.use
     app.use(vite.middlewares)
 
-    // redirect / to /k8s-at-home-search/
-    app.get("/", (req, res) => {
-        res.redirect("/k8s-at-home-search/");
-    });
-
-    // /k8s-at-home-search/hr/data-*.json => dist/static/hr/data-*.json
-    app.use("/k8s-at-home-search/hr/data-:id.json", (req, res) => {
+    // /hr/data-*.json => dist/static/hr/data-*.json
+    app.use("/hr/data-:id.json", (req, res) => {
         const id = parseInt(req.params.id);
         if (id in renderer.jsonFilesData) {
             // input is already json stringified

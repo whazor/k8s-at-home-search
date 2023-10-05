@@ -149,12 +149,12 @@ export class Renderer {
         <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">        
         ${pages.map(page => `
             <url>
-                <loc>https://nanne.dev/k8s-at-home${page}</loc>
+                <loc>https://kubesearch.dev${page}</loc>
                 <lastmod>${new Date().toISOString()}</lastmod>
             </url>
         `).join('')}
             <url>
-                <loc>https://nanne.dev/k8s-at-home/</loc>
+                <loc>https://kubesearch.dev/</loc>
                 <lastmod>${new Date().toISOString()}</lastmod>
             </url>
         </urlset>

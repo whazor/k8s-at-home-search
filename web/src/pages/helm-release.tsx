@@ -282,7 +282,7 @@ export default function HR(props: HRProps) {
         ">
           <h3>More popular helm chart found</h3>
           <p>
-            <a href={`/k8s-at-home-search/hr/${morePopular[0]}`}>{name}</a> from {simplifyURL(morePopular[1])} is more popular with {morePopular[2]} repositories.
+            <a href={`/hr/${morePopular[0]}`}>{name}</a> from {simplifyURL(morePopular[1])} is more popular with {morePopular[2]} repositories.
           </p>
         </div>
       )}

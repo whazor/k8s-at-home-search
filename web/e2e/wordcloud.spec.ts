@@ -9,7 +9,7 @@ test('test wordcloud', async ({ page }) => {
   // so any errors suggesting that there are multiple links with
   // the same text suggests there is a bug in the wordcloud
   await page.getByRole('link', { name: 'cert-manager' }).click();
-  await expect(page).toHaveURL('/k8s-at-home-search/hr/charts.jetstack.io-cert-manager');
+  await expect(page).toHaveURL('/hr/charts.jetstack.io-cert-manager');
 
   const rows = page.locator('table tbody tr');
   for (let i = 0; i < 5; i++) {

@@ -11,7 +11,7 @@ export function Top(props: any) {
             rows={props.repos.map((repo: any) => ({
                 key: "top" + repo.url,
                 data: [
-                    <a href={'/k8s-at-home-search/repo/'+repo.name}>{repo.count}</a>,
+                    <a href={'/repo/'+repo.name}>{repo.count}</a>,
                     <a href={repo.url} target={"_blank"}>
                         {repo.name}
                     </a>,

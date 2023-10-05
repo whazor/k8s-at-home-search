@@ -12,7 +12,7 @@ test('test search', async ({ page }) => {
 
 
   // code to check if the search results are correct
-  // <td><a href="/k8s-at-home-search/hr/bjw-s.github.io-helm-charts-app-template-plex">plex</a></td><td><a href="/k8s-at-home-search/hr/bjw-s.github.io-helm-charts-app-template-plex">bjw-s/app-template</a></td><td><a href="/k8s-at-home-search/hr/bjw-s.github.io-helm-charts-app-template-plex">35</a></td>
+  // <td><a href="/hr/bjw-s.github.io-helm-charts-app-template-plex">plex</a></td><td><a href="/hr/bjw-s.github.io-helm-charts-app-template-plex">bjw-s/app-template</a></td><td><a href="/hr/bjw-s.github.io-helm-charts-app-template-plex">35</a></td>
   // check if table has plex, parse count value and check if it is above 15
   // first select row with plex
   const rows = await page.locator('table tbody tr:has(a:has-text("plex"))').all();
@@ -28,8 +28,8 @@ test('test search', async ({ page }) => {
 
   // check url, it must be either of the two (OCI vs non-OCI)
   try {
-    await expect(page).toHaveURL('/k8s-at-home-search/hr/bjw-s.github.io-helm-charts-app-template-plex');
+    await expect(page).toHaveURL('/hr/bjw-s.github.io-helm-charts-app-template-plex');
   } catch (e) {
-    await expect(page).toHaveURL('/k8s-at-home-search/hr/ghcr.io-bjw-s-helm-app-template-plex');
+    await expect(page).toHaveURL('/hr/ghcr.io-bjw-s-helm-app-template-plex');
   }
 });
