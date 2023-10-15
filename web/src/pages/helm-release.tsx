@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import Text from "../components/text";
 import Code from "../components/code";
 import Table from "../components/table";
-import type { PageData, ReleaseInfo, RepoAlsoHas } from "../generators/helm-release/models";
+import { MINIMUM_COUNT, type PageData, type ReleaseInfo, type RepoAlsoHas } from "../generators/helm-release/models";
 import { modeCount, simplifyURL } from "../utils";
 
 dayjs.extend(relativeTime);
@@ -37,12 +37,12 @@ function ValueRow(props: {
   );
   const shouldDrawArray = name.endsWith("[]");
   const valueToText = (key: string, value: string[]) => {
-    return <span>{value.map((v: any, i) => 
+    return <span>{value.map((v: any, i) =>
       <span key={key + i}>
-      {shouldDrawArray ? "- " + (
-        v.match(/^[0-9]/) ? '"' + v + '"' : v
+        {shouldDrawArray ? "- " + (
+          v.match(/^[0-9]/) ? '"' + v + '"' : v
         ) : v}
-      <br />
+        <br />
       </span>
     )}</span>
   }
@@ -115,7 +115,7 @@ function FilterRepos(props: {
     ])
   );
 
-  if (Object.values(alsoHas).every(l => l.length == 0)) 
+  if (Object.values(alsoHas).every(l => l.length == 0))
     return null;
 
   return (
@@ -169,25 +169,25 @@ function FilterRepos(props: {
 
 export default function HR(props: HRProps) {
   const [repos, setRepos] = useState<PageData["repos"]>(props.pageData?.repos || []);
-    // top repos are filtered by the STAR_THRESHOLD and sorted latest first
+  // top repos are filtered by the STAR_THRESHOLD and sorted latest first
   const top = useMemo(() => {
     return repos
       .sort((a, b) => b.timestamp - a.timestamp)
-      .filter((rel) => rel.stars > STAR_THRESHOLD )
+      .filter((rel) => rel.stars > STAR_THRESHOLD)
       .slice(0, MAX_REPOS);
   }, [repos]);
 
   const [showAll, setShowAll] = useState(false);
-    // if there are too little top repos, we show all
+  // if there are too little top repos, we show all
   // or when there are too little repos in total (we don't want to say Top)
   useEffect(() => {
-    if(top.length < 2 || repos.length <= MAX_REPOS) {
+    if (top.length < 2 || repos.length <= MAX_REPOS) {
       setShowAll(true);
     }
   }, [top.length, repos.length])
 
   const [pageData, setPageData] = useState(props.pageData);
-  
+
   const [filters, setFilters] = useState(new Set<string>());
   const [filteredRepos, setFilteredRepos] = useState(
     props.pageData?.repos || []
@@ -208,15 +208,15 @@ export default function HR(props: HRProps) {
 
   const morePopular = useMemo(
     () => {
-      if(!pageData) return undefined;
+      if (!pageData) return undefined;
       const p = props.releases.reduce((acc, r) => {
-        if(r.name != pageData.name) return acc;
-        if(r.count > acc[2]) {
+        if (r.name != pageData.name) return acc;
+        if (r.count > acc[2] && r.count > MINIMUM_COUNT) {
           return [r.key, r.chartsUrl, r.count] as [string, string, number];
         }
         return acc;
-      }, [pageData.key, pageData.helmRepoURL, pageData.repos.length] as [string,string, number]) ;
-      if(p[0] !== pageData.key) {
+      }, [pageData.key, pageData.helmRepoURL, pageData.repos.length] as [string, string, number]);
+      if (p[0] !== pageData.key) {
         return p;
       } else return undefined;
     }, [props.releases, pageData]
@@ -242,7 +242,7 @@ export default function HR(props: HRProps) {
     ...v,
     key: v.name,
     name: v.name.replaceAll(/(([a-zA-Z0-9_\-\/]*#)+[a-zA-Z0-9_\-\/]*)/g, x => {
-      return '"' + x.replaceAll('#', '.') +'"';
+      return '"' + x.replaceAll('#', '.') + '"';
     }),
     urls: v.urls.map((u) => urlMap[u]),
   }));
@@ -252,7 +252,7 @@ export default function HR(props: HRProps) {
   const doc =
     pageData.doc ||
     `No introduction found. <a href="${docUrl}" target="_blank">Create it?</a>`;
-  
+
 
 
 
@@ -260,7 +260,7 @@ export default function HR(props: HRProps) {
   const filtered = !showAll && filters.size == 0 ? top : filteredRepos;
   const filteredUrls = new Set(filteredRepos.map((r) => r.url));
   const repoCount = filtered.length;
-  
+
   const filterName = showAll ? (filters.size > 0 ? "Filtered" : "All") : "Top"
   const seeAllBtnEnabled = !showAll && filters.size === 0;
   return (
@@ -337,35 +337,35 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
           See all {repos.length} releases
         </button>
       ) : <></>}
-      <h3>{ filters.size > 0 && "Filtered "}Values</h3>
+      <h3>{filters.size > 0 && "Filtered "}Values</h3>
       <Text>See the most popular values for this chart:</Text>
       <Table
         headers={["Key", "Types"]}
         rows={
-        valueList
-          .filter(v => v.urls.some(u => filteredUrls.has(u)))
-          .map(({ key, name, types, urls }) => ({
-            key: "popular-repos-values" + key,
-            data: [
-              <ValueRow
-                {...{ name, types, urls}}
-                key={"value-row" + key}
-                showMin={repoCount <= 3}
-                values={
-                  key in valueMap
-                    ? ((
+          valueList
+            .filter(v => v.urls.some(u => filteredUrls.has(u)))
+            .map(({ key, name, types, urls }) => ({
+              key: "popular-repos-values" + key,
+              data: [
+                <ValueRow
+                  {...{ name, types, urls }}
+                  key={"value-row" + key}
+                  showMin={repoCount <= 3}
+                  values={
+                    key in valueMap
+                      ? ((
                         Object.entries(valueMap[key]) as unknown as [
                           number,
                           any
                         ][]
-                    ).filter(([u,]) => filteredUrls.has(urlMap[u])).map(([k, v]) => [urlMap[k], v]))
-                    
-                    : []
-                }
-              />,
-              types.join(", "),
-            ],
-          }))}
+                      ).filter(([u,]) => filteredUrls.has(urlMap[u])).map(([k, v]) => [urlMap[k], v]))
+
+                      : []
+                  }
+                />,
+                types.join(", "),
+              ],
+            }))}
       />
     </>
   );
