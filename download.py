@@ -24,7 +24,6 @@ subprocess.run(['mkdir', 'repos'])
 for repo in repos:
   dir_name, branch, url = repo
   bash_command('mkdir repos/'+dir_name)
-  tarball_url = url + '/tarball/' + branch
   # max 1 year
   bash_command('git clone '+url+' repos/'+dir_name+' --branch '+branch+' --filter=blob:limit=1m --single-branch --shallow-since="1 year"')
 

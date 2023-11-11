@@ -451,14 +451,19 @@ export function generateRepoPagesData(data: CollectorData,): Record<string, Repo
         }
         return acc;
     }, {} as Record<string, RepoReleaseInfo[]>);
-    return Object.entries(releaseMap).reduce((acc, [key, repos]) => {
+
+    return Object.entries(releaseMap)
+      .filter(([, repos]) => repos.length >= 1)
+      .reduce((acc, [key, repos]) => {
+        const parsedUrl = new URL(repos[0].url);
+        const url = `https://${parsedUrl.host}/${key}`;
         acc[key] = {
-            name: key,
-            url: "https://github.com/" + key,
-            releases: repos,
-        }
+          name: key,
+          url,
+          releases: repos,
+        };
         return acc;
-    }, {} as Record<string, RepoPageData>);
+      }, {} as Record<string, RepoPageData>);
 
             
 }

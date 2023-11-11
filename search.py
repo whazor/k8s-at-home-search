@@ -7,6 +7,7 @@ from ruamel.yaml.error import YAMLError
 import sqlite3
 from subprocess import check_output
 import warnings
+from urllib.parse import urlparse
 
 from ruamel.yaml.error import ReusedAnchorWarning
 from info_model import InfoModel
@@ -22,10 +23,10 @@ conn2 = sqlite3.connect('repos-extended.db')
 c1 = conn1.cursor()
 c2 = conn2.cursor()
 
-c1.execute("SELECT replace(repo_name, '/', '-'), repo_name FROM repo")
+c1.execute("SELECT replace(repo_name, '/', '-'), url FROM repo")
 # to map
 repos = dict(c1.fetchall())
-c1.execute("SELECT repo_name, branch FROM repo")
+c1.execute("SELECT replace(repo_name, '/', '-'), branch FROM repo")
 branches = dict(c1.fetchall())
 
 yaml=YAML(typ="safe", pure=True)
@@ -82,19 +83,22 @@ for root, dirs, files in os.walk("repos/"):
                 s for s in found_scanners 
                   if s.check(prepare_walk(doc))]
               if len(current_scanners) > 0:
-                cmd = "git log -1 --format=%ct -- "+ file_path.split("repos/"+repo_dir_name+"/")[1]
+                cmd = "git log -1 --format=%ct -- "+ os.path.relpath(file_path, "repos/"+repo_dir_name+"/")
                 timestamp = check_output(
                   cmd,
                   shell=True,
                   cwd="repos/" + repo_dir_name,
                 )
-                repo_name = repos[repo_dir_name]
-                branch = branches[repo_name]
-                url = "https://github.com/" + repo_name + "/blob/"+branch+"/" + file_path.split('/', 2)[2]
+                url = repos[repo_dir_name]
+                
+                branch = branches[repo_dir_name]
+                full_url = f"{url}/blob/{branch}/{os.path.relpath(file_path, 'repos/' + repo_dir_name + '/')}"
+                repo_name = urlparse(url).path[1:]
+
                 rest = InfoModel(
-                  repo_name=repos[repo_dir_name],
+                  repo_name=repo_name,
                   timestamp=timestamp.decode("utf-8").strip(),
-                  url=url,
+                  url=full_url,
                   amount_lines=amount_lines,
                 )
                 for s in current_scanners:
