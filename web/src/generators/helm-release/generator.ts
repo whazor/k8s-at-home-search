@@ -26,6 +26,7 @@ const INTERESTING = [
     'authelia',
     'authentik',
     'nfs-subdir-external-provisioner',
+    'cloudnative-pg',
     'csi-driver-nfs', 
     'external-dns', 
     'ingress-nginx', 
