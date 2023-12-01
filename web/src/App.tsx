@@ -113,9 +113,20 @@ export default function App(props: AppData & { pageData: any }) {
     <div className='p-4'>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <nav>
-      <div className="float-right m-4 w-32 h-7 place-content-end">
-        <GitHubButton href="https://github.com/whazor/k8s-at-home-search" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star whazor/k8s-at-home on GitHub">Star</GitHubButton>
-      </div>
+        <div className="float-right place-content-end flex flex-row gap-1">
+          <a href={'https://github.com/whazor/k8s-at-home-search/actions/workflows/update.yaml'} target="_blank" title='Badge that shows whether search index is updated'>
+            <img src='https://github.com/whazor/k8s-at-home-search/actions/workflows/update.yaml/badge.svg?query=branch%3Amain'
+              className='h-5 hidden md:block'
+              />
+          </a>
+          <a href={'https://github.com/whazor/k8s-at-home-search/actions/workflows/update.yaml'} target="_blank" title='Badge that shows whether frontend is updated'>
+            <img src='https://github.com/whazor/k8s-at-home-search/actions/workflows/build.yaml/badge.svg?query=branch%3Amain'
+            className='h-5  hidden md:block'
+            />
+          </a>
+
+          <GitHubButton href="https://github.com/whazor/k8s-at-home-search" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star whazor/k8s-at-home on GitHub">Star</GitHubButton>
+        </div>
         <a
         href={'/'} 
         ><h1 className="text-3xl dark:text-gray-300">kubesearch</h1></a>
