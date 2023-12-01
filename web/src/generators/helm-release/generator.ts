@@ -490,7 +490,7 @@ export function generateImagePageData(data: CollectorData): ImagePageData {
         }
         const image = values['image'];
         // check if object and whether tag and repository are set
-        if (!(typeof image === 'object' && 'tag' in image && 'repository' in image)) {
+        if (typeof image !== 'object' || image == null || !('tag' in image) || !('repository' in image)) {
             continue;
         }
         // images.push(`${image.repository}:${image.tag}`);
