@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useLocation } from "react-router-dom";
 
@@ -20,9 +20,21 @@ interface P  {
     onEnter: () => void
 }
 
+function getTextWidth(text: string, element: HTMLElement) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d')!;
+  
+    context.font = getComputedStyle(element).font;
+  
+    return context.measureText(text).width;
+}
+  
+
 export function SearchBar(props: P ) {
     const {search, setSearch, mode, setMode} = props;
-
+    const [selectWidth, setSelectWidth] = useState(30);
+    const selectRef = useRef<HTMLSelectElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     let location = useLocation();
     useEffect(() => {
         if(location.pathname !== "/" && location.pathname !== "/" && search.length > 0) {
@@ -49,32 +61,40 @@ export function SearchBar(props: P ) {
             props.onEnter()
         }
     }, [setSearch]);
-    return <div><label>
-        <span className='sr-only'>Search for a chart:</span>
-        {/* draw mode 'inside' input, with border */}
-        {mode && <span title={names[mode]} className='absolute z-50 m-3 mt-3 p-1 border-2 border-blue-500 rounded text-sm bg-blue-200'>
-            {mode}
-        </span>}
+    useEffect(() => {
+        if(!selectRef.current) return;
+        setSelectWidth(getTextWidth(selectRef.current.value, selectRef.current) + 22);
+    }, [selectRef, mode])
+
+    const message = {
+        "hr": "Search for a Helm Release...",
+        "image": "Search for an image...",
+        "grep": "Search for a grep pattern..."
+    }[mode || "hr"]
+    return <label className="
+    bg-slate-50 appearance-none border-2 p-3 border-gray-200 rounded w-full text-gray-700 leading-tight
+    focus-within:bg-white focus-within:border-blue-500 dark:bg-black dark:text-gray-300 dark:border-gray-700 dark:focus-within:bg-gray-800 dark:focus-within:border-blue-500
+    flex flex-row peer
+    ">
+        <span className='sr-only'>{message}</span>
+        {mode ? <select ref={selectRef} style={{width: selectWidth, fontSize: "16px"}} className='font-mono mr-3 p-1 border-none  rounded text-sm bg-blue-200'
+            value={mode}
+            onChange={(e) => setMode(e.target.value as SearchMode)}
+        >
+            {searchModes.map(m => <option key={m} value={m} title={names[m]}>{m}</option>)}
+        </select>: <span className='font-mono mr-3 p-1 border-none rounded text-sm bg-blue-200'>...</span>}
         <input
+            ref={inputRef}
             autoFocus
-            className={`peer bg-slate-50 appearance-none border-2 border-gray-200 rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none 
-                    focus:bg-white focus:border-blue-500 dark:bg-black dark:text-gray-300 dark:border-gray-700 dark:focus:bg-gray-800 dark:focus:border-blue-500
-            `}
-            style={{
-                paddingLeft: mode && mode.length > 0 ? 34 + mode.length * 8 : undefined
-            }}
+            className={`bg-transparent grow  focus:outline-none`}
             type="text"
-            placeholder="Search for a chart..."
+            placeholder={message}
             value={search.replace(new RegExp(`^${mode} `), "")}
             onKeyDown={keyDown}
             onChange={(e) => {
-                const val = mode === "hr" ? e.target.value : mode+" "+e.target.value;
+                const val = mode === "hr" ? e.target.value : mode + " " + e.target.value;
                 setSearch(val)
             }}
         />
-        <span className="text-sm text-slate-500">
-            Switch modes by typing <span><code>image</code>[space] for image search</span> or <code>grep</code>[space] for grep mode.</span>
-        </label>
-        
-        </div>;
+    </label>;
 }
