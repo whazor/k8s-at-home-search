@@ -5,9 +5,9 @@ test('test search', async ({ page }) => {
 
 
   // Click [placeholder="search a chart"]
-  await page.locator('[placeholder="Search for a chart..."]').click();
+  await page.locator('[placeholder="Search for a helm release..."]').click();
   // Fill [placeholder="search a chart"]
-  await page.locator('[placeholder="Search for a chart..."]').fill('plex');
+  await page.locator('[placeholder="Search for a helm release..."]').fill('plex');
   // await expect(page).toHaveURL('#/plex');
 
 

@@ -67,7 +67,7 @@ export function SearchBar(props: P ) {
     }, [selectRef, mode])
 
     const message = {
-        "hr": "Search for a Helm Release...",
+        "hr": "Search for a helm release...",
         "image": "Search for an image...",
         "grep": "Search for a grep pattern..."
     }[mode || "hr"]

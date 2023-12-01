@@ -239,15 +239,12 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@playwright/test@^1.27.1":
-  version "1.32.0"
-  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.32.0.tgz#0cc4c179e62995cc123adb12fdfaa093fed282c4"
-  integrity sha512-zOdGloaF0jeec7hqoLqM5S3L2rR4WxMJs6lgiAeR70JlH7Ml54ZPoIIf3X7cvnKde3Q9jJ/gaxkFh8fYI9s1rg==
+"@playwright/test@^1.40.1":
+  version "1.40.1"
+  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.40.1.tgz#9e66322d97b1d74b9f8718bacab15080f24cde65"
+  integrity sha512-EaaawMTOeEItCRvfmkI9v6rBkF1svM8wjl/YPRrg2N2Wmp+4qJYkWtJsbew1szfKKDm6fPLy4YAanBhIlf9dWw==
   dependencies:
-    "@types/node" "*"
-    playwright-core "1.32.0"
-  optionalDependencies:
-    fsevents "2.3.2"
+    playwright "1.40.1"
 
 "@remix-run/router@1.4.0":
   version "1.4.0"
@@ -831,9 +828,14 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001449, caniuse-lite@^1.0.30001464:
-  version "1.0.30001469"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001469.tgz#3dd505430c8522fdc9f94b4a19518e330f5c945a"
-  integrity sha512-Rcp7221ScNqQPP3W+lVOYDyjdR6dC+neEQCttoNr5bAyz54AboB4iwpnWgyi8P4YUsPybVzT4LgWiBbI3drL4g==
+  version "1.0.30001565"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001565.tgz"
+  integrity sha512-xrE//a3O7TP0vaJ8ikzkD2c2NgcVUvsEe2IvFTntV4Yd1Z9FVzh+gW+enX96L0psrbaFMcVcH2l90xNuGDWc8w==
+
+caniuse-lite@^1.0.30001565:
+  version "1.0.30001565"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001565.tgz#a528b253c8a2d95d2b415e11d8b9942acc100c4f"
+  integrity sha512-xrE//a3O7TP0vaJ8ikzkD2c2NgcVUvsEe2IvFTntV4Yd1Z9FVzh+gW+enX96L0psrbaFMcVcH2l90xNuGDWc8w==
 
 ccount@^2.0.0:
   version "2.0.1"
@@ -2781,10 +2783,19 @@ pify@^2.3.0:
   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
   integrity sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==
 
-playwright-core@1.32.0:
-  version "1.32.0"
-  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.32.0.tgz#730c2d1988d30377480b925aaa6c1b1e2442d67e"
-  integrity sha512-Z9Ij17X5Z3bjpp6XKujGBp9Gv4eViESac9aDmwgQFUEJBW0K80T21m/Z+XJQlu4cNsvPygw33b6V1Va6Bda5zQ==
+playwright-core@1.40.1:
+  version "1.40.1"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.40.1.tgz#442d15e86866a87d90d07af528e0afabe4c75c05"
+  integrity sha512-+hkOycxPiV534c4HhpfX6yrlawqVUzITRKwHAmYfmsVreltEl6fAZJ3DPfLMOODw0H3s1Itd6MDCWmP1fl/QvQ==
+
+playwright@1.40.1:
+  version "1.40.1"
+  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.40.1.tgz#a11bf8dca15be5a194851dbbf3df235b9f53d7ae"
+  integrity sha512-2eHI7IioIpQ0bS1Ovg/HszsN/XKNwEG1kbzSDDmADpclKc7CyqkHw7Mg2JCz/bbCxg25QUPcjksoMW7JcIFQmw==
+  dependencies:
+    playwright-core "1.40.1"
+  optionalDependencies:
+    fsevents "2.3.2"
 
 postcss-calc@^8.2.3:
   version "8.2.4"

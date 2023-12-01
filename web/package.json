@@ -4,16 +4,17 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "nodemon -e ts,md,json,html ./server.ts",
-    "build": "tsc && npm run build:client && npm run build:server",
+    "build": "tsc && yarn run build:client && yarn run build:server",
     "build:client": "vite build --outDir dist/client  --ssrManifest",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
-    "generate": "rm -rf dist; tsc && vite build --outDir dist/static --ssrManifest && npm run build:server && ts-node --project tsconfig.json prerender.ts",
+    "generate": "rm -rf dist; tsc && vite build --outDir dist/static --ssrManifest && yarn run build:server && ts-node --project tsconfig.json prerender.ts",
     "serve": "vite preview --outDir dist/static",
     "test": "playwright test"
   },
   "dependencies": {
     "@iconify/react": "^4.0.1",
     "@types/marked": "^4.0.8",
+    "caniuse-lite": "^1.0.30001565",
     "dayjs": "^1.11.7",
     "dompurify": "^2.4.3",
     "jsdom": "^21.0.0",
@@ -28,7 +29,7 @@
   },
   "devDependencies": {
     "@mdx-js/rollup": "^2.2.1",
-    "@playwright/test": "^1.27.1",
+    "@playwright/test": "^1.40.1",
     "@tailwindcss/typography": "^0.5.9",
     "@types/dompurify": "^2.4.0",
     "@types/express": "^4.17.16",
