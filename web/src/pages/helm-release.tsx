@@ -330,7 +330,7 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
       {seeAllBtnEnabled ? (
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white
-          dark:bg-blue-700 dark:hover:bg-blue-500 dark:text-gray-300
+          dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100
            font-bold py-2 px-4 rounded mt-3 mb-6"
           onClick={() => setShowAll(true)}
         >
