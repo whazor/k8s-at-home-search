@@ -16,13 +16,12 @@ FROM repo
 """)
 repos = c.fetchall()
 
-# print(repos)
-
 # mkdir repos
 subprocess.run(['mkdir', 'repos'])
 
 for repo in repos:
   dir_name, branch, url = repo
+  print("downloading "+dir_name+" "+branch+" "+url)
   bash_command('rm -rf repos/'+dir_name)
   # max 1 year
   bash_command('git clone '+url+' repos/'+dir_name+' --branch '+branch+' --filter=blob:limit=1m --single-branch --shallow-since="1 year"')
