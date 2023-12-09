@@ -14,7 +14,7 @@ jobs:
           submodules: false
       # cd frontend/
       - name: NPM or Yarn install with caching 📦
-        uses: bahmutov/npm-install@v1
+        uses: bahmutov/npm-install@v1.8.36
         with:
           working-directory: web/
       - name: Install dependencies 📦
