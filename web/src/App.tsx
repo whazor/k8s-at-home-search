@@ -20,44 +20,44 @@ export default function App(props: AppData & { pageData: any }) {
   const releases = denormalize(props).releases;
   const [search, setSearch2] = useState("");
   const childRef = useRef<SearchInterface>(null);
-  
-  const [mode, setMode] = useState<SearchMode|undefined>(undefined);
+
+  const [mode, setMode] = useState<SearchMode | undefined>(undefined);
   if (!import.meta.env.SSR) {
     useEffect(() => {
       let handler: any;
       function checkHash() {
         let hash = window.location.hash;
-        if(hash === "#/top") {
+        if (hash === "#/top") {
           window.location.href = "/top"
-        } else if(hash.startsWith("#/repo:")) {
+        } else if (hash.startsWith("#/repo:")) {
           window.location.href = "/repo/" + hash.slice("#/repo:".length)
-        } else if(hash.startsWith("#/")) {
+        } else if (hash.startsWith("#/")) {
           hash = hash.slice(2);
-          if(hash.startsWith("chart:")) {
+          if (hash.startsWith("chart:")) {
             hash = hash.slice("chart:".length)
           }
           // decode
           hash = decodeURIComponent(hash);
-          if(search !== hash){
+          if (search !== hash) {
             setSearch2(hash);
             return true;
           }
         } else if (hash.length > 1) {
           hash = hash.slice(1);
           hash = decodeURIComponent(hash);
-          if(search !== hash) {
+          if (search !== hash) {
             setSearch2(hash);
             return true;
           }
         }
         return false;
       }
-      if(!checkHash()){
-        if(window.location.hash !== search){
+      if (!checkHash()) {
+        if (window.location.hash !== search) {
           handler = setTimeout(() => {
-            if(search) {
-              history.replaceState(undefined, "", "#"+search);
-            } else if(!search && window.location.hash) {
+            if (search) {
+              history.replaceState(undefined, "", "#" + search);
+            } else if (!search && window.location.hash) {
               history.replaceState(undefined, "", window.location.pathname + window.location.search);
             }
           }, 100);
@@ -65,7 +65,7 @@ export default function App(props: AppData & { pageData: any }) {
       }
       window.addEventListener("popstate", checkHash);
       return () => {
-        if(handler) {
+        if (handler) {
           clearTimeout(handler);
         }
         window.removeEventListener("popstate", checkHash);
@@ -73,10 +73,10 @@ export default function App(props: AppData & { pageData: any }) {
     }, []);
   }
   const setSearch = (s: string) => {
-    if(s.length === 0) {
+    if (s.length === 0) {
       history.replaceState(undefined, "", window.location.pathname + window.location.search);
     } else {
-      history.replaceState(undefined, "", "#"+s)
+      history.replaceState(undefined, "", "#" + s)
     }
     setSearch2(s);
   };
@@ -84,28 +84,28 @@ export default function App(props: AppData & { pageData: any }) {
     // on grep mode, redirect to /grep and keep location hash
     const isOnGrepPage = window.location.pathname === "/grep";
     const isOnImagePage = window.location.pathname === "/image";
-    if(mode === "grep" && !isOnGrepPage) {
-        // history.replaceState(undefined, "", "/grep" + window.location.hash);
-        const s = search === "grep" ? "grep " : search;
-        window.location.href = "/grep#" + encodeURI(s);
+    if (mode === "grep" && !isOnGrepPage) {
+      // history.replaceState(undefined, "", "/grep" + window.location.hash);
+      const s = search === "grep" ? "grep " : search;
+      window.location.href = "/grep#" + encodeURI(s);
     }
-    else if(mode === "image" && !isOnImagePage) {
+    else if (mode === "image" && !isOnImagePage) {
       window.location.href = "/image#" + encodeURI(search);
     }
     // if not grep mode, but on grep page, redirect to / and keep location hash
-    else if(isOnGrepPage) {
-      if(mode && (mode !== "grep")) {
+    else if (isOnGrepPage) {
+      if (mode && (mode !== "grep")) {
         window.location.href = "/" + encodeURI(window.location.hash);
       } else {
         setMode("grep");
       }
-    } else if(isOnImagePage) {
-      if(mode && (mode !== "image")) {
+    } else if (isOnImagePage) {
+      if (mode && (mode !== "image")) {
         window.location.href = "/" + encodeURI(window.location.hash);
       } else {
         setMode("image");
       }
-    } else if(!mode) {
+    } else if (!mode) {
       setMode("hr");
     }
   }, [mode, search]);
@@ -117,27 +117,27 @@ export default function App(props: AppData & { pageData: any }) {
           <a href={'https://github.com/whazor/k8s-at-home-search/actions/workflows/update.yaml'} target="_blank" title='Badge that shows whether search index is updated'>
             <img src='https://github.com/whazor/k8s-at-home-search/actions/workflows/update.yaml/badge.svg?query=branch%3Amain'
               className='h-5 hidden md:block'
-              />
+            />
           </a>
-          <a href={'https://github.com/whazor/k8s-at-home-search/actions/workflows/update.yaml'} target="_blank" title='Badge that shows whether frontend is updated'>
+          <a href={'https://github.com/whazor/k8s-at-home-search/actions/workflows/build.yaml'} target="_blank" title='Badge that shows whether frontend is updated'>
             <img src='https://github.com/whazor/k8s-at-home-search/actions/workflows/build.yaml/badge.svg?query=branch%3Amain'
-            className='h-5  hidden md:block'
+              className='h-5  hidden md:block'
             />
           </a>
 
           <GitHubButton href="https://github.com/whazor/k8s-at-home-search" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star whazor/k8s-at-home on GitHub">Star</GitHubButton>
         </div>
         <a
-        href={'/'} 
+          href={'/'}
         ><h1 className="text-3xl dark:text-gray-300">kubesearch</h1></a>
         <p className="text-lg dark:text-gray-300">Search for a helm release</p>
       </nav>
       <div className='pt-2'>
         <div className='mb-4'>
-          <SearchBar 
-            search={search} 
+          <SearchBar
+            search={search}
             setSearch={setSearch} onEnter={() => childRef.current!.onEnter()}
-            mode={mode} setMode={setMode}  
+            mode={mode} setMode={setMode}
           />
           {mode === "hr" && <HRSearchResults releases={releases} search={search} ref={childRef} />}
 
@@ -147,17 +147,17 @@ export default function App(props: AppData & { pageData: any }) {
           {releases.map(({ key, chart, release }) => {
             return (
               <Route
-                key={'hr-'+key}
+                key={'hr-' + key}
                 path={`/hr/${key}`}
-                element={<HelmRelease {...{ chart, release }} 
-                    key={'hr-el'+key}
-                    url={'/hr/'+key}
-                    pageData={pageData}
-                    repoAlsoHas={repoAlsoHas}
-                    releases={releases}
-                    keyFileMap={props.keyFileMap}
-                      />}
-                ></Route>
+                element={<HelmRelease {...{ chart, release }}
+                  key={'hr-el' + key}
+                  url={'/hr/' + key}
+                  pageData={pageData}
+                  repoAlsoHas={repoAlsoHas}
+                  releases={releases}
+                  keyFileMap={props.keyFileMap}
+                />}
+              ></Route>
             )
           })}
           <Route key="top" path="/top" element={<Top repos={pageData} repoAlsoHas={repoAlsoHas} />} />
@@ -168,10 +168,10 @@ export default function App(props: AppData & { pageData: any }) {
           {props.repos.map((repo) => {
             return (
               <Route
-                key={'repo-'+repo}
+                key={'repo-' + repo}
                 path={`/repo/${repo}`}
                 element={<Repo {...pageData} />}
-                ></Route>
+              ></Route>
             )
           })}
         </Routes>

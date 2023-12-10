@@ -1,13 +1,14 @@
 {
   "name": "web",
   "private": true,
+  "type": "module",
   "version": "0.0.0",
   "scripts": {
-    "dev": "nodemon -e ts,md,json,html ./server.ts",
+    "dev": "tsx watch ./server.ts",
     "build": "tsc && yarn run build:client && yarn run build:server",
     "build:client": "vite build --outDir dist/client  --ssrManifest",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
-    "generate": "rm -rf dist; tsc && vite build --outDir dist/static --ssrManifest && yarn run build:server && ts-node --project tsconfig.json prerender.ts",
+    "generate": "rm -rf dist; tsc && vite build --outDir dist/static --ssrManifest && yarn run build:server && tsx prerender.ts",
     "serve": "vite preview --outDir dist/static",
     "test": "playwright test"
   },
@@ -47,6 +48,7 @@
     "tailwindcss": "^3.3.6",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.2",
+    "tsx": "^4.6.2",
     "typescript": "^4.9.3",
     "vite": "^4.0.0"
   }
