@@ -63,7 +63,7 @@ export function SearchBar(props: P) {
   }, [setSearch]);
   useEffect(() => {
     if (!selectRef.current) return;
-    setSelectWidth(getTextWidth(selectRef.current.value, selectRef.current) + 22);
+    setSelectWidth(getTextWidth(selectRef.current.value, selectRef.current) + 35);
   }, [selectRef, mode])
 
   const message = {
