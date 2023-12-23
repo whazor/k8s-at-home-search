@@ -77,6 +77,60 @@ function ValueRow(props: {
   );
 }
 
+const MAJOR_VERSION_REGEX = /^v?(\d+)/;
+
+function FilterMajorVersions(props: {
+  repos: PageData["repos"];
+  filteredRepos: PageData["repos"];
+  version: string | undefined;
+  setVersion: (v: string | undefined, repos: PageData["repos"]) => void;
+}) {
+
+  const majorVersions = useMemo(() => [...new Set(props.repos.map(r =>
+    (r.chart_version || "").match(MAJOR_VERSION_REGEX)?.[1]
+  ))], [props.repos]);
+
+  const chooseVersion = (v: string) => {
+    const repos = !!v && v !== "All" ? props.repos.filter(r => (r.chart_version || "").match(MAJOR_VERSION_REGEX)?.[1] == v) : props.repos;
+    props.setVersion(v, repos);
+  };
+
+  useEffect(() => {
+    // select the latest major version
+    const versions = majorVersions.map(v => parseInt(v || "0", 10))
+      .filter(v => v > 0)
+      .sort((a, b) => b - a).map(v => v.toString());
+    if (versions.length > 0 && !props.version) {
+      chooseVersion(versions[0]);
+    }
+  }, [majorVersions]);
+
+  return <div>
+    <label className="text-sm mr-1 dark:text-gray-300"
+    >Major version:</label>
+    <select
+      className="border bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
+      value={props.version}
+      onChange={
+        e => {
+
+          const v = e.target.value;
+          chooseVersion(v);
+        }
+      }
+    >
+      <option>All</option>
+      {majorVersions.map((v) => (
+        <option key={"select" + v}>
+          {v}
+        </option>
+      ))}
+    </select>
+
+  </div>
+}
+
+
 function FilterRepos(props: {
   repoAlsoHas: RepoAlsoHas;
   repos: PageData["repos"];
@@ -86,7 +140,6 @@ function FilterRepos(props: {
 }) {
   const { filters, setFilters, filteredRepos } = props;
   const repoSet = new Set(props.repos.map((r) => r.repo));
-
   const alsoHas = Object.fromEntries(
     Object.entries(props.repoAlsoHas.interestingIdToName).map(([id, name]) => [
       name,
@@ -139,7 +192,7 @@ function FilterRepos(props: {
       ))}
       {Object.keys(alsoHas).filter((n) => !filters.has(n)).length > 0 && (
         <select
-          className="border bg-gray-100 dark:bg-gray-800 dark:border-gray-700"
+          className="border bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300"
           onChange={(e) => {
             const name = e.target.value;
             const newSet = new Set(filters);
@@ -160,8 +213,10 @@ function FilterRepos(props: {
               </option>
             ))}
         </select>
-      )}
-    </div>
+      )
+      }
+
+    </div >
   );
 }
 
@@ -192,6 +247,8 @@ export default function HR(props: HRProps) {
   const [filteredRepos, setFilteredRepos] = useState(
     props.pageData?.repos || []
   );
+
+  const [majorVersion, setMajorVersion] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (!pageData) {
@@ -293,22 +350,35 @@ export default function HR(props: HRProps) {
         {`helm repo add ${helmRepoName} ${helmRepoURL}
 helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
       </Code>
-      <h3>
+      <h3>Examples</h3>
+      <Text>See examples from other people.</Text>
+      <div className="flex flex-col lg:flex-row lg:space-x-2 space-y-2 lg:space-y-0">
+        <FilterMajorVersions
+          repos={props.pageData?.repos || []}
+          filteredRepos={filteredRepos}
+          version={majorVersion}
+          setVersion={(v, repos) => {
+            setRepos(repos);
+            setFilteredRepos(repos);
+            setMajorVersion(v);
+            //setShowAll(true);
+          }} />
+        <FilterRepos
+          repoAlsoHas={props.repoAlsoHas}
+          repos={props.pageData?.repos || []}
+          filteredRepos={filteredRepos}
+          filters={filters}
+          setFilters={(f, r) => {
+            setFilters(f);
+            setFilteredRepos(r);
+            setShowAll(true);
+          }}
+        />
+      </div>
+      <h4>
         {filterName} Repositories
         ({repoCount} out of {repos.length})
-      </h3>
-      <Text>See examples from other people.</Text>
-      <FilterRepos
-        repoAlsoHas={props.repoAlsoHas}
-        repos={props.pageData?.repos || []}
-        filteredRepos={filteredRepos}
-        filters={filters}
-        setFilters={(f, r) => {
-          setFilters(f);
-          setFilteredRepos(r);
-          setShowAll(true);
-        }}
-      />
+      </h4>
       <Table
         headers={["Name", "Repo", "Stars", "Version", "Timestamp"]}
         rows={filtered.map((repo) => ({
@@ -331,13 +401,13 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white
           dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100
-           font-bold py-2 px-4 rounded mt-3 mb-6"
+            py-1 px-1 rounded mt-3 mb-3 text-sm"
           onClick={() => setShowAll(true)}
         >
           See all {repos.length} releases
         </button>
       ) : <></>}
-      <h3>{filters.size > 0 && "Filtered "}Values</h3>
+      <h4>{filters.size > 0 && "Filtered "}Values</h4>
       <Text>See the most popular values for this chart:</Text>
       <Table
         headers={["Key", "Types"]}
