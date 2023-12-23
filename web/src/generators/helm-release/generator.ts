@@ -42,6 +42,36 @@ const INTERESTING = [
   'volsync',
 ];
 
+function mergeHelmURL(url: string) {
+  // wrap http to known oci registries
+  const mapping: Record<string, string> = {
+    "https://bjw-s.github.io/helm-charts/": "oci://ghcr.io/bjw-s/helm/",
+    "https://charts.bitnami.com/bitnami/": "oci://registry-1.docker.io/bitnamicharts/",
+    "https://github.com/prometheus-community/helm-charts/": "oci://ghcr.io/prometheus-community/charts/",
+    "https://actions.github.io/actions-runner-controller/": "oci://ghcr.io/actions/actions-runner-controller-charts/",
+    "https://kyverno.github.io/kyverno/": "oci://ghcr.io/kyverno/charts/",
+    "https://grafana.github.io/helm-charts/": "oci://ghcr.io/grafana-operator/helm-charts/",
+
+  };
+  if (url in mapping) {
+    return mapping[url];
+  }
+
+  return url;
+}
+
+
+function releaseKey(url: string, name: string) {
+  return (url
+    .replace("https://", "")
+    .replace("http://", "")
+    .replace("oci://", "")
+    .replace(/\/$/, '')
+    .replaceAll("/", "-")
+    + '-' + name).replaceAll(/\s+/g, '-')
+    .replaceAll(/[^a-zA-Z0-9\.\-]/gi, '')
+    .replaceAll(/^\.+/g, '').toLowerCase()
+}
 
 
 export async function collector(
@@ -80,18 +110,10 @@ export async function collector(
     if (err) {
       throw err;
     }
-    const { helm_repo_url, chart_name, chart_version, release_name } = row;
+    const { chart_name, chart_version, release_name } = row;
+    const helm_repo_url = mergeHelmURL(row.helm_repo_url);
     const name = chart_name == release_name ? chart_name : `${chart_name}-${release_name}`;
-    const key =
-      (helm_repo_url
-        .replace("https://", "")
-        .replace("http://", "")
-        .replace("oci://", "")
-        .replace(/\/$/, '')
-        .replaceAll("/", "-")
-        + '-' + name).replaceAll(/\s+/g, '-')
-        .replaceAll(/[^a-zA-Z0-9\.\-]/gi, '')
-        .replaceAll(/^\.+/g, '').toLowerCase();
+    const key = releaseKey(helm_repo_url, name);
     releases[key] =
       {
         release: release_name,
@@ -112,7 +134,7 @@ export async function collector(
         name: row.release_name,
         repo: row.repo_name,
         helm_repo_name: row.helm_repo_name,
-        helm_repo_url: row.helm_repo_url,
+        helm_repo_url,
         url: row.url,
         chart_version: row.chart_version,
         repo_url: row.repo_url,
