@@ -48,6 +48,7 @@ function mergeHelmURL(url: string) {
     "https://bjw-s.github.io/helm-charts/": "oci://ghcr.io/bjw-s/helm/",
     "https://charts.bitnami.com/bitnami/": "oci://registry-1.docker.io/bitnamicharts/",
     "https://github.com/prometheus-community/helm-charts/": "oci://ghcr.io/prometheus-community/charts/",
+    "https://prometheus-community.github.io/helm-charts/": "oci://ghcr.io/prometheus-community/charts/",
     "https://actions.github.io/actions-runner-controller/": "oci://ghcr.io/actions/actions-runner-controller-charts/",
     "https://kyverno.github.io/kyverno/": "oci://ghcr.io/kyverno/charts/",
     "https://grafana.github.io/helm-charts/": "oci://ghcr.io/grafana-operator/helm-charts/",
