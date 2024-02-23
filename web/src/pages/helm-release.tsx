@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import Text from "../components/text";
 import Code from "../components/code";
 import Table from "../components/table";
-import { MINIMUM_COUNT, type PageData, type ReleaseInfo, type RepoAlsoHas } from "../generators/helm-release/models";
+import { MINIMUM_COUNT, ValuesData, type PageData, type ReleaseInfo, type RepoAlsoHas } from "../generators/helm-release/models";
 import { modeCount, simplifyURL } from "../utils";
 
 dayjs.extend(relativeTime);
@@ -220,6 +220,122 @@ function FilterRepos(props: {
   );
 }
 
+const MB_REGEXP = /(\d+)(mi?)/i;
+const GB_REGEXP = /(\d+)(gi?)/i;
+
+const convertToBytes = (size: string) => {
+  let res;
+  if (res = MB_REGEXP.exec(size)) {
+    return parseInt(res[1]);
+  }
+  if (res = GB_REGEXP.exec(size)) {
+    return parseInt(res[1]) * 1024;
+  }
+  console.error("unknown memory size", size)
+  return -1;
+}
+function sort(i: Array<number>): Array<number> {
+  return i.sort((a, b) => a - b);
+}
+
+const CPU_REGEXP = /(\d+)m/i;
+
+const convertToCPU = (size: string) => {
+  let res;
+  if (res = CPU_REGEXP.exec(size)) {
+    return parseInt(res[1]);
+  }
+  if (res = /\d+/.exec(size)) {
+    return parseInt(res[1]) * 1000;
+  }
+  console.error("unknown cpu size", size)
+  return -1;
+}
+
+// TODO: replace with d3
+function GroupResources({ data, suffix, label }: { data: number[], suffix: string, label: string }) {
+  if (data.length < 5) {
+    return <></>;
+  }
+  const numMap = Object.entries(data.reduce(
+    (obj, x) => ({
+      ...obj,
+      [x]: x in obj ? obj[x] + 1 : 1
+    }), {} as Record<number, number>
+  ));
+  const mostPopular = numMap.map(x => x[1]).reduce((a, b) => Math.max(a, b), 0);
+
+  return <div>
+    <label>{label}</label>
+    <div className="flex gap-x-1">
+      {numMap.map(([x, amount]) =>
+        <a key={label + x} className="inline-block border no-underline px-1 cursor-pointer" style={{
+          borderColor: `rgba(255, 255, 255, ${Math.max(amount / mostPopular, 0.1)})`,
+          borderStyle: ''
+        }} title={`used ${amount} times`} onClick={
+          ev => {
+            // TODO: show notification
+            navigator.clipboard.writeText(
+              `${x}${suffix}`
+            )
+            const link = ev.target as HTMLElement;
+            link.className = link.className + " animate-bounce";
+            setTimeout(() => {
+              link.className = link.className.replace("animate-bounce", "");
+            }, 500)
+          }
+        }>
+          {x}{suffix}
+        </a>)}
+    </div></div>;
+}
+
+
+function Resources({ values }: { values: ValuesData }) {
+  const {
+    valueMap
+  } = values;
+
+  const mapToValue = (names: string[]) => {
+    for (let name of names) {
+      if (name in valueMap) {
+        return Object.values(valueMap[name]).map(x => x[0]) as string[];
+      }
+    }
+    return [];
+  };
+  const mapBytes = (names: string[]) => sort(
+    mapToValue(names).map(x => convertToBytes(x))
+  );
+  const mapCPU = (names: string[]) => sort(
+    mapToValue(names).map(x => convertToCPU(x))
+  )
+
+  const expand = (name: string) => [
+    `controllers.main.containers.main.resources.${name}`,
+    `resources.${name}`,
+  ]
+
+  const memoryRequest = mapBytes(expand(
+    "requests.memory"
+  ));
+  const memoryLimit = mapBytes(expand("limits.memory"));
+  const cpuRequest = mapCPU(expand("requests.cpu"));
+  const cpuLimit = mapCPU(expand("limits.cpu"));
+
+  if (Math.max(memoryRequest.length, memoryLimit.length, cpuRequest.length, cpuLimit.length) < 5) {
+    return <></>;
+  }
+
+  return <div className="text-white">
+    <h3>Resources</h3>
+    <GroupResources data={memoryRequest} label="Memory request" suffix="Mi" />
+    <GroupResources data={memoryLimit} label="Memory limit" suffix="Mi" />
+    <GroupResources data={cpuRequest} label="CPU Request" suffix="m" />
+    <GroupResources data={cpuLimit} label="CPU Limit" suffix="m" />
+
+  </div>
+}
 
 
 export default function HR(props: HRProps) {
@@ -350,6 +466,8 @@ export default function HR(props: HRProps) {
         {`helm repo add ${helmRepoName} ${helmRepoURL}
 helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
       </Code>
+
+
       <h3>Examples</h3>
       <Text>See examples from other people.</Text>
       <div className="flex flex-col lg:flex-row lg:space-x-2 space-y-2 lg:space-y-0">
@@ -407,6 +525,8 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
           See all {repos.length} releases
         </button>
       ) : <></>}
+
+      <Resources values={valueResult} />
       <h4>{filters.size > 0 && "Filtered "}Values</h4>
       <Text>See the most popular values for this chart:</Text>
       <Table
