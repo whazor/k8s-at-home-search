@@ -32,11 +32,12 @@ for topic in topics:
     if isDry:
         break
     while len(items) > 0 or page == 1:
-        items = requests.get(
+        result = requests.get(
             "https://api.github.com/search/repositories",
             params={"q": "topic:"+topic, "per_page": 100, "page": page},
             headers=github_header,
-        ).json()["items"]
+        ).json()
+        items = result["items"] if "items" in result else []
         for repo_info in items:
             pushed_at = datetime.strptime(repo_info["pushed_at"], "%Y-%m-%dT%H:%M:%SZ")
             # filter out unmaintained repos
