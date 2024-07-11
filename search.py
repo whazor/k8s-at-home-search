@@ -8,6 +8,7 @@ import sqlite3
 from subprocess import check_output
 import warnings
 from urllib.parse import urlparse
+import shlex
 
 from ruamel.yaml.error import ReusedAnchorWarning
 from info_model import InfoModel
@@ -83,7 +84,9 @@ for root, dirs, files in os.walk("repos/"):
                 s for s in found_scanners 
                   if s.check(prepare_walk(doc))]
               if len(current_scanners) > 0:
-                cmd = "git log -1 --format=%ct -- "+ os.path.relpath(file_path, "repos/"+repo_dir_name+"/")
+                rel_file_path = os.path.relpath(file_path, "repos/"+repo_dir_name+"/")
+                safe_file_path = shlex.quote(rel_file_path)
+                cmd = f"git log -1 --format=%ct -- {safe_file_path}"
                 timestamp = check_output(
                   cmd,
                   shell=True,
