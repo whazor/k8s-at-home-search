@@ -15,6 +15,7 @@ from info_model import InfoModel
 from pydantic import ValidationError
 
 from scanners.flux_helm_release import FluxHelmReleaseScanner
+from scanners.argo_helm_application import ArgoHelmApplicationScanner
 from scanners.flux_helm_repo import FluxHelmRepoScanner
 warnings.simplefilter("ignore", ReusedAnchorWarning)
 
@@ -34,7 +35,8 @@ yaml=YAML(typ="safe", pure=True)
 
 scanners = [
   FluxHelmReleaseScanner(),
-  FluxHelmRepoScanner()
+  FluxHelmRepoScanner(),
+  ArgoHelmApplicationScanner()
 ]
 
 for scanner in scanners:
@@ -57,14 +59,14 @@ for root, dirs, files in os.walk("repos/"):
             if s.pre_check(stream):
               found_scanners.append(s)
         except UnicodeDecodeError as e:
-          print("unicode error", e) 
+          print("unicode error", e)
           continue
         if len(found_scanners) > 0:
           stream.seek(0)
           try:
             amount_lines = len(stream.readlines())
           except UnicodeDecodeError as e:
-            print("unicode error", e) 
+            print("unicode error", e)
             continue
           stream.seek(0)
           try:
@@ -81,7 +83,7 @@ for root, dirs, files in os.walk("repos/"):
               return walk
             for doc in docs:
               current_scanners = [
-                s for s in found_scanners 
+                s for s in found_scanners
                   if s.check(prepare_walk(doc))]
               if len(current_scanners) > 0:
                 rel_file_path = os.path.relpath(file_path, "repos/"+repo_dir_name+"/")
@@ -93,7 +95,7 @@ for root, dirs, files in os.walk("repos/"):
                   cwd="repos/" + repo_dir_name,
                 )
                 url = repos[repo_dir_name]
-                
+
                 branch = branches[repo_dir_name]
                 full_url = f"{url}/blob/{branch}/{os.path.relpath(file_path, 'repos/' + repo_dir_name + '/')}"
                 repo_name = urlparse(url).path[1:]
