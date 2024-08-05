@@ -103,8 +103,8 @@ export async function collector(
 
   union all
     select
+      rel.helm_repo_url as helm_repo_url,  
       "" as helm_repo_name,
-      rel.helm_repo_url as helm_repo_url,
       rel.chart_name,
       rel.chart_version,
       rel.release_name,
