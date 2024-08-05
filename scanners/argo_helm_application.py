@@ -2,7 +2,8 @@ from info_model import InfoModel
 from typing import Optional
 import json
 
-
+from ruamel.yaml import YAML
+from ruamel.yaml.error import YAMLError
 class ArgoHelmApplication(InfoModel):
     release_name: str
     chart_name: str
@@ -47,7 +48,18 @@ class ArgoHelmApplicationScanner:
         release_name = walk('metadata.name')
         namespace = walk('spec.destination.namespace')
         helm_repo_url = walk('spec.source.repoURL')
-        values = walk('spec.source.helm.valuesObject')
+        valuesObject = walk('spec.source.helm.valuesObject')
+        valuesString = walk('spec.source.helm.values')
+        values = valuesObject or valuesString
+        # if string, parse yaml
+        if values and isinstance(values, str):
+            try:
+                yaml=YAML(typ="safe", pure=True)
+                values = yaml.load(values)
+            except YAMLError as exc:
+                print("yaml err")
+                print(exc)
+
 
         hajimari_icon = walk(
             'spec.source.helm.valuesObject.ingress.main.annotations.hajimari\.io/icon',
@@ -59,7 +71,7 @@ class ArgoHelmApplicationScanner:
             'hajimari_icon': hajimari_icon,
             'namespace': namespace,
             'helm_repo_url': helm_repo_url,
-            'values': json.dumps(values, default=str)
+            'values': json.dumps(values, default=str) if values else None
         })
 
     def create_table(self, c1, c2):
@@ -69,6 +81,7 @@ class ArgoHelmApplicationScanner:
                       chart_name text NOT NULL, 
                       chart_version text NULL,
                       namespace text NULL,
+                      repo_name text NOT NULL,
                       hajimari_icon text NULL, 
                       lines number NOT NULL,
                       url text NOT NULL, 
@@ -82,12 +95,13 @@ class ArgoHelmApplicationScanner:
 
     def insert(self, c1, c2, data: ArgoHelmApplication):
         c1.execute(
-            "INSERT INTO argo_helm_application VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO argo_helm_application VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 data.release_name,
                 data.chart_name,
                 data.chart_version,
                 data.namespace,
+                data.repo_name,
                 data.hajimari_icon,
                 data.amount_lines,
                 data.url,
