@@ -80,27 +80,43 @@ export async function collector(
   dbExtended: Database<sqlite3.Database, sqlite3.Statement>
 ): Promise<CollectorData> {
   const query = `
-    select 
-        hrep.helm_repo_url,
-        hrep.helm_repo_name,
-        rel.chart_name,
-        rel.chart_version,
-        rel.release_name,
-        rel.url,
-        rel.repo_name,
-        rel.hajimari_icon,
-        rel.timestamp,
-        repo.stars,
-        repo.url as repo_url
-    from flux_helm_release rel
-    join flux_helm_repo hrep
-    on rel.helm_repo_name = hrep.helm_repo_name
-    and rel.helm_repo_namespace = hrep.namespace
-    and rel.repo_name = hrep.repo_name
+  select 
+    hrep.helm_repo_url,
+    hrep.helm_repo_name,
+    rel.chart_name,
+    rel.chart_version,
+    rel.release_name,
+    rel.url,
+    rel.repo_name,
+    rel.hajimari_icon,
+    rel.timestamp,
+    repo.stars,
+    repo.url as repo_url
+  from flux_helm_release rel
+  join flux_helm_repo hrep
+  on rel.helm_repo_name = hrep.helm_repo_name
+  and rel.helm_repo_namespace = hrep.namespace
+  and rel.repo_name = hrep.repo_name
+  join repo repo
+  on rel.repo_name = repo.repo_name
+  group by rel.url
+
+  union all
+    select
+      "" as helm_repo_name,
+      rel.helm_repo_url as helm_repo_url,
+      rel.chart_name,
+      rel.chart_version,
+      rel.release_name,
+      rel.url,
+      rel.repo_name,
+      rel.hajimari_icon,
+      rel.timestamp,
+      repo.stars,
+      repo.url as repo_url
+    from argo_helm_application rel
     join repo repo
     on rel.repo_name = repo.repo_name
-
-    group by rel.url
     `;
 
   const keySet: Set<string> = new Set();
@@ -151,7 +167,12 @@ export async function collector(
     const urls = repos[key].map(r => r.url);
     const query = `
         select url, val
-        from flux_helm_release_values
+        from 
+          (
+            select url, val from flux_helm_release_values
+            union all
+            select url, val from argo_helm_application_values
+          )
         where url in (${urls.map(() => '?').join(',')})
 `;
     await dbExtended.each(query, urls, (err, row) => {
