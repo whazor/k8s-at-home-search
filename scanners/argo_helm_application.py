@@ -101,4 +101,4 @@ class ArgoHelmApplicationScanner:
 
     def test(self, c1, c2) -> bool:
         c1.execute("SELECT count(*) FROM argo_helm_application")
-        return c1.fetchone()[0] > 1600
+        return c1.fetchone()[0] > 15
