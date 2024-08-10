@@ -31,7 +31,8 @@ repos = dict(c1.fetchall())
 c1.execute("SELECT replace(repo_name, '/', '-'), branch FROM repo")
 branches = dict(c1.fetchall())
 
-yaml=YAML(typ="safe", pure=True)
+yaml=YAML(typ="safe")
+yaml.composer.return_alias = lambda s: copy.deepcopy(s)
 
 scanners = [
   FluxHelmReleaseScanner(),
