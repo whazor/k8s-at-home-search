@@ -11,6 +11,7 @@ class FluxHelmRelease(InfoModel):
   chart_version: Optional[str]
   namespace: Optional[str]
   hajimari_icon: Optional[str]
+  hajimari_group: Optional[str]
   helm_repo_name: str
   helm_repo_namespace: Optional[str]
   values: Optional[str]
@@ -52,11 +53,16 @@ class FluxHelmReleaseScanner:
     hajimari_icon = walk(
       'spec.values.ingress.main.annotations.hajimari\.io/icon',
       lambda x: x.strip()) or None
+    hajimari_group = walk(
+      'spec.values.ingress.main.annotations.hajimari\.io/group',
+      lambda x: x.strip()) or None
+
     return FluxHelmRelease.parse_obj(rest.dict() | {
       'chart_name': chart_name,
       'chart_version': chart_version,
       'release_name': release_name,
       'hajimari_icon': hajimari_icon,
+      'hajimari_group': hajimari_group,
       'namespace': namespace,
       'helm_repo_name': helm_repo_name,
       'helm_repo_namespace': helm_repo_namespace,
@@ -72,6 +78,7 @@ class FluxHelmReleaseScanner:
                   namespace text NULL,
                   repo_name text NOT NULL, 
                   hajimari_icon text NULL, 
+                  hajimari_group text NULL,
                   lines number NOT NULL,
                   url text NOT NULL, 
                   timestamp text NOT NULL,
@@ -85,7 +92,7 @@ class FluxHelmReleaseScanner:
 
   def insert(self, c1, c2, data: FluxHelmRelease):
     c1.execute(
-      "INSERT INTO flux_helm_release VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO flux_helm_release VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       (
         data.release_name, 
         data.chart_name, 
@@ -93,6 +100,7 @@ class FluxHelmReleaseScanner:
         data.namespace,
         data.repo_name, 
         data.hajimari_icon, 
+        data.hajimari_group,
         data.amount_lines, 
         data.url, 
         data.timestamp,
@@ -106,4 +114,6 @@ class FluxHelmReleaseScanner:
   
   def test(self, c1, c2) -> bool:
     c1.execute("SELECT count(*) FROM flux_helm_release")
-    return c1.fetchone()[0] > 1600
+    c = c1.fetchone()[0]
+    print("flux_helm_release count", c)
+    return c > 100

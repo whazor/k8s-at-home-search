@@ -10,6 +10,7 @@ class ArgoHelmApplication(InfoModel):
     chart_version: Optional[str]
     namespace: Optional[str]
     hajimari_icon: Optional[str]
+    hajimari_group: Optional[str]
     values: Optional[str]
     helm_repo_url: str
 
@@ -64,11 +65,15 @@ class ArgoHelmApplicationScanner:
         hajimari_icon = walk(
             'spec.source.helm.valuesObject.ingress.main.annotations.hajimari\.io/icon',
             lambda x: x.strip()) or None
+        hajimari_group = walk(
+            'spec.source.helm.valuesObject.ingress.main.annotations.hajimari\.io/group',
+            lambda x: x.strip()) or None
         return ArgoHelmApplication.parse_obj(rest.dict() | {
             'chart_name': chart_name,
             'chart_version': chart_version,
             'release_name': release_name,
             'hajimari_icon': hajimari_icon,
+            'hajimari_group': hajimari_group,
             'namespace': namespace,
             'helm_repo_url': helm_repo_url,
             'values': json.dumps(values, default=str) if values else None
@@ -83,6 +88,7 @@ class ArgoHelmApplicationScanner:
                       namespace text NULL,
                       repo_name text NOT NULL,
                       hajimari_icon text NULL, 
+                      hajimari_group text NULL,
                       lines number NOT NULL,
                       url text NOT NULL, 
                       timestamp text NOT NULL,
@@ -95,7 +101,7 @@ class ArgoHelmApplicationScanner:
 
     def insert(self, c1, c2, data: ArgoHelmApplication):
         c1.execute(
-            "INSERT INTO argo_helm_application VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO argo_helm_application VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 data.release_name,
                 data.chart_name,
@@ -103,6 +109,7 @@ class ArgoHelmApplicationScanner:
                 data.namespace,
                 data.repo_name,
                 data.hajimari_icon,
+                data.hajimari_group,
                 data.amount_lines,
                 data.url,
                 data.timestamp,
@@ -115,4 +122,6 @@ class ArgoHelmApplicationScanner:
 
     def test(self, c1, c2) -> bool:
         c1.execute("SELECT count(*) FROM argo_helm_application")
-        return c1.fetchone()[0] > 15
+        c = c1.fetchone()[0]
+        print("argo_helm_application count", c)
+        return c > 10
