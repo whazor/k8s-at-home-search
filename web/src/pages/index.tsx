@@ -50,7 +50,7 @@ export default function Home(props: {releases: Release[]}) {
         )
         .sort((a, b) => groupMap[b].length - groupMap[a].length)
         .map((group, i) => {
-          return <span key={group} 
+          return <button key={group} 
           onClick={() => 
             setSelectedGroup(group === selectedGroup ? undefined : group)
           }
@@ -59,7 +59,7 @@ export default function Home(props: {releases: Release[]}) {
             (selectedGroup === group ? " bg-blue-300 text-blue-900" : "")
           }>
         {group}
-      </span>
+      </button>
         })}
         </div>
         </div>
