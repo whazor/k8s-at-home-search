@@ -89,6 +89,7 @@ export async function collector(
     rel.url,
     rel.repo_name,
     rel.hajimari_icon,
+    rel.hajimari_group,
     rel.timestamp,
     repo.stars,
     repo.url as repo_url
@@ -111,6 +112,7 @@ export async function collector(
       rel.url,
       rel.repo_name,
       rel.hajimari_icon,
+      rel.hajimari_group,
       rel.timestamp,
       repo.stars,
       repo.url as repo_url
@@ -157,6 +159,7 @@ export async function collector(
         repo_url: row.repo_url,
         stars: row.stars,
         icon: row.hajimari_icon,
+        group: row.hajimari_group,
         timestamp: row.timestamp,
       }
     );
@@ -233,9 +236,6 @@ export function appDataGenerator(data: CollectorData):
   const { releases, keys, count, repos } = data;
   const [chartURLs, chartURLMap] = normalizeData(releases.map(r => r.chartsUrl));
 
-
-
-
   return {
     chartURLs,
     repoAlsoHas: repoAlsoHas(data),
@@ -248,6 +248,7 @@ export function appDataGenerator(data: CollectorData):
       chartURLMap[r.chartsUrl],
       count[r.key],
       mode(repos[r.key].filter(r => r.icon).map(r => r.icon)),
+      mode(repos[r.key].filter(r => r.group).map(r => r.group)),
     ]))
   }
 };

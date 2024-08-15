@@ -7,6 +7,7 @@ export type ReleaseInfoCompressed = [
     number, // chartsUrl
     number, // count,
     string|undefined, // icon
+    string|undefined, // group
 ]
 
 export interface RepoAlsoHas {
@@ -52,7 +53,7 @@ export function denormalize(
     } {
     return {
         releases: appData.releases.map(
-            ([release, chart, name, key, chartsUrl, count, icon]) => ({
+            ([release, chart, name, key, chartsUrl, count, icon, group]) => ({
                 release,
                 chart,
                 name,
@@ -60,6 +61,7 @@ export function denormalize(
                 chartsUrl: appData.chartURLs[chartsUrl],
                 count,
                 icon,
+                group,
             })
         ),
     }
@@ -80,6 +82,7 @@ export interface RepoInfo {
     chart_version: string,
     stars: number,
     icon: string,
+    group: string,
     timestamp: number,
 }
 
