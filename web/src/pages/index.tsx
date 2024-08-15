@@ -40,7 +40,7 @@ export default function Home(props: {releases: Release[]}) {
 
     return (
       <>
-        <div className="flex flex-wrap gap-2 mb-2">
+        <div className="flex flex-wrap gap-2 mb-2 items-center">
         <h2>Popular releases</h2>
         <div>
         {[...groups].filter(Boolean)
