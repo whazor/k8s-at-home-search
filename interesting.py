@@ -140,7 +140,8 @@ must_have = {
 }
 
 filter_out = [
-    "true_charts" # Skip true_charts because they do not have helm_release to parse
+    "true_charts",
+    "truecharts"
 ]
 
 results = {k: v for k, v in results.items() if not any(filter_text in k for filter_text in filter_out)}
