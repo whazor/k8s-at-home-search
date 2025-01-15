@@ -129,13 +129,25 @@ for topic in topics:
 must_have = {
     "onedr0p/home-ops",
     "billimek/k8s-gitops",
+    "bjw-s-labs/home-ops",
     "xunholy/k8s-gitops",
     "bjw-s/home-ops",
-    "wrmilling/k3s-gitops",
+    "toboshii/home-ops",
     "carpenike/k8s-gitops",
-    "truxnell/home-cluster",
-    "brettinternet/homelab",
+    "wrmilling/k3s-gitops",
+    "brettinternet/homeops",
+    "buroa/k8s-gitops",
+    "szinn/k8s-homelab",
+    "auricom/home-ops",
+    "ahinko/home-ops",
+    "budimanjojo/home-cluster",
     "angelnu/k8s-gitops",
+    "joryirving/home-ops",
+    "truxnell/home-cluster",
+    "haraldkoch/kochhaus-home",
+    "ishioni/homelab-ops",
+    "samip5/k8s-cluster",
+    "kashalls/home-cluster",
     "anthr76/infra"
 }
 
@@ -151,7 +163,7 @@ for repo in must_have:
         print(f"Missing {repo}")
         exit(1)
 
-if len(results) < 50:
+if len(results) < 200:
     print("Not enough repos, error fetching topic github repos")
     exit(1)
 
