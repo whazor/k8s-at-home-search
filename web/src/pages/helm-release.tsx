@@ -49,7 +49,7 @@ function ValueRow(props: {
   }
   const [valueMode, valueCount] = modeCount(values?.map(v => v[1]) || [])
   return (
-    <div className="w-96 lg:w-[900px] m-h-[150px] overflow-auto">
+    <div className="break-all">
       <a onClick={() => setShow(!show)} title={`List all values from ${name}`}>
         {name} ({values?.length || 0})
       </a>
