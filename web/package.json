@@ -4,7 +4,8 @@
   "type": "module",
   "version": "0.0.0",
   "scripts": {
-    "dev": "tsx watch ./server.ts",
+    "dev": "tsx ./server.ts",
+    "dev:watch": "tsx watch --clear-screen=false --exclude *.timestamp-*.* --exclude tailwind.config.cjs ./server.ts",
     "build": "tsc && yarn run build:client && yarn run build:server",
     "build:client": "vite build --outDir dist/client  --ssrManifest",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
@@ -14,11 +15,15 @@
   },
   "dependencies": {
     "@iconify/react": "^4.0.1",
+    "@radix-ui/react-tabs": "^1.1.2",
     "@types/marked": "^4.0.8",
     "caniuse-lite": "^1.0.30001565",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "dayjs": "^1.11.7",
     "dompurify": "^2.4.3",
     "jsdom": "^21.0.0",
+    "lucide-react": "^0.473.0",
     "marked": "^4.2.12",
     "pako": "^2.1.0",
     "react": "^18.2.0",
@@ -26,7 +31,9 @@
     "react-github-btn": "^1.4.0",
     "react-router-dom": "^6.6.2",
     "sqlite": "^4.1.2",
-    "sqlite3": "^5.1.4"
+    "sqlite3": "^5.1.4",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@mdx-js/rollup": "^2.2.1",
@@ -48,7 +55,7 @@
     "tailwindcss": "^3.3.6",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.2",
-    "tsx": "^4.6.2",
+    "tsx": "^4.19.2",
     "typescript": "^4.9.3",
     "vite": "^4.0.0"
   }

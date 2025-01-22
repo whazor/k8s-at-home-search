@@ -18,7 +18,10 @@
     "moduleResolution": "Node",
     "skipLibCheck": true,
     "sourceMap": true,
-    "target": "ES2017"
+    "target": "ES2017",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src/**/*", "types/*", "server.ts", "node_modules/vite/types/*"],
   "exclude": ["dist/**/*"],

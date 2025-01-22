@@ -7,6 +7,7 @@ import Code from "../components/code";
 import Table from "../components/table";
 import { MINIMUM_COUNT, ValuesData, type PageData, type ReleaseInfo, type RepoAlsoHas } from "../generators/helm-release/models";
 import { modeCount, simplifyURL } from "../utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 dayjs.extend(relativeTime);
 
@@ -462,10 +463,34 @@ export default function HR(props: HRProps) {
 
       <h3>Install</h3>
       <Text>Install with:</Text>
-      <Code>
-        {`helm repo add ${helmRepoName} ${helmRepoURL}
+      <Tabs defaultValue="helm">
+        <TabsList>
+          <TabsTrigger value="helm">Helm</TabsTrigger>
+          <TabsTrigger value="flux">Flux</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="helm" className="border rounded-md p-2">
+          <Code>
+            {`helm repo add ${helmRepoName} ${helmRepoURL}
 helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
-      </Code>
+          </Code>
+        </TabsContent>
+        <TabsContent value="flux" className="border rounded-md p-2">
+          <Code>
+            {`---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrepository-source-v1beta2.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: ${helmRepoName}
+  namespace: flux-system
+spec:
+  interval: 12h
+  url: ${helmRepoURL}
+`}
+          </Code>
+        </TabsContent>
+      </Tabs>
 
 
       <h3>Examples</h3>

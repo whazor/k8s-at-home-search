@@ -3,8 +3,9 @@ import path from 'node:path'
 import express from 'express'
 import { createServer as createViteServer } from 'vite'
 import { Renderer } from './renderer'
+import { fileURLToPath } from 'node:url'
 
-// const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const toAbsolute = (p: string) => path.resolve(__dirname, p)
 

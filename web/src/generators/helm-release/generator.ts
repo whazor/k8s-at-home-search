@@ -425,7 +425,7 @@ export function pageGenerator(
     const { name, chart } = releaseMap[key];
     let doc = undefined;
     const docPath = path.join(__dirname, '../../info/', `${name}.md`);
-    console.log(docPath);
+    // console.log(docPath);
     const icon = mode(repos[key].filter(r => r.icon).map(r => r.icon));
     const helmRepoName = mode(repos[key].map(r => r.helm_repo_name));
     const helmRepoURL = mode(repos[key].map(r => r.helm_repo_url));
@@ -435,7 +435,7 @@ export function pageGenerator(
         fs.readFileSync(docPath, 'utf-8').replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, "")
       ));
     } else {
-      console.log("No doc for", name);
+      // console.log("No doc for", name);
     }
     pages["/hr/" + key] = {
       title: name + ' helm release',
