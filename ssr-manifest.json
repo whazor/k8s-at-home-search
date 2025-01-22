@@ -31,14 +31,44 @@
   ],
   "node_modules/@iconify/react/dist/iconify.mjs": [
   ],
+  "node_modules/@radix-ui/primitive/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-collection/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-compose-refs/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-context/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-direction/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-id/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-presence/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-primitive/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-roving-focus/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-slot/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-tabs/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-use-callback-ref/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs": [
+  ],
+  "node_modules/@radix-ui/react-use-layout-effect/dist/index.mjs": [
+  ],
   "node_modules/@remix-run/router/dist/router.js": [
+  ],
+  "node_modules/clsx/dist/clsx.mjs": [
   ],
   "node_modules/dayjs/dayjs.min.js": [
   ],
   "node_modules/dayjs/plugin/relativeTime.js": [
   ],
   "node_modules/github-buttons/dist/buttons.esm.js": [
-    "/assets/buttons.esm-67fcdf1d.js"
+    "/assets/buttons.esm-594d48d3.js"
   ],
   "node_modules/pako/dist/pako.esm.mjs": [
   ],
@@ -66,6 +96,8 @@
   ],
   "node_modules/scheduler/index.js": [
   ],
+  "node_modules/tailwind-merge/dist/bundle-mjs.mjs": [
+  ],
   "src/App.tsx": [
   ],
   "src/components/code/index.tsx": [
@@ -80,11 +112,15 @@
   ],
   "src/components/text/index.tsx": [
   ],
+  "src/components/ui/tabs.tsx": [
+  ],
   "src/entry-client.tsx": [
   ],
   "src/generators/helm-release/models.ts": [
   ],
   "src/index.css?used&inline": [
+  ],
+  "src/lib/utils.ts": [
   ],
   "src/pages/grep.tsx": [
   ],
