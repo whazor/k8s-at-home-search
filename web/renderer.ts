@@ -129,13 +129,22 @@ export class Renderer {
 
         const appHtml = await render(url, this.appData, pageData)
 
-
         const title = pageData && "title" in pageData ? pageData.title + ' - ' : "";
+        
+        // Generate description for helm release pages
+        let description = "Search through community Kubernetes repositories for Helm chart examples and configurations - explore how others deploy their applications";
+        if (pageData && url.startsWith("/hr/")) {
+            const name = pageData.title || "";
+            const chartName = pageData.chartName || "";
+            description = `Find real-world examples and configurations of the ${name} Helm chart. See how the community deploys ${chartName} in their Kubernetes clusters.`;
+        }
+
         const pageDataJS = `window.__PAGE_DATA__ = "${b64EncodeUnicode(JSON.stringify(pageData))}";`
         const appDataJS = `window.__APP_DATA__ = "${b64EncodeUnicode(JSON.stringify(this.appData))}";`
 
         const html = template
             .replace(`<!--title-->`, title)
+            .replace(`<!--description-->`, description)
             .replace(`<!--app-html-->`, appHtml)
             .replace(`/**--app-data--**/`, appDataJS)
             .replace(`/**--page-data--**/`, pageDataJS);
