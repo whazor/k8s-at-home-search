@@ -1,3 +1,4 @@
+from copy import deepcopy
 import os
 import sqlite3
 import sys
@@ -32,7 +33,7 @@ c1.execute("SELECT replace(repo_name, '/', '-'), branch FROM repo")
 branches = dict(c1.fetchall())
 
 yaml=YAML(typ="safe")
-yaml.composer.return_alias = lambda s: copy.deepcopy(s)
+yaml.composer.return_alias = lambda s: deepcopy(s)
 
 scanners = [
   FluxHelmReleaseScanner(),
