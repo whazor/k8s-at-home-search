@@ -47,7 +47,7 @@ for scanner in scanners:
 for root, dirs, files in os.walk("repos/"):
   for file in files:
     file_path = os.path.join(root, file)
-    if file.endswith(".yaml"):
+    if file.endswith(".yaml") and "/.archive/" not in file_path and "/archive/" not in file_path:
       repo_dir_name = file_path.split('/')[1]
       if repo_dir_name not in repos:
         print("repo", repo_dir_name, "not found in repos")
