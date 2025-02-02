@@ -479,7 +479,7 @@ helm install ${name} ${helmRepoName}/${chartName} -f values.yaml`}
           <Code>
             {`---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrepository-source-v1beta2.json
-apiVersion: source.toolkit.fluxcd.io/v1
+apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
   name: ${helmRepoName}
