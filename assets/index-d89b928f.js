@@ -70,7 +70,7 @@ Error generating stack: `+i.message+`
         `,children:[w.jsx("h3",{children:"More popular helm chart found"}),w.jsxs("p",{children:[w.jsx("a",{href:`/hr/${v[0]}`,children:x})," from ",Mi(v[1])," is more popular with ",v[2]," repositories."]})]}),w.jsx("h3",{children:"Install"}),w.jsx(pa,{children:"Install with:"}),w.jsxs(Dx,{defaultValue:"helm",children:[w.jsxs(ug,{children:[w.jsx($s,{value:"helm",children:"Helm"}),w.jsx($s,{value:"flux",children:"Flux"})]}),w.jsx(Fs,{value:"helm",className:"border rounded-md p-2",children:w.jsx(Wd,{children:`helm repo add ${g} ${y}
 helm install ${x} ${g}/${p} -f values.yaml`})}),w.jsx(Fs,{value:"flux",className:"border rounded-md p-2",children:w.jsx(Wd,{children:`---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrepository-source-v1beta2.json
-apiVersion: source.toolkit.fluxcd.io/v1
+apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
   name: ${g}
