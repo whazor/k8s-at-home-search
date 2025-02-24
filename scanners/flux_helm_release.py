@@ -1,4 +1,5 @@
 import json
+import re
 from typing import Optional
 
 from info_model import InfoModel
@@ -38,8 +39,9 @@ class FluxHelmReleaseScanner:
     return walk('apiVersion', lambda x: x.startswith(self.api_version)) and \
       walk('kind', lambda x: x == self.kind) and \
       walk('spec.chart.spec.chart', lambda x: x is not None) and \
-      walk('spec.chart.spec.sourceRef.kind', lambda x: x == "HelmRepository" or x == "GitRepository")
-
+      walk('spec.chart.spec.sourceRef.kind', lambda x: x == "HelmRepository" or x == "GitRepository") and \
+      walk('metadata.name', lambda x: re.match(r'^[^{}]+$', x) is not None)
+    
   def parse(self, walk, rest: InfoModel) -> FluxHelmRelease:
     chart_name = walk('spec.chart.spec.chart')
     chart_version = walk('spec.chart.spec.version')
