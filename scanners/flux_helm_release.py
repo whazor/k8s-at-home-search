@@ -38,17 +38,23 @@ class FluxHelmReleaseScanner:
   def check(self, walk) -> bool:
     return walk('apiVersion', lambda x: x.startswith(self.api_version)) and \
       walk('kind', lambda x: x == self.kind) and \
-      walk('spec.chart.spec.chart', lambda x: x is not None) and \
-      walk('spec.chart.spec.sourceRef.kind', lambda x: x == "HelmRepository" or x == "GitRepository") and \
+      (self._helm_or_git_repo(walk) or self._oci_repo(walk)) and \
       walk('metadata.name', lambda x: re.match(r'^[^{}]+$', x) is not None)
-    
+
+  def _helm_or_git_repo(self, walk):
+      return walk('spec.chart.spec.chart', lambda x: x is not None) and \
+        walk('spec.chart.spec.sourceRef.kind', lambda x: x == "HelmRepository" or x == "GitRepository")
+
+  def _oci_repo(self, walk):
+      return walk('spec.chartRef.kind', lambda x: x == "OCIRepository")
+
   def parse(self, walk, rest: InfoModel) -> FluxHelmRelease:
-    chart_name = walk('spec.chart.spec.chart')
-    chart_version = walk('spec.chart.spec.version')
     release_name = walk('metadata.name')
     namespace = walk('metadata.namespace')
-    helm_repo_name = walk('spec.chart.spec.sourceRef.name')
-    helm_repo_namespace = walk('spec.chart.spec.sourceRef.namespace')
+    chart_name = walk('spec.chart.spec.chart') or walk('spec.chartRef.name')
+    chart_version = walk('spec.chart.spec.version')
+    helm_repo_name = walk('spec.chart.spec.sourceRef.name') or walk('spec.chartRef.name')
+    helm_repo_namespace = walk('spec.chart.spec.sourceRef.namespace') or walk('spec.chartRef.namespace')
     values = walk('spec.values')
     
     
