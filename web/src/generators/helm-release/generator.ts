@@ -79,8 +79,7 @@ export async function collector(
   db: Database<sqlite3.Database, sqlite3.Statement>,
   dbExtended: Database<sqlite3.Database, sqlite3.Statement>
 ): Promise<CollectorData> {
-  const query = `
-  select 
+  const query = `select 
     hrep.helm_repo_url,
     hrep.helm_repo_name,
     rel.chart_name,
@@ -97,28 +96,57 @@ export async function collector(
   join flux_helm_repo hrep
   on rel.helm_repo_name = hrep.helm_repo_name
   and rel.helm_repo_namespace = hrep.namespace
-  and rel.repo_name = hrep.repo_name
+  and rel.repo_name = hrep.repo_name and
+  (rel.chart_ref_kind = 'HelmRepository' or rel.chart_ref_kind = 'GitRepository')
   join repo repo
   on rel.repo_name = repo.repo_name
   group by rel.url
 
   union all
-    select
-      rel.helm_repo_url as helm_repo_url,  
-      "" as helm_repo_name,
-      rel.chart_name,
-      rel.chart_version,
-      rel.release_name,
-      rel.url,
-      rel.repo_name,
-      rel.hajimari_icon,
-      rel.hajimari_group,
-      rel.timestamp,
-      repo.stars,
-      repo.url as repo_url
-    from argo_helm_application rel
-    join repo repo
-    on rel.repo_name = repo.repo_name
+  
+  select 
+    flor.url as helm_repo_url,
+    flor.name as helm_repo_name,
+    rel.chart_name,
+    rel.chart_version,
+    rel.release_name,
+    rel.url,
+    rel.repo_name,
+    rel.hajimari_icon,
+    rel.hajimari_group,
+    rel.timestamp,
+    repo.stars,
+    repo.url as repo_url
+  from flux_helm_release rel
+  join flux_oci_repository flor
+  on rel.helm_repo_name = flor.name and 
+  rel.chart_ref_kind = 'OCIRepository'
+  and (
+    flor.namespace = rel.helm_repo_namespace
+    or (rel.helm_repo_namespace is null and (flor.namespace is null or flor.namespace = 'flux-system'))
+  )
+
+  join repo repo
+  on rel.repo_name = repo.repo_name
+  group by rel.url
+
+union all
+  select
+    rel.helm_repo_url as helm_repo_url,  
+    "" as helm_repo_name,
+    rel.chart_name,
+    rel.chart_version,
+    rel.release_name,
+    rel.url,
+    rel.repo_name,
+    rel.hajimari_icon,
+    rel.hajimari_group,
+    rel.timestamp,
+    repo.stars,
+    repo.url as repo_url
+  from argo_helm_application rel
+  join repo repo
+  on rel.repo_name = repo.repo_name
     `;
 
   const keySet: Set<string> = new Set();

@@ -13,6 +13,7 @@ class FluxHelmRelease(InfoModel):
   namespace: Optional[str]
   hajimari_icon: Optional[str]
   hajimari_group: Optional[str]
+  chart_ref_kind: Optional[str]
   helm_repo_name: str
   helm_repo_namespace: Optional[str]
   values: Optional[str]
@@ -55,6 +56,7 @@ class FluxHelmReleaseScanner:
     chart_version = walk('spec.chart.spec.version')
     helm_repo_name = walk('spec.chart.spec.sourceRef.name') or walk('spec.chartRef.name')
     helm_repo_namespace = walk('spec.chart.spec.sourceRef.namespace') or walk('spec.chartRef.namespace')
+    chart_ref_kind = walk('spec.chart.spec.sourceRef.kind') or walk('spec.chartRef.kind')
     values = walk('spec.values')
     
     
@@ -74,6 +76,7 @@ class FluxHelmReleaseScanner:
       'namespace': namespace,
       'helm_repo_name': helm_repo_name,
       'helm_repo_namespace': helm_repo_namespace,
+      'chart_ref_kind': chart_ref_kind,
       'values': json.dumps(values, default=str)
     })
 
@@ -85,8 +88,9 @@ class FluxHelmReleaseScanner:
                   chart_version text NULL,
                   namespace text NULL,
                   repo_name text NOT NULL, 
-                  hajimari_icon text NULL, 
+                  hajimari_icon text NULL,
                   hajimari_group text NULL,
+                  chart_ref_kind text NULL,
                   lines number NOT NULL,
                   url text NOT NULL, 
                   timestamp text NOT NULL,
@@ -100,7 +104,7 @@ class FluxHelmReleaseScanner:
 
   def insert(self, c1, c2, data: FluxHelmRelease):
     c1.execute(
-      "INSERT INTO flux_helm_release VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO flux_helm_release VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       (
         data.release_name, 
         data.chart_name, 
@@ -109,11 +113,13 @@ class FluxHelmReleaseScanner:
         data.repo_name, 
         data.hajimari_icon, 
         data.hajimari_group,
+        data.chart_ref_kind,
         data.amount_lines, 
         data.url, 
         data.timestamp,
         data.helm_repo_name, 
-        data.helm_repo_namespace,))
+        data.helm_repo_namespace,
+      ))
     c2.execute("INSERT INTO flux_helm_release_values VALUES (?, ?)",
       (
           data.url,
