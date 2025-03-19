@@ -18,6 +18,7 @@ from pydantic import ValidationError
 from scanners.flux_helm_release import FluxHelmReleaseScanner
 from scanners.argo_helm_application import ArgoHelmApplicationScanner
 from scanners.flux_helm_repo import FluxHelmRepoScanner
+from scanners.flux_oci_repository import FluxOCIRepositoryScanner
 warnings.simplefilter("ignore", ReusedAnchorWarning)
 
 # create sqlite db
@@ -38,7 +39,8 @@ yaml.composer.return_alias = lambda s: deepcopy(s)
 scanners = [
   FluxHelmReleaseScanner(),
   FluxHelmRepoScanner(),
-  ArgoHelmApplicationScanner()
+  ArgoHelmApplicationScanner(),
+  FluxOCIRepositoryScanner()
 ]
 
 for scanner in scanners:
@@ -117,6 +119,14 @@ for root, dirs, files in os.walk("repos/"):
           except YAMLError as exc:
             print("yaml err")
             print(exc)
+
+# Update chart_version in flux_helm_release for OCI repositories
+conn1.execute(
+    """UPDATE flux_helm_release
+       SET chart_version = tag FROM flux_oci_repository
+       WHERE flux_helm_release.repo_name = flux_oci_repository.repo_name
+       AND flux_helm_release.chart_name = flux_oci_repository.name
+       AND flux_helm_release.chart_version IS NULL""")
 conn1.commit()
 conn2.commit()
 
