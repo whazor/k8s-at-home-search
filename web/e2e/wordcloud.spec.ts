@@ -8,7 +8,7 @@ test('test wordcloud', async ({ page }) => {
   // there should only be one link with the text "cert-manager",
   // so any errors suggesting that there are multiple links with
   // the same text suggests there is a bug in the wordcloud
-  await page.getByRole('link', { name: 'cert-manager' }).click();
+  await page.getByRole('link', { name: 'cert-manager' }).first().click();
   await expect(page).toHaveURL('/hr/charts.jetstack.io-cert-manager');
 
   const rows = page.locator('table tbody tr');
