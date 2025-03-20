@@ -62,16 +62,40 @@ function mergeHelmURL(url: string) {
 }
 
 
-function releaseKey(url: string, name: string) {
-  return (url
+function releaseKey(_url: string, chart_name: string, release_name: string) {
+  const url = _url
     .replace("https://", "")
     .replace("http://", "")
     .replace("oci://", "")
     .replace(/\/$/, '')
     .replaceAll("/", "-")
-    + '-' + name).replaceAll(/\s+/g, '-')
-    .replaceAll(/[^a-zA-Z0-9\.\-]/gi, '')
-    .replaceAll(/^\.+/g, '').toLowerCase()
+
+  let key: string;
+  // OCI Repo's tend to have the chart name as the last part of the URL
+  if (url.endsWith(chart_name)) {
+    // If the chart name is the same as the release name, use the URL without the release name
+    if(chart_name === release_name) {
+      key = url;
+    } else {
+      key = url + '-' + release_name;
+    }
+  }
+  // helm repo case
+  else {
+    // when the chart name is the same as the release name, use the URL without the release name
+    if (chart_name === release_name) {
+      key = url + '-' + chart_name;
+    } else {
+      key = url + '-' + `${chart_name}-${release_name}`;
+    }
+  }
+
+  return (
+    key
+      .replaceAll(/\s+/g, '-')
+      .replaceAll(/[^a-zA-Z0-9\.\-]/gi, '')
+      .replaceAll(/^\.+/g, '').toLowerCase()
+  )
 }
 
 
@@ -159,8 +183,8 @@ union all
     }
     const { chart_name, chart_version, release_name } = row;
     const helm_repo_url = mergeHelmURL(row.helm_repo_url);
-    const name = chart_name == release_name ? chart_name : `${chart_name}-${release_name}`;
-    const key = releaseKey(helm_repo_url, name);
+
+    const key = releaseKey(helm_repo_url, chart_name, release_name);
     releases[key] =
       {
         release: release_name,
