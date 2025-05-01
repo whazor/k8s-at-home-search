@@ -53,12 +53,21 @@ export function simplifyURL(url: string) {
         name = name.replace(/\.github$/, '');
         return name;
     }
-    if(url.startsWith('oci://ghcr.io/')) {
-        let name = url.split('oci://ghcr.io/')[1];
-        // split off before first /
-        name = name.split('/')[0];
-        return name;
+
+    if (
+        url.startsWith('oci://ghcr.io/') ||
+        url.startsWith('oci://quay.io/') ||
+        url.startsWith('oci://tccr.io/')
+    ) {
+        // Split by "/" and get everything after the third "/"
+        const parts = url.split('/');
+        // parts[0] = "oci:"
+        // parts[1] = "" (empty, because of the double slash)
+        // parts[2] = "ghcr.io" | "quay.io" | "tccr.io"
+        // parts[3] = actual name
+        return parts.slice(3).join('/');
     }
+
     if (url.startsWith('oci')) {
         // remove oci://
         let name = url.split('oci://')[1];
