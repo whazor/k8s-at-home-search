@@ -116,6 +116,8 @@ for root, dirs, files in os.walk("repos/"):
                     s.insert(c1, c2, result)
                   except ValidationError as e:
                     print("validation error", e)
+                  except ValueError as e:
+                    print("value error", e)
           except YAMLError as exc:
             print("yaml err")
             print(exc)
