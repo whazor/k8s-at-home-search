@@ -28,8 +28,8 @@ test('test search', async ({ page }) => {
 
   // check url, it must be either of the two (OCI vs non-OCI)
   try {
-    await expect(page).toHaveURL('/hr/bjw-s.github.io-helm-charts-app-template-plex');
+    await expect(page).toHaveURL('/hr/bjw-s-labs.github.io-helm-charts-app-template-plex');
   } catch (e) {
-    await expect(page).toHaveURL('/hr/ghcr.io-bjw-s-helm-app-template-plex');
+    await expect(page).toHaveURL('/hr/ghcr.io-bjw-s-labs-helm-app-template-plex');
   }
 });
