@@ -43,24 +43,44 @@ const INTERESTING = [
 ];
 
 function mergeHelmURL(url: string) {
-  // wrap http to known oci registries
-  const mapping: Record<string, string> = {
-    "https://bjw-s.github.io/helm-charts/": "oci://ghcr.io/bjw-s/helm/",
-    "https://charts.bitnami.com/bitnami/": "oci://registry-1.docker.io/bitnamicharts/",
-    "https://github.com/prometheus-community/helm-charts/": "oci://ghcr.io/prometheus-community/charts/",
-    "https://prometheus-community.github.io/helm-charts/": "oci://ghcr.io/prometheus-community/charts/",
-    "https://actions.github.io/actions-runner-controller/": "oci://ghcr.io/actions/actions-runner-controller-charts/",
-    "https://kyverno.github.io/kyverno/": "oci://ghcr.io/kyverno/charts/",
-    "https://grafana.github.io/helm-charts/": "oci://ghcr.io/grafana-operator/helm-charts/",
+  let cleanUrl = url.replace(/\/$/, "");
 
+  // normalize bjw-s / bjw-s-labs repositories
+  // This catches:
+  // - https://bjw-s.github.io/helm-charts
+  // - oci://ghcr.io/bjw-s/helm
+  // - oci://ghcr.io/bjw-s-labs/app-template
+  // - oci://ghcr.io/bjw-s-labs/charts
+  if (
+    cleanUrl.includes("bjw-s.github.io/helm-charts") ||
+    cleanUrl.match(/ghcr\.io\/bjw-s(-labs)?\/(helm|charts|app-template)/)
+  ) {
+    // Canonicalize all to the main charts OCI registry
+    return "oci://ghcr.io/bjw-s-labs/charts/";
+  }
+
+  //  Handle standard mappings (wrap http to known oci registries)
+  const mapping: Record<string, string> = {
+    "https://charts.bitnami.com/bitnami": "oci://registry-1.docker.io/bitnamicharts/",
+    "https://github.com/prometheus-community/helm-charts": "oci://ghcr.io/prometheus-community/charts/",
+    "https://prometheus-community.github.io/helm-charts": "oci://ghcr.io/prometheus-community/charts/",
+    "https://actions.github.io/actions-runner-controller": "oci://ghcr.io/actions/actions-runner-controller-charts/",
+    "https://kyverno.github.io/kyverno": "oci://ghcr.io/kyverno/charts/",
+    "https://grafana.github.io/helm-charts": "oci://ghcr.io/grafana-operator/helm-charts/",
   };
+
+  // Check strict mapping on the cleaned URL
+  if (cleanUrl in mapping) {
+    return mapping[cleanUrl];
+  }
+  
+  // Check strict mapping on original URL (just in case keys in mapping have slashes)
   if (url in mapping) {
     return mapping[url];
   }
 
   return url;
 }
-
 
 function releaseKey(_url: string, chart_name: string, release_name: string) {
   const url = _url
