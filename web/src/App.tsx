@@ -3,7 +3,7 @@ import HelmRelease from './pages/helm-release';
 import Home from './pages/index';
 import styles from "./index.css?inline"
 import { SearchBar, SearchMode } from './components/search';
-import { AppData as HRAppData, denormalize, PageData, RepoAlsoHas, ReleaseInfo } from './generators/helm-release/models';
+import { AppData as HRAppData, denormalize, MINIMUM_COUNT, PageData, RepoAlsoHas, ReleaseInfo } from './generators/helm-release/models';
 import GitHubButton from 'react-github-btn';
 import { Top } from './pages/top';
 import { Repo } from './pages/repo';
@@ -175,6 +175,20 @@ export default function App(props: AppData & { pageData: any }) {
         </div>
         <Routes>
           <Route key={"/"} path={"/"} element={<Home releases={releases} />} />
+          {releases.filter(r => r.count >= MINIMUM_COUNT).map(({ key, chart, release }) => (
+            <Route
+              key={'hr-' + key}
+              path={`/hr/${key}`}
+              element={<HelmRelease {...{ chart, release }}
+                key={'hr-el' + key}
+                url={'/hr/' + key}
+                pageData={pageData}
+                repoAlsoHas={repoAlsoHas}
+                releases={releases}
+                keyFileMap={props.keyFileMap}
+              />}
+            />
+          ))}
           <Route
             path="/hr/:releaseKey"
             element={
