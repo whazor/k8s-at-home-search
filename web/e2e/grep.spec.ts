@@ -5,13 +5,13 @@ test('test grep', async ({ page }) => {
     // input field should be focused
     await expect(page.locator('[placeholder="Search for a helm release..."]')).toBeFocused();
 
-    await page.locator('[placeholder="Search for a helm release..."]').type('grep ');
+    await page.locator('[placeholder="Search for a helm release..."]').pressSequentially('grep ');
     await expect(page).toHaveURL('/grep#grep%20');
 
     await expect(page.locator('[placeholder="Search for a grep pattern..."]')).toBeFocused();
 
     // search for "image.repository"
-    await page.locator('[placeholder="Search for a grep pattern..."]').type('image.repository');
+    await page.locator('[placeholder="Search for a grep pattern..."]').pressSequentially('image.repository');
     
     // search image.repository
     // const expand = await page

@@ -26,10 +26,6 @@ test('test search', async ({ page }) => {
   // click on first cell of first row
   await rows[0].locator('td:nth-of-type(1) a').click();
 
-  // check url, it must be either of the two (OCI vs non-OCI)
-  try {
-    await expect(page).toHaveURL('/hr/bjw-s-labs.github.io-helm-charts-app-template-plex');
-  } catch (e) {
-    await expect(page).toHaveURL('/hr/ghcr.io-bjw-s-labs-helm-app-template-plex');
-  }
+  // check url, it must match one of the known bjw-s plex URL patterns
+  await expect(page).toHaveURL(/\/hr\/(bjw-s-labs\.github\.io-helm-charts-app-template-plex|ghcr\.io-bjw-s-labs-(charts|helm)-app-template-plex)/);
 });
