@@ -28,6 +28,34 @@ with open("repos.json", "r") as f:
 
 items = []
 page = 1
+# Self-Hosted Repos from Epithet
+for topic in topics:
+    page = 1
+    if isDry:
+        break
+    while len(items) > 0 or page == 1:
+        result = requests.get(
+            "https://epithet.eno1.dev/v1/api/topics/"+topic,
+            params={"limit": 100, "page": page},
+        ).json()
+        items = result["results"] if "results" in result else []
+        for repo_info in items:
+            pushed_at = datetime.strptime(repo_info["last_updated"], "%Y-%m-%dT%H:%M:%SZ")
+            # filter out unmaintained repos
+            if (datetime.now() - pushed_at).days > 90:
+                continue
+            repo_name = repo_info["username"] + "/" + repo_info["name"]
+            key = repo_name.lower()
+            stars = repo_info["stars"]
+            url = repo_info["web_url"]
+            branch = repo_info["default_branch"]
+            if key in results and stars < results[key][3]:
+                continue
+            results[key] = (repo_name, url, branch, stars)
+        page += 1
+
+page = 1
+# Github Repos
 for topic in topics:
     if isDry:
         break
@@ -123,7 +151,6 @@ for topic in topics:
         if key in results and stars < results[key][3]:
             continue
         results[key] = (repo_name, url, branch, stars)
-
 
 # check if all must_have repos are in results
 must_have = {
