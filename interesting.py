@@ -158,7 +158,6 @@ must_have = {
     "billimek/k8s-gitops",
     "bjw-s-labs/home-ops",
     "xunholy/k8s-gitops",
-    "bjw-s/home-ops",
     "toboshii/home-ops",
     "carpenike/k8s-gitops",
     "wrmilling/k3s-gitops",
