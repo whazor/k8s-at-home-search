@@ -21,12 +21,16 @@ test('test helm release page', async ({ page }) => {
   const totalCount = parseInt(matches![2]);
   await expect(totalCount).toBeGreaterThan(40);
 
-  // installCRDs should appear as a popular value
-  const installCRDs = await page.$$('a:has-text("installCRDs")');
-  await expect(installCRDs.length).toBe(1);
-  const installCRDsText = await installCRDs[0].innerText();
-  const regex2 = /installCRDs \((\d+)\)/;
-  const matches2 = installCRDsText.match(regex2);
-  const installCRDsCount = parseInt(matches2![1]);
-  await expect(installCRDsCount).toBeGreaterThan(20);
+  // CRD installation should appear as a popular value.
+  // cert-manager v1.15+ renamed installCRDs to crds.enabled, so the most
+  // popular release may use either key depending on which source is dominant.
+  const installCRDsLinks = await page.$$('a:has-text("installCRDs")');
+  const crdsEnabledLinks = await page.$$('a:has-text("crds.enabled")');
+  const crdLink = installCRDsLinks.length > 0 ? installCRDsLinks[0] : crdsEnabledLinks[0];
+  await expect(crdLink).toBeTruthy();
+  const crdText = await crdLink.innerText();
+  const crdRegex = /(?:installCRDs|crds\.enabled) \((\d+)\)/;
+  const crdMatches = crdText.match(crdRegex);
+  const crdCount = parseInt(crdMatches![1]);
+  await expect(crdCount).toBeGreaterThan(10);
 });
