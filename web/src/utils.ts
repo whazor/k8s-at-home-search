@@ -40,9 +40,11 @@ export function modeCount<K extends keyof any>(array: K[]) {
 
 
 export function simplifyURL(url: string) {
-    if (url.startsWith('http')) {
+    const trimmed = url.replace(/\/+$/, '');
+
+    if (trimmed.startsWith('http')) {
         // remove https
-        let name = url.replace(/https?:\/\//, '').split('/')[0];
+        let name = trimmed.replace(/https?:\/\//, '').split('/')[0];
         // remove tld
         name = name.split('.').slice(0, -1).join('.');
         // remove charts.
@@ -55,12 +57,12 @@ export function simplifyURL(url: string) {
     }
 
     if (
-        url.startsWith('oci://ghcr.io/') ||
-        url.startsWith('oci://quay.io/') ||
-        url.startsWith('oci://tccr.io/')
+        trimmed.startsWith('oci://ghcr.io/') ||
+        trimmed.startsWith('oci://quay.io/') ||
+        trimmed.startsWith('oci://tccr.io/')
     ) {
         // Split by "/" and get everything after the third "/"
-        const parts = url.split('/');
+        const parts = trimmed.split('/');
         // parts[0] = "oci:"
         // parts[1] = "" (empty, because of the double slash)
         // parts[2] = "ghcr.io" | "quay.io" | "tccr.io"
@@ -68,12 +70,12 @@ export function simplifyURL(url: string) {
         return parts.slice(3).join('/');
     }
 
-    if (url.startsWith('oci')) {
+    if (trimmed.startsWith('oci')) {
         // remove oci://
-        let name = url.split('oci://')[1];
+        let name = trimmed.split('oci://')[1];
         // get domain
         name = name.split('.').slice(0, -1).join('.');
         return name;
     }
-    return url;
+    return trimmed;
 };
