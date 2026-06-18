@@ -1,9 +1,9 @@
-import { BrowserRouter, HashRouter, Route, RouterProvider, Routes, createHashRouter } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Route, RouterProvider, Routes, createHashRouter, useParams } from 'react-router-dom'
 import HelmRelease from './pages/helm-release';
 import Home from './pages/index';
 import styles from "./index.css?inline"
 import { SearchBar, SearchMode } from './components/search';
-import { AppData as HRAppData, denormalize } from './generators/helm-release/models';
+import { AppData as HRAppData, denormalize, PageData, RepoAlsoHas, ReleaseInfo } from './generators/helm-release/models';
 import GitHubButton from 'react-github-btn';
 import { Top } from './pages/top';
 import { Repo } from './pages/repo';
@@ -14,6 +14,37 @@ import HRSearchResults, { SearchInterface } from './components/search/hr';
 
 export type AppData = HRAppData;
 
+function HelmReleaseRoute(props: {
+  pageData: any;
+  releases: ReleaseInfo[];
+  repoAlsoHas: RepoAlsoHas;
+  keyFileMap: Record<string, number>;
+}) {
+  const { releaseKey } = useParams<{ releaseKey: string }>();
+  const url = '/hr/' + releaseKey;
+  const releaseInfo = props.releases.find(r => r.key === releaseKey);
+  const currentPageData: PageData | undefined =
+    props.pageData?.key === releaseKey ? props.pageData : undefined;
+  return (
+    <HelmRelease
+      chart={releaseInfo?.chart || ''}
+      release={releaseInfo?.release || ''}
+      url={url}
+      pageData={currentPageData}
+      repoAlsoHas={props.repoAlsoHas}
+      releases={props.releases}
+      keyFileMap={props.keyFileMap}
+    />
+  );
+}
+
+function RepoRoute(props: { pageData: any }) {
+  const { '*': repoName } = useParams<{ '*': string }>();
+  if (!props.pageData || props.pageData.name !== repoName) {
+    return <div>Repository not found</div>;
+  }
+  return <Repo {...props.pageData} />;
+}
 
 export default function App(props: AppData & { pageData: any }) {
   const { pageData, repoAlsoHas, } = props;
@@ -144,36 +175,23 @@ export default function App(props: AppData & { pageData: any }) {
         </div>
         <Routes>
           <Route key={"/"} path={"/"} element={<Home releases={releases} />} />
-          {releases.map(({ key, chart, release }) => {
-            return (
-              <Route
-                key={'hr-' + key}
-                path={`/hr/${key}`}
-                element={<HelmRelease {...{ chart, release }}
-                  key={'hr-el' + key}
-                  url={'/hr/' + key}
-                  pageData={pageData}
-                  repoAlsoHas={repoAlsoHas}
-                  releases={releases}
-                  keyFileMap={props.keyFileMap}
-                />}
-              ></Route>
-            )
-          })}
+          <Route
+            path="/hr/:releaseKey"
+            element={
+              <HelmReleaseRoute
+                pageData={pageData}
+                releases={releases}
+                repoAlsoHas={repoAlsoHas}
+                keyFileMap={props.keyFileMap}
+              />
+            }
+          />
           <Route key="top" path="/top" element={<Top repos={pageData} repoAlsoHas={repoAlsoHas} />} />
           <Route key="grep" path="/grep" element={
             <Grep {...pageData} search={search} />
           } />
           <Route key="image" path="/image" element={<Image {...pageData} search={search} />} />
-          {props.repos.map((repo) => {
-            return (
-              <Route
-                key={'repo-' + repo}
-                path={`/repo/${repo}`}
-                element={<Repo {...pageData} />}
-              ></Route>
-            )
-          })}
+          <Route path="/repo/*" element={<RepoRoute pageData={pageData} />} />
         </Routes>
       </div>
     </div>
